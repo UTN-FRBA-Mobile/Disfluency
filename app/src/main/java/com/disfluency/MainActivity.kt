@@ -1,83 +1,89 @@
 package com.disfluency
 
 import android.os.Bundle
-import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.disfluency.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ScaffoldTest()
-                }
-            }
+            MyApp(content = { ScaffoldTest()} )
         }
     }
 }
 
 @Composable
-fun ScaffoldTest() {
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(containerColor = MaterialTheme.colorScheme.surface) {
-                Row(Modifier.padding(all = 4.dp)) {
-                    ButtonTest(text = "Test1")
-
-                    Spacer(Modifier.width(4.dp))
-
-                    ButtonTest(text = "Test2")
-                }
-            }
-        },
-        content = { paddingValues -> Text(text = "Test", Modifier.padding(paddingValues)) }
-    )
-}
-@Composable
-fun ButtonTest(text: String) {
-    Column(Modifier.padding(all = 4.dp)) {
-        Box(
-            Modifier
-                .size(16.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.onSurface)
-        )
-        Spacer(Modifier.height(4.dp))
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
+fun MyApp(content: @Composable () -> Unit) {
     MyApplicationTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ScaffoldTest()
+            content()
         }
     }
+}
+
+@Composable
+fun ScaffoldTest() {
+    var selectedItem by remember {
+        mutableStateOf(0)
+    }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(text = "Pacientes") },
+                navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
+                actions = { Icon(Icons.Filled.AccountBox, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface) }
+            )
+        },
+        bottomBar = {
+            // Pasar a loop
+            NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                NavigationBarItem(
+                    selected = selectedItem == 0,
+                    onClick = { selectedItem = 0 },
+                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    label = { Text(text = "Home") }
+                )
+                NavigationBarItem(
+                    selected = selectedItem == 1,
+                    onClick = { selectedItem = 1 },
+                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    label = { Text(text = "Pacientes") }
+                )
+                NavigationBarItem(
+                    selected = selectedItem == 2,
+                    onClick = { selectedItem = 2 },
+                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    label = { Text(text = "Ejercicios") }
+                )
+                NavigationBarItem(
+                    selected = selectedItem == 3,
+                    onClick = { selectedItem = 3 },
+                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    label = { Text(text = "Cuestionarios") }
+                )
+            }
+        },
+        content = { paddingValues -> Text(text = "Test", Modifier.padding(paddingValues)) }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    MyApp(content = { ScaffoldTest()} )
 }
