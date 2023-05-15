@@ -2,10 +2,8 @@ package com.disfluency.screens
 
 import android.window.SplashScreen
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -42,6 +40,10 @@ fun Splash(){
             contentDescription = "Disfluency",
             modifier = Modifier.size(170.dp, 170.dp)
         )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LinearProgressIndicator()
     }
 }
 
