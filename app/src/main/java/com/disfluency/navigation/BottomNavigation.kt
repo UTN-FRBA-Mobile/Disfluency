@@ -3,7 +3,6 @@ package com.disfluency.navigation
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -42,7 +41,7 @@ fun BottomNavigation(navController: NavController) {
         BottomNavigationItem.Cuestionarios
     )
 
-    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+    NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
@@ -50,7 +49,7 @@ fun BottomNavigation(navController: NavController) {
 
             NavigationBarItem(
                 selected = currentRoute == item.screenRoute,
-                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title, tint = MaterialTheme.colorScheme.onSurface) },
+                icon = { Icon(item.icon, contentDescription = item.title) },
                 label = { Text(text = item.title) },
                 onClick = {
                     navController.navigate(item.screenRoute) {
