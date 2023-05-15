@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -46,7 +46,7 @@ fun ScaffoldTest() {
             CenterAlignedTopAppBar(
                 title = { Text(text = "Pacientes") },
                 navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
-                actions = { Icon(Icons.Filled.AccountBox, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface) }
+                actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface) }
             )
         },
         bottomBar = {
@@ -55,25 +55,25 @@ fun ScaffoldTest() {
                 NavigationBarItem(
                     selected = selectedItem == 0,
                     onClick = { selectedItem = 0 },
-                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    icon = { Icon(Icons.Outlined.Home , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
                     label = { Text(text = "Home") }
                 )
                 NavigationBarItem(
                     selected = selectedItem == 1,
                     onClick = { selectedItem = 1 },
-                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    icon = { Icon(Icons.Outlined.ContactMail , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
                     label = { Text(text = "Pacientes") }
                 )
                 NavigationBarItem(
                     selected = selectedItem == 2,
                     onClick = { selectedItem = 2 },
-                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    icon = { Icon(Icons.Outlined.Mic , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
                     label = { Text(text = "Ejercicios") }
                 )
                 NavigationBarItem(
                     selected = selectedItem == 3,
                     onClick = { selectedItem = 3 },
-                    icon = { Icon(Icons.Filled.Favorite , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
+                    icon = { Icon(Icons.Outlined.Assignment , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
                     label = { Text(text = "Cuestionarios") }
                 )
             }
