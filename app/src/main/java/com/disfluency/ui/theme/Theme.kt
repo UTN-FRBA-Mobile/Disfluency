@@ -27,8 +27,11 @@ private val LightColorScheme = lightColorScheme(
     onSecondaryContainer = Blue20,
 
     background = Color.White,
+    onBackground = Blue10,
     surface = Orange99,
-    onSurface = Orange40,
+    onSurface = Grey10,
+    onSurfaceVariant = Orange40,
+
     error = Red40,
     onError = Color.White,
     outline = Orange60
@@ -38,7 +41,7 @@ private val LightColorScheme = lightColorScheme(
 fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
