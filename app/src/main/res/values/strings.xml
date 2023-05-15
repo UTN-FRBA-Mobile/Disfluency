@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Disfluency</string>
+    <string name="home">Home</string>
+    <string name="pacientes">Pacientes</string>
+    <string name="ejercicios">Ejercicios</string>
+    <string name="cuestionarios">Cuestionarios</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.disfluency
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.disfluency.navigation.BottomNavigation
+import com.disfluency.navigation.NavigationGraph
+import com.disfluency.navigation.getItemByRoute
 import com.disfluency.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,41 +44,25 @@ fun MyApp(content: @Composable () -> Unit) {
 
 @Composable
 fun ScaffoldTest() {
-    var selectedItem by remember {
-        mutableStateOf(0)
-    }
-    val pages = listOf(
-        Pair("Home", Icons.Filled.Favorite)
-        ,   Pair("Pacientes", Icons.Filled.Favorite)
-        ,   Pair("Ejercicios", Icons.Filled.Favorite)
-        ,   Pair("Cuestionarios", Icons.Filled.Favorite)
-    )
+    val navController = rememberNavController()
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = pages[selectedItem].first) },
+                title = { Text(text = getItemByRoute(currentRoute).title) },
                 navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
                 actions = { Icon(Icons.Filled.AccountBox, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface) }
             )
         },
         bottomBar = {
-            // Pasar a loop
-            NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-                pages.forEachIndexed {
-                    index, (nombre, iconImage)->
-
-                    NavigationBarItem(
-                        selected = selectedItem == index,
-                        onClick = { selectedItem = index },
-                        icon = { Icon(iconImage, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
-                        label = { Text(text = nombre) }
-                    )
-                }
-            }
-        },
-        content = { paddingValues -> Text(text = "Test", Modifier.padding(paddingValues)) }
-    )
+            BottomNavigation(navController = navController)
+        }
+    ) {
+        NavigationGraph(navController = navController)
+    }
 }
 
 @Preview(showBackground = true)
