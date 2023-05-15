@@ -1,14 +1,19 @@
 package com.disfluency.navigation
 
-import com.disfluency.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Assignment
+import androidx.compose.material.icons.outlined.ContactMail
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.RecordVoiceOver
+import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class BottomNavigationItem(val title: String, val icon: Int, val screenRoute: String) {
+sealed class BottomNavigationItem(val title: String, val icon: ImageVector, val screenRoute: String) {
 
     //TODO: read string values from R.strings
-    object Home : BottomNavigationItem("Home", R.drawable.ic_home, "home")
-    object Pacientes : BottomNavigationItem("Pacientes", R.drawable.ic_pacientes, "pacientes")
-    object Cuestionarios : BottomNavigationItem("Cuestionarios", R.drawable.ic_cuestionarios, "cuestionarios")
-    object Ejercicios : BottomNavigationItem("Ejercicios", R.drawable.ic_ejercicios, "ejercicios")
+    object Home : BottomNavigationItem("Home", Icons.Outlined.Home, "home")
+    object Pacientes : BottomNavigationItem("Pacientes", Icons.Outlined.ContactMail, "pacientes")
+    object Cuestionarios : BottomNavigationItem("Cuestionarios", Icons.Outlined.RecordVoiceOver, "cuestionarios")
+    object Ejercicios : BottomNavigationItem("Ejercicios", Icons.Outlined.Assignment, "ejercicios")
 
 }
 
