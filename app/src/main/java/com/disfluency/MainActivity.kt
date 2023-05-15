@@ -41,41 +41,33 @@ fun ScaffoldTest() {
     var selectedItem by remember {
         mutableStateOf(0)
     }
+    val pages = listOf(
+        Pair("Home", Icons.Outlined.Home),
+        Pair("Pacientes", Icons.Outlined.ContactMail),
+        Pair("Ejercicios", Icons.Outlined.RecordVoiceOver),
+        Pair("Cuestionarios", Icons.Outlined.Assignment)
+    )
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Pacientes") },
+                title = { Text(text = pages[selectedItem].first) },
                 navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
                 actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface) }
             )
         },
         bottomBar = {
-            // Pasar a loop
             NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-                NavigationBarItem(
-                    selected = selectedItem == 0,
-                    onClick = { selectedItem = 0 },
-                    icon = { Icon(Icons.Outlined.Home , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
-                    label = { Text(text = "Home") }
-                )
-                NavigationBarItem(
-                    selected = selectedItem == 1,
-                    onClick = { selectedItem = 1 },
-                    icon = { Icon(Icons.Outlined.ContactMail , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
-                    label = { Text(text = "Pacientes") }
-                )
-                NavigationBarItem(
-                    selected = selectedItem == 2,
-                    onClick = { selectedItem = 2 },
-                    icon = { Icon(Icons.Outlined.Mic , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
-                    label = { Text(text = "Ejercicios") }
-                )
-                NavigationBarItem(
-                    selected = selectedItem == 3,
-                    onClick = { selectedItem = 3 },
-                    icon = { Icon(Icons.Outlined.Assignment , contentDescription = "", tint = MaterialTheme.colorScheme.onSurface)},
-                    label = { Text(text = "Cuestionarios") }
-                )
+                pages.forEachIndexed {
+                    index, (name, iconImage)->
+
+                    NavigationBarItem(
+                        selected = selectedItem == index,
+                        onClick = { selectedItem = index },
+                        icon = { Icon(iconImage, contentDescription = name, tint = MaterialTheme.colorScheme.onSurface)},
+                        label = { Text(text = name) }
+                    )
+                }
             }
         },
         content = { paddingValues -> Text(text = "Test", Modifier.padding(paddingValues)) }
