@@ -12,8 +12,8 @@ sealed class BottomNavigationItem(val title: String, val icon: ImageVector, val 
     //TODO: read string values from R.strings
     object Home : BottomNavigationItem("Home", Icons.Outlined.Home, "home")
     object Pacientes : BottomNavigationItem("Pacientes", Icons.Outlined.ContactMail, "pacientes")
-    object Cuestionarios : BottomNavigationItem("Cuestionarios", Icons.Outlined.RecordVoiceOver, "cuestionarios")
-    object Ejercicios : BottomNavigationItem("Ejercicios", Icons.Outlined.Assignment, "ejercicios")
+    object Cuestionarios : BottomNavigationItem("Cuestionarios", Icons.Outlined.Assignment, "cuestionarios")
+    object Ejercicios : BottomNavigationItem("Ejercicios", Icons.Outlined.RecordVoiceOver, "ejercicios")
 
 }
 
