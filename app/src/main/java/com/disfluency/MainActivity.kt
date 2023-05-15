@@ -53,18 +53,18 @@ fun ScaffoldTest() {
             CenterAlignedTopAppBar(
                 title = { Text(text = pages[selectedItem].first) },
                 navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
-                actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface) }
+                actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
             )
         },
         bottomBar = {
-            NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+            NavigationBar {
                 pages.forEachIndexed {
                     index, (name, iconImage)->
 
                     NavigationBarItem(
                         selected = selectedItem == index,
                         onClick = { selectedItem = index },
-                        icon = { Icon(iconImage, contentDescription = name, tint = MaterialTheme.colorScheme.onSurface)},
+                        icon = { Icon(iconImage, contentDescription = name)},
                         label = { Text(text = name) }
                     )
                 }
