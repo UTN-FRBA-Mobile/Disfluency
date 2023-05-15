@@ -53,7 +53,7 @@ fun ScaffoldTest() {
             CenterAlignedTopAppBar(
                 title = { Text(text = getItemByRoute(currentRoute).title) },
                 navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
-                actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "", tint = MaterialTheme.colorScheme.onSurface) }
+                actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
             )
         },
         bottomBar = {
