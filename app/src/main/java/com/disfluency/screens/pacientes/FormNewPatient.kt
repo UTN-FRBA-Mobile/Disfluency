@@ -11,18 +11,20 @@ import androidx.core.text.isDigitsOnly
 /*TODO:
  * * Al enviar deberian saltar todos los errores, o bien el boton deberia estar deshabilitado
  * * No pude sacar el espacio del input numero
+ * * Al salir y volver a entrar a la pagina de pacientes, se eliminan. Esto es por el scope de la variable. A futuro habrá que pasará por parámetro
  */
 
 @Composable
 fun FormNewPatient(onSubmit: (_:Patient)->Unit){
     var patientName by remember { mutableStateOf("") }
     var wrongName by remember { mutableStateOf(false) }
-    //TODO: Esta validacion salta con enter desde la computadora, pero no con el boton del celular. Igualmente tiene que haber otra forma mas facil
+    val validateName = {wrongName = patientName.isBlank()}
+
     OutlinedTextField(
         value = patientName
         , onValueChange = {
             patientName = it
-            wrongName = patientName.isBlank()
+            validateName()
         }
         , label = { Text("Nombre") }
         , singleLine = true
@@ -32,11 +34,12 @@ fun FormNewPatient(onSubmit: (_:Patient)->Unit){
 
     var patientLastname by remember { mutableStateOf("") }
     var wrongLastname by remember { mutableStateOf(false) }
+    val validateLastname = {wrongLastname = patientLastname.isBlank()}
     OutlinedTextField(
         value = patientLastname
         , onValueChange = {
             patientLastname = it
-            wrongLastname = patientLastname.isBlank()
+            validateLastname()
         }
         , label = { Text("Apellido") }
         , singleLine = true
@@ -47,11 +50,12 @@ fun FormNewPatient(onSubmit: (_:Patient)->Unit){
 
     var dni by remember { mutableStateOf("") }
     var wrongDNI by remember { mutableStateOf(false) }
+    val validateDNI = { wrongDNI = dni.isBlank() || !dni.isDigitsOnly() }
     OutlinedTextField(
         value = dni,
         onValueChange = {
             dni = it
-            wrongDNI = dni.isBlank() || dni.contains(" ");
+            validateDNI()
         }
         , label = { Text(text = "DNI") }
         , singleLine = true
@@ -66,21 +70,16 @@ fun FormNewPatient(onSubmit: (_:Patient)->Unit){
     Button(
         onClick = {
             val patient = Patient(patientName, patientLastname, dni)
-            if(whatsWrongWithPatient(patient).isEmpty()){
+            listOf(validateName, validateLastname, validateDNI)
+                .forEach { it() }
+            if(!wrongName && !wrongLastname && !wrongDNI){
                 onSubmit(patient)
             }
         }
     ) {
         Text("Crear")
     }
-}
 
-fun whatsWrongWithPatient(patient: Patient): List<String>{
-    val wrongThings = mutableListOf<String>()
-    if(patient.name.isBlank()) wrongThings += "Falta ingresar nombre"
-    if(patient.lastname.isBlank()) wrongThings += "Falta ingresar apellido"
-    if(!patient.dni.isDigitsOnly()) wrongThings += "Falta ingresar numero de DNI"
-    return wrongThings
 }
 
 @Composable

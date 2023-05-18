@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun PacientesScreen() {
-
     val patients by remember {
         mutableStateOf(ArraySet<Patient>())
     }
@@ -27,14 +26,17 @@ fun PacientesScreen() {
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
-        if(displayedNewPatient){
-            Button(onClick = { displayedNewPatient=false }){
-                Text(text = "Cancelar")
-            }
+        if (displayedNewPatient) {
 
-            FormNewPatient{
-                patients.add(it)
-                displayedNewPatient = false
+            Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Button(onClick = { displayedNewPatient = false }) {
+                    Text(text = "Cancelar")
+                }
+
+                FormNewPatient {
+                    patients.add(it)
+                    displayedNewPatient = false
+                }
             }
         } else {
             Text(
@@ -46,12 +48,12 @@ fun PacientesScreen() {
                 fontSize = 20.sp
             )
 
-            Button(onClick = { displayedNewPatient=true }){
+            Button(onClick = { displayedNewPatient = true }) {
                 Text(text = "Nuevo Paciente")
             }
 
             patients.forEachIndexed { index, paciente ->
-                Text(text = "#${index+1} ${paciente.name}")
+                Text(text = "#${index + 1} ${paciente.name}")
             }
         }
     }
