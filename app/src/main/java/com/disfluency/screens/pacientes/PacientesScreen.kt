@@ -55,7 +55,7 @@ fun PacientesScreen() {
 
             val date = LocalDate.now()
             patients.forEachIndexed { index, paciente ->
-                Text(text = "#${index+1} ${paciente.name} ${paciente.getAgeAtDate(date)} años")
+                Text(text = "#${index+1} ${paciente.name} ${paciente.lastname}\n${paciente.dni}\n${paciente.getAgeAtDate(date)} años")
             }
         }
     }

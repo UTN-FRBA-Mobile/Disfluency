@@ -8,6 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.text.isDigitsOnly
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 /*TODO:
  * * Al enviar deberian saltar todos los errores, o bien el boton deberia estar deshabilitado
@@ -27,48 +29,18 @@ fun FormNewPatient(onSubmit: (_:Patient)->Unit){
         )
     )
 
-    val bornDate = inputDate(label = "Fecha Nacimiento")
+    val bornDate: Value<LocalDate> = inputDate(label = "Fecha Nacimiento")
 
     Button(
         onClick = {
-            val attributes = listOf(patientName, patientLastname, dni)
+            val attributes = listOf(patientName, patientLastname, dni, bornDate)
             attributes.forEach {it.validate()}
             if(attributes.all { !it.wrongValue() }) {
-                val patient = Patient(patientName.value, patientLastname.value, dni.value, bornDate)
+                val patient = Patient(patientName.value, patientLastname.value, dni.value, bornDate.value)
                 onSubmit(patient)
             }
         }
     ) {
         Text("Crear")
     }
-}
-
-data class Value(val value: String, val wrongValue: ()->Boolean, val validate: ()->Unit)
-
-@Composable
-fun inputString(label: String, valid: (String)->Boolean, keyboardOptions: KeyboardOptions=KeyboardOptions.Default): Value{
-    var value by remember { mutableStateOf("") }
-    var wrongValue: Boolean by remember { mutableStateOf(false) }
-    val validate = {wrongValue = !valid(value)}
-
-    OutlinedTextField(
-        value = value
-        , onValueChange = {
-            value = it
-            validate()
-        }
-        , label = { Text(label) }
-        , singleLine = true
-        , isError = wrongValue
-        , trailingIcon = {if (wrongValue) ErrorIcon()}
-        , keyboardOptions = keyboardOptions
-
-    )
-
-    return Value(value, {wrongValue},validate)
-}
-
-@Composable
-fun ErrorIcon(){
-    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
 }
