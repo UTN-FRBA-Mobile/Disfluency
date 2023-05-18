@@ -1,10 +1,13 @@
 package com.disfluency.screens.pacientes
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.text.isDigitsOnly
 
@@ -17,29 +20,6 @@ import androidx.core.text.isDigitsOnly
 class Value(val value: String, val wrongValue: ()->Boolean, val validate: ()->Unit)
 
 @Composable
-fun inputValue(label: String, valid: (String)->Boolean, keyboardOptions: KeyboardOptions=KeyboardOptions.Default): Value{
-    var value by remember { mutableStateOf("") }
-    var wrongValue: Boolean by remember { mutableStateOf(false) }
-    val validate = {wrongValue = !valid(value)}
-
-    OutlinedTextField(
-        value = value
-        , onValueChange = {
-            value = it
-            validate()
-        }
-        , label = { Text(label) }
-        , singleLine = true
-        , isError = wrongValue
-        , trailingIcon = {ShowIconInCaseOfError(isError = wrongValue)}
-        , keyboardOptions = keyboardOptions
-
-    )
-
-    return Value(value, {wrongValue},validate)
-}
-
-@Composable
 fun FormNewPatient(onSubmit: (_:Patient)->Unit){
     val _notblank = String::isNotBlank
     val patientName = inputValue("Nombre", _notblank)
@@ -50,6 +30,8 @@ fun FormNewPatient(onSubmit: (_:Patient)->Unit){
             keyboardType = KeyboardType.Decimal
         )
     )
+
+
 
     Button(
         onClick = {
@@ -66,7 +48,29 @@ fun FormNewPatient(onSubmit: (_:Patient)->Unit){
 }
 
 @Composable
-fun ShowIconInCaseOfError(isError: Boolean){
-    if (isError)
-        Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
+fun inputValue(label: String, valid: (String)->Boolean, keyboardOptions: KeyboardOptions=KeyboardOptions.Default): Value{
+    var value by remember { mutableStateOf("") }
+    var wrongValue: Boolean by remember { mutableStateOf(false) }
+    val validate = {wrongValue = !valid(value)}
+
+    OutlinedTextField(
+        value = value
+        , onValueChange = {
+            value = it
+            validate()
+        }
+        , label = { Text(label) }
+        , singleLine = true
+        , isError = wrongValue
+        , trailingIcon = {if (wrongValue) ErrorIcon()}
+        , keyboardOptions = keyboardOptions
+
+    )
+
+    return Value(value, {wrongValue},validate)
+}
+
+@Composable
+fun ErrorIcon(){
+    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
 }
