@@ -13,11 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import java.time.LocalDate
 
 @Composable
 fun PacientesScreen() {
     val patients by remember {
-        mutableStateOf(ArraySet<Patient>())
+        mutableStateOf(ArrayList<Patient>())
     }
     var displayedNewPatient by remember { mutableStateOf(false) }
 
@@ -26,7 +27,7 @@ fun PacientesScreen() {
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
-        if (displayedNewPatient) {
+        if(displayedNewPatient){
 
             Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Button(onClick = { displayedNewPatient = false }) {
@@ -48,12 +49,13 @@ fun PacientesScreen() {
                 fontSize = 20.sp
             )
 
-            Button(onClick = { displayedNewPatient = true }) {
+            Button(onClick = { displayedNewPatient=true }){
                 Text(text = "Nuevo Paciente")
             }
 
+            val date = LocalDate.now()
             patients.forEachIndexed { index, paciente ->
-                Text(text = "#${index + 1} ${paciente.name}")
+                Text(text = "#${index+1} ${paciente.name} ${paciente.getAgeAtDate(date)} años")
             }
         }
     }
