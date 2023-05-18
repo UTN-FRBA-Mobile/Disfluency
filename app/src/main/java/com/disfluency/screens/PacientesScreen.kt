@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.disfluency.data.PatientRepository
 
 @Composable
 fun PacientesScreen() {
@@ -19,13 +20,6 @@ fun PacientesScreen() {
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
-        Text(
-            text = "Mis Pacientes",
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
+        SinglePatientScreen(PatientRepository.testPatient) //TODO: agregar un boton que me lleve aca por el momento
     }
 }
