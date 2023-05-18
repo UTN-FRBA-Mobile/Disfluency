@@ -11,7 +11,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.disfluency.screens.CuestionariosScreen
 import com.disfluency.screens.EjerciciosScreen
 import com.disfluency.screens.HomeScreen
-import com.disfluency.screens.PacientesScreen
+import com.disfluency.screens.pacientes.PacientesScreen
 
 
 @Composable
