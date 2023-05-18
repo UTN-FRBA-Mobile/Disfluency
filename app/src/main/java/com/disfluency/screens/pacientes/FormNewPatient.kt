@@ -14,72 +14,55 @@ import androidx.core.text.isDigitsOnly
  * * Al salir y volver a entrar a la pagina de pacientes, se eliminan. Esto es por el scope de la variable. A futuro habrá que pasará por parámetro
  */
 
+class Value(val value: String, val wrongValue: ()->Boolean, val validate: ()->Unit)
+
+@Composable
+fun inputValue(label: String, valid: (String)->Boolean, keyboardOptions: KeyboardOptions=KeyboardOptions.Default): Value{
+    var value by remember { mutableStateOf("") }
+    var wrongValue: Boolean by remember { mutableStateOf(false) }
+    val validate = {wrongValue = !valid(value)}
+
+    OutlinedTextField(
+        value = value
+        , onValueChange = {
+            value = it
+            validate()
+        }
+        , label = { Text(label) }
+        , singleLine = true
+        , isError = wrongValue
+        , trailingIcon = {ShowIconInCaseOfError(isError = wrongValue)}
+        , keyboardOptions = keyboardOptions
+
+    )
+
+    return Value(value, {wrongValue},validate)
+}
+
 @Composable
 fun FormNewPatient(onSubmit: (_:Patient)->Unit){
-    var patientName by remember { mutableStateOf("") }
-    var wrongName by remember { mutableStateOf(false) }
-    val validateName = {wrongName = patientName.isBlank()}
-
-    OutlinedTextField(
-        value = patientName
-        , onValueChange = {
-            patientName = it
-            validateName()
-        }
-        , label = { Text("Nombre") }
-        , singleLine = true
-        , isError = wrongName
-        , trailingIcon = {ShowIconInCaseOfError(isError = wrongName)}
-    )
-
-    var patientLastname by remember { mutableStateOf("") }
-    var wrongLastname by remember { mutableStateOf(false) }
-    val validateLastname = {wrongLastname = patientLastname.isBlank()}
-    OutlinedTextField(
-        value = patientLastname
-        , onValueChange = {
-            patientLastname = it
-            validateLastname()
-        }
-        , label = { Text("Apellido") }
-        , singleLine = true
-        , isError = wrongLastname
-        , trailingIcon = {ShowIconInCaseOfError(isError = wrongLastname)}
-
-    )
-
-    var dni by remember { mutableStateOf("") }
-    var wrongDNI by remember { mutableStateOf(false) }
-    val validateDNI = { wrongDNI = dni.isBlank() || !dni.isDigitsOnly() }
-    OutlinedTextField(
-        value = dni,
-        onValueChange = {
-            dni = it
-            validateDNI()
-        }
-        , label = { Text(text = "DNI") }
-        , singleLine = true
-        , keyboardOptions = KeyboardOptions(
+    val _notblank = String::isNotBlank
+    val patientName = inputValue("Nombre", _notblank)
+    val patientLastname = inputValue(label = "Apellido", valid = _notblank)
+    val dni = inputValue("DNI"
+        , valid = { _notblank(it) && it.isDigitsOnly() }
+        ,  keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal
         )
-        , isError = wrongDNI
-        , trailingIcon = {ShowIconInCaseOfError(isError = wrongDNI)}
-
     )
 
     Button(
         onClick = {
-            val patient = Patient(patientName, patientLastname, dni)
-            listOf(validateName, validateLastname, validateDNI)
-                .forEach { it() }
-            if(!wrongName && !wrongLastname && !wrongDNI){
+            val patient = Patient(patientName.value, patientLastname.value, dni.value)
+            val attributes = listOf(patientName, patientLastname, dni)
+            attributes.forEach {it.validate()}
+            if(attributes.all { !it.wrongValue() }) {
                 onSubmit(patient)
             }
         }
     ) {
         Text("Crear")
     }
-
 }
 
 @Composable
