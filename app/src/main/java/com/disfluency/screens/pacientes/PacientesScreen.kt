@@ -15,11 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 
+val patients = ArrayList<Patient>()
+
 @Composable
 fun PacientesScreen() {
-    val patients by remember {
-        mutableStateOf(ArrayList<Patient>())
-    }
     var displayedNewPatient by remember { mutableStateOf(false) }
 
     Column(

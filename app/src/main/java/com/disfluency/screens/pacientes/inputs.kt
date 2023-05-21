@@ -1,6 +1,7 @@
 package com.disfluency.screens.pacientes
 
 import android.app.DatePickerDialog
+import android.text.InputType
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,89 +12,84 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Collections
 
-data class Value<T>(val value: T, val wrongValue: ()->Boolean, val validate: (String)->Unit, val showedValue: () -> String){
+data class Input<T>(val value: T, val wrongValue: ()->Boolean, val validate: (T)->Unit){
     fun validate() {
-        validate(showedValue())
+        validate(value)
     }
 }
 
 @Composable
-fun inputString(label: String, valid: (String)->Boolean, keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Value<String>{
+fun inputString(label: String, validations: List<((String)->Boolean)> = Collections.emptyList(), keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Input<String>{
     var value by remember { mutableStateOf("") }
-    return inputStr(
-        showedValue = {value}
-        , onValueChange = { value = it }
+
+    return input(formattedValue = {value}
+        , getRealValue = {value}
+        , onValueChange = {value = it}
+        , enabled = true
         , label = label
         , keyboardOptions = keyboardOptions
-        , valid = valid
+        , validations = validations
     )
 }
 
 @Composable
-fun ErrorIcon(){
-    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
-}
-
-@Composable
-fun inputDate(label: String): Value<LocalDate>{
+fun inputDate(label: String): Input<LocalDate>{
     var dateValue by remember { mutableStateOf(LocalDate.now()) }
     var showedDateValue by remember { mutableStateOf("")}
 
-    var value: Value<LocalDate>? = null //TODO: Meter dentro de una caja
+    var input: Input<LocalDate>? = null //TODO: Meter dentro de una caja
 
     val datePicker = DatePickerDialog(LocalContext.current,
         { _: DatePicker, year, month, day ->
             dateValue = LocalDate.of(year, month, day)
             showedDateValue = dateValue.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
             //Aca se deberia ejecutar el onChange, pero no lo hace.
-            value?.validate()
+            input?.validate()
             //Por algun motivo, adentro del validate se analiza el valor anterior
         }
         , dateValue.year, dateValue.monthValue, dateValue.dayOfMonth
     )
 
-    value = input(
+    input = input(
         label = label
-        , realValue = dateValue
-        , showedValue = {showedDateValue}, onValueChange = {}
+        , getRealValue = {dateValue}
+        , formattedValue = {showedDateValue}, onValueChange = {}
         , enabled = false
         , modifier = Modifier.clickable { datePicker.show() }
         , trailingIcon = {DateIcon()}
-        , valid = String::isNotBlank
     )
 
-    return value
+    return input
 }
 
 @Composable
-fun inputStr(showedValue: ()->String,
-             enabled: Boolean = true
-             , onValueChange: (String)->Unit
-             , modifier: Modifier = Modifier,
-             trailingIcon: @Composable ()->Unit={},
-             label: String, valid: (String)->Boolean, keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Value<String>{
-    return input(showedValue, showedValue(), enabled, onValueChange, modifier, trailingIcon, label, valid, keyboardOptions)
-}
+fun <T> input(
+    formattedValue: ()->String, getRealValue: ()->T
+    , enabled: Boolean = true
+    , onValueChange: (String)->Unit
+    , modifier: Modifier = Modifier
+    , trailingIcon: @Composable ()->Unit={}
+    , label: String
+    , validations: List<((T) -> Boolean)> = listOf()
+    , keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+): Input<T>{
 
-@Composable
-fun <T> input(showedValue: ()->String, realValue: T,
-              enabled: Boolean = true
-              , onValueChange: (String)->Unit
-              , modifier: Modifier = Modifier,
-              trailingIcon: @Composable ()->Unit={},
-              label: String, valid: (String)->Boolean, keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Value<T>{
-    val valueItself = showedValue()
+    val valueAsString = formattedValue()
     var wrongValue: Boolean by remember { mutableStateOf(false) }
-    val validate: (String)->Unit = { wrongValue = !valid(it) }
+    val validate: (T)->Unit = {value->
+        wrongValue = formattedValue().isBlank() || validations.any{!it(value)}
+    }
 
     OutlinedTextField(
-        value = valueItself
+        value = valueAsString
         , onValueChange = {
             onValueChange(it)
-            validate(valueItself)
+            validate(getRealValue())
         }
         , label = { Text(label) }
         , singleLine = true
@@ -104,7 +100,12 @@ fun <T> input(showedValue: ()->String, realValue: T,
         , modifier = modifier
     )
 
-    return Value(realValue, {wrongValue}, validate, showedValue)
+    return Input(getRealValue(), {wrongValue}, validate)
+}
+
+@Composable
+fun ErrorIcon(){
+    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
 }
 
 @Composable

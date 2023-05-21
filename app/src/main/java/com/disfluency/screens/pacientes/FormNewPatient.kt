@@ -2,14 +2,12 @@ package com.disfluency.screens.pacientes
 
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.text.isDigitsOnly
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /*TODO:
  * * Al enviar deberian saltar todos los errores, o bien el boton deberia estar deshabilitado
@@ -19,24 +17,24 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun FormNewPatient(onSubmit: (_:Patient)->Unit){
-    val _notblank = String::isNotBlank
-    val patientName = inputString("Nombre", _notblank)
-    val patientLastname = inputString(label = "Apellido", valid = _notblank)
-    val dni = inputString("DNI"
-        , valid = { _notblank(it) && it.isDigitsOnly() }
+    val CAPITALIZE_WORDS = KeyboardOptions(capitalization = KeyboardCapitalization.Words)
+
+    val patientName = inputString("Nombre", keyboardOptions = CAPITALIZE_WORDS)
+    val patientLastname = inputString(label = "Apellido", keyboardOptions = CAPITALIZE_WORDS)
+    val patientDNI = inputString("DNI"
+        , validations = listOf { it.isDigitsOnly() }
         ,  keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal
         )
     )
-
-    val bornDate: Value<LocalDate> = inputDate(label = "Fecha Nacimiento")
+    val birthDate: Input<LocalDate> = inputDate(label = "Fecha Nacimiento")
 
     Button(
         onClick = {
-            val attributes = listOf(patientName, patientLastname, dni, bornDate)
+            val attributes = listOf(patientName, patientLastname, patientDNI, birthDate)
             attributes.forEach {it.validate()}
             if(attributes.all { !it.wrongValue() }) {
-                val patient = Patient(patientName.value, patientLastname.value, dni.value, bornDate.value)
+                val patient = Patient(patientName.value, patientLastname.value, patientDNI.value, birthDate.value)
                 onSubmit(patient)
             }
         }
