@@ -11,37 +11,34 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.text.isDigitsOnly
 import java.time.LocalDate
 
-/*TODO:
- * * Al enviar deberian saltar todos los errores, o bien el boton deberia estar deshabilitado
- * * No pude sacar el espacio del input numero
- */
-
 @Composable
 fun FormNewPatient(onSubmit: (_:Patient)->Unit){
-    val DEFAULT_KEY_OPTIONS = KeyboardOptions(imeAction = ImeAction.Next)
-    val CAPITALIZE_WORDS = DEFAULT_KEY_OPTIONS.copy(capitalization = KeyboardCapitalization.Words)
+    val NEXT_INPUT_ON_ENTER = KeyboardOptions(imeAction = ImeAction.Next)
+    val CAPITALIZE_WORDS = NEXT_INPUT_ON_ENTER.copy(capitalization = KeyboardCapitalization.Words)
 
     val patientName = inputString("Nombre", keyboardOptions = CAPITALIZE_WORDS)
     val patientLastname = inputString(label = "Apellido", keyboardOptions = CAPITALIZE_WORDS)
     val patientDNI = inputString("DNI"
         , validations = listOf { it.isDigitsOnly() }
-        ,  keyboardOptions = DEFAULT_KEY_OPTIONS.copy(
+        ,  keyboardOptions = NEXT_INPUT_ON_ENTER.copy(
             keyboardType = KeyboardType.NumberPassword
         )
     )
 
-    val todaysDate = LocalDate.now()
-    val birthDate: Input<LocalDate> = inputDate(label = "Fecha Nacimiento", todaysDate)
-    val email = inputString(label = "Correo Electrónico", keyboardOptions = DEFAULT_KEY_OPTIONS.copy(
+    val email = inputString(label = "Correo Electrónico", keyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Email
-    ), validations = listOf ({s->Patterns.EMAIL_ADDRESS.asPredicate().test(s)}))
+        , imeAction = ImeAction.Done
+    ), validations = listOf { Patterns.EMAIL_ADDRESS.asPredicate().test(it) })
+
+    val todaysDate = LocalDate.now()
+    val patientBirthDate: Input<LocalDate> = inputDate(label = "Fecha Nacimiento", todaysDate)
 
     Button(
         onClick = {
-            val attributes = listOf(patientName, patientLastname, patientDNI, birthDate, email)
+            val attributes = listOf(patientName, patientLastname, patientDNI, patientBirthDate, email)
             attributes.forEach {it.validate()}
             if(attributes.all { !it.wrongValue() }) {
-                val patient = Patient(patientName.value, patientLastname.value, patientDNI.value, birthDate.value, email.value, todaysDate)
+                val patient = Patient(patientName.value, patientLastname.value, patientDNI.value, patientBirthDate.value, email.value, todaysDate)
                 onSubmit(patient)
             }
         }

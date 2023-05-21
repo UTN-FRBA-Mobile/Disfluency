@@ -1,6 +1,5 @@
 package com.disfluency.screens.pacientes
 
-import androidx.collection.ArraySet
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize

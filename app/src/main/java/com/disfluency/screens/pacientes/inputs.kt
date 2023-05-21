@@ -43,7 +43,7 @@ fun inputDate(label: String, startDate: LocalDate): Input<LocalDate>{
     var dateValue by remember { mutableStateOf(startDate) }
     var showedDateValue by remember { mutableStateOf("")}
 
-    var input: Input<LocalDate>? = null //TODO: Meter dentro de una caja
+    var input: Input<LocalDate>? = null
 
     val datePicker = DatePickerDialog(LocalContext.current,
         { _: DatePicker, year, month, day ->
