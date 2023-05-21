@@ -49,9 +49,7 @@ fun inputDate(label: String, startDate: LocalDate): Input<LocalDate>{
         { _: DatePicker, year, month, day ->
             dateValue = LocalDate.of(year, month, day)
             showedDateValue = dateValue.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            //Aca se deberia ejecutar el onChange, pero no lo hace.
             input?.validate()
-            //Por algun motivo, adentro del validate se analiza el valor anterior
         }
         , dateValue.year, dateValue.monthValue, dateValue.dayOfMonth
     )
