@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Collections
+import java.util.function.Predicate
 
 data class Input<T>(val value: T, val wrongValue: ()->Boolean, val validate: (T)->Unit){
     fun validate() {
@@ -24,7 +25,7 @@ data class Input<T>(val value: T, val wrongValue: ()->Boolean, val validate: (T)
 }
 
 @Composable
-fun inputString(label: String, validations: List<((String)->Boolean)> = Collections.emptyList(), keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Input<String>{
+fun inputString(label: String, validations: List<(String)->Boolean> = Collections.emptyList(), keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Input<String>{
     var value by remember { mutableStateOf("") }
 
     return input(formattedValue = {value}
