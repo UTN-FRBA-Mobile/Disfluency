@@ -38,8 +38,8 @@ fun inputString(label: String, validations: List<((String)->Boolean)> = Collecti
 }
 
 @Composable
-fun inputDate(label: String): Input<LocalDate>{
-    var dateValue by remember { mutableStateOf(LocalDate.now()) }
+fun inputDate(label: String, startDate: LocalDate): Input<LocalDate>{
+    var dateValue by remember { mutableStateOf(startDate) }
     var showedDateValue by remember { mutableStateOf("")}
 
     var input: Input<LocalDate>? = null //TODO: Meter dentro de una caja
