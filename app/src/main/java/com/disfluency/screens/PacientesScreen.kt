@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -38,8 +39,8 @@ fun PacientesScreen() {
 @Composable
 fun PacientesList(pacientes: List<Patient>) {
     LazyColumn {
-        items(pacientes) {paciente ->
-            PacienteCard(paciente)
+        items(pacientes) {paciente -> 
+            PacienteCard(paciente = paciente)
         }
     }
 }
