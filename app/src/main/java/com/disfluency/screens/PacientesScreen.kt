@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
@@ -13,9 +12,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.disfluency.R
-import java.time.LocalDate
-import java.time.Period
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,54 +22,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.disfluency.data.PatientRepository
+import com.disfluency.model.Patient
 
-data class Paciente(val nombre: String,
-                    val apellido: String,
-                    val fechaNac: LocalDate,
-                    val drawable: Int)
-
-val pacientesList = listOf<Paciente>(
-    Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
-    Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
-    Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
-    Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
-    Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
-    Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
-    Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
-    Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
-    Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
-    Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
-    Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
-    Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
-    Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
-    Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
-    Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
-    Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
-    Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
-    Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
-    Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
-    Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
-    Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli)
-)
 
 @Composable
 fun PacientesScreen() {
     Column {
         SearchBar()
-        PacientesList(pacientesList)
+        PacientesList(PatientRepository.testList)
     }
     PacienteCreation()
 }
 
 @Composable
-fun PacientesList(pacientes: List<Paciente>) {
+fun PacientesList(pacientes: List<Patient>) {
     LazyColumn {
         items(pacientes) {paciente ->
             PacienteCard(paciente)
@@ -121,12 +84,12 @@ fun SearchBar() {
 }
 
 @Composable
-fun PacienteCard(paciente: Paciente) {
+fun PacienteCard(paciente: Patient) {
     Row(modifier = Modifier
         .padding(all = 8.dp)
         .fillMaxWidth()) {
         Image(
-            painter = painterResource(paciente.drawable),
+            painter = painterResource(paciente.profilePic),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
@@ -136,7 +99,7 @@ fun PacienteCard(paciente: Paciente) {
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = paciente.apellido+", "+paciente.nombre,
+                text = paciente.fullName(),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -144,10 +107,7 @@ fun PacienteCard(paciente: Paciente) {
 
             Surface(shape = MaterialTheme.shapes.medium) {
                 Text(
-                    text = Period.between(
-                            paciente.fechaNac,
-                            LocalDate.now()
-                        ).years.toString() + " años",
+                    text = paciente.age().toString()+ " años",
                     modifier = Modifier.padding(all = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )
