@@ -35,31 +35,31 @@ data class Paciente(val nombre: String,
 val pacientesList = listOf<Paciente>(
     Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
     Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Arzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
+    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
     Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
     Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
     Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Arzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
+    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
     Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
     Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
     Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Arzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
+    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
     Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
     Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
     Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Arzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
+    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
     Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
     Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
     Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Arzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
+    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
     Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
     Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
     Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Arzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
+    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
     Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli),
     Paciente("José", "Bruzzoni", LocalDate.parse("1997-11-08"), R.drawable.yo),
     Paciente("Agustín", "Cragno", LocalDate.parse("1999-11-08"), R.drawable.agus),
-    Paciente("Matias", "Arzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
+    Paciente("Matias", "Anzorandia", LocalDate.parse("1998-11-08"), R.drawable.matias),
     Paciente("Julian", "Simaro", LocalDate.parse("1995-11-08"), R.drawable.juli)
 )
 
@@ -137,7 +137,6 @@ fun PacienteCard(paciente: Paciente) {
         Column {
             Text(
                 text = paciente.apellido+", "+paciente.nombre,
-                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -167,7 +166,6 @@ fun PacienteCreation() {
     ) {
         FloatingActionButton(
             onClick = { /* do something */ },
-            containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(16.dp),
         ) {
             Icon(Icons.Filled.Add, "Creacion")
