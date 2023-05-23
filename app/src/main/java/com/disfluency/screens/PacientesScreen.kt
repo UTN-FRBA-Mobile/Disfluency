@@ -3,29 +3,30 @@ package com.disfluency.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.disfluency.R
-import java.time.LocalDate
-import java.time.Period
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.disfluency.R
+import com.disfluency.navigation.Route
+import java.time.LocalDate
+import java.time.Period
 
 data class Paciente(val nombre: String,
                     val apellido: String,
@@ -64,19 +65,19 @@ val pacientesList = listOf<Paciente>(
 )
 
 @Composable
-fun PacientesScreen() {
+fun PacientesScreen(navController: NavHostController) {
     Column {
-        SearchBar()
-        PacientesList(pacientesList)
+        SearchBar() //TODO: ver de usar la SearchBar de material
+        PacientesList(pacientesList, navController)
     }
-    PacienteCreation()
+    PacienteCreation(navController)
 }
 
 @Composable
-fun PacientesList(pacientes: List<Paciente>) {
+fun PacientesList(pacientes: List<Paciente>, navController: NavHostController) {
     LazyColumn {
         items(pacientes) {paciente ->
-            PacienteCard(paciente)
+            PacienteCard(paciente, navController)
         }
     }
 }
@@ -121,10 +122,17 @@ fun SearchBar() {
 }
 
 @Composable
-fun PacienteCard(paciente: Paciente) {
-    Row(modifier = Modifier
-        .padding(all = 8.dp)
-        .fillMaxWidth()) {
+fun PacienteCard(paciente: Paciente, navController: NavHostController) {
+    val onClick = {
+        navController.navigate(Route.Paciente.routeTo(paciente.nombre))
+    }
+
+    Row(
+        modifier = Modifier
+            .padding(all = 8.dp)
+            .fillMaxWidth()
+            .clickable { onClick() }
+    ) {
         Image(
             painter = painterResource(paciente.drawable),
             contentDescription = null,
@@ -136,7 +144,7 @@ fun PacienteCard(paciente: Paciente) {
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = paciente.apellido+", "+paciente.nombre,
+                text = "${paciente.apellido}, ${paciente.nombre}",
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -145,27 +153,28 @@ fun PacienteCard(paciente: Paciente) {
             Surface(shape = MaterialTheme.shapes.medium) {
                 Text(
                     text = Period.between(
-                            paciente.fechaNac,
-                            LocalDate.now()
-                        ).years.toString() + " años",
+                        paciente.fechaNac,
+                        LocalDate.now()
+                    ).years.toString() + " años",
                     modifier = Modifier.padding(all = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )
             }
         }
-
     }
+
 }
 
-@Preview(showBackground = true)
 @Composable
-fun PacienteCreation() {
+fun PacienteCreation(navController: NavHostController) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
     ) {
         FloatingActionButton(
-            onClick = { /* do something */ },
+            onClick = {
+                navController.navigate(Route.NuevoPaciente.route)
+            },
             modifier = Modifier.padding(16.dp),
         ) {
             Icon(Icons.Filled.Add, "Creacion")
