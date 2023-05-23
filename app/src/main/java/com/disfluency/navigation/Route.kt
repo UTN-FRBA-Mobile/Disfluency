@@ -6,7 +6,7 @@ sealed class Route(val route: String, val title: String){
     object Cuestionarios: Route("cuestionarios", "Cuestionarios")
     object Ejercicios: Route("ejercicios", "Ejercicios")
     object Paciente: Route("paciente/{id}", "Detalle del Paciente"){
-        fun routeTo(idPaciente: String): String{
+        fun routeTo(idPaciente: Int): String{
             return "paciente/$idPaciente"
         }
     }

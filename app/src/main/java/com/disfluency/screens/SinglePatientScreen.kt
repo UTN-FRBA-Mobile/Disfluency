@@ -11,10 +11,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.disfluency.data.PacienteRepository
 
 @Composable
-fun SinglePatientScreen(id: String) {
-
+fun SinglePatientScreen(id: Int) {
+    val paciente = PacienteRepository.getPacienteById(id)
 
     Column(
         modifier = Modifier
@@ -22,7 +23,7 @@ fun SinglePatientScreen(id: String) {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Pantalla de paciente: $id",
+            text = "Pantalla de paciente: ${paciente.name}",
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
             modifier = Modifier.align(Alignment.CenterHorizontally),

@@ -31,7 +31,7 @@ fun NavigationGraph(navController: NavHostController) {
             route = Route.Paciente.route,
             arguments = listOf(navArgument("id") {  })
         ) { backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(it) }
+            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(it.toInt()) }
         }
         composable(Route.NuevoPaciente.route) {
             FormNewPatient()
