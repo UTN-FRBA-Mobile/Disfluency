@@ -1,6 +1,5 @@
 package com.disfluency.screens
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,85 +7,87 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.semantics.isContainer
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.disfluency.data.PacienteRepository
 import com.disfluency.model.Paciente
 import com.disfluency.navigation.Route
 
-
 @Composable
 fun PacientesScreen(navController: NavHostController) {
-    Column {
-        SearchBar() //TODO: ver de usar la SearchBar de material
-        PacientesList(PacienteRepository.longListForTest, navController)
+    var text by rememberSaveable { mutableStateOf("") }
+    var active by rememberSaveable { mutableStateOf(false) }
+    Column(modifier = Modifier.fillMaxSize()) {
+        Box(
+            Modifier
+                .semantics { isContainer = true }
+                .zIndex(1f)
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)) {
+            SearchBar(
+                modifier = Modifier.align(Alignment.TopCenter),
+                query = text,
+                onQueryChange = { text = it },
+                onSearch = { active = false },
+                active = active,
+                onActiveChange = {
+                    active = it
+                },
+                placeholder = { Text("Buscar paciente") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            ) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Ultimas 5 busquedas?
+                    items(4) { idx ->
+                        val resultText = "Suggestion $idx"
+                        ListItem(
+                            headlineContent = { Text(resultText) },
+                            modifier = Modifier.clickable {
+                                text = resultText
+                                active = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
+        PacientesList(PacienteRepository.longListForTest, navController, text)
     }
     PacienteCreation(navController)
 }
 
 @Composable
-fun PacientesList(pacientes: List<Paciente>, navController: NavHostController) {
-    LazyColumn {
-        items(pacientes) {paciente ->
+fun PacientesList(pacientes: List<Paciente>, navController: NavHostController, filter: String) {
+    LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(pacientes.filter {
+                paciente -> paciente.fullName().contains(filter, true) }) {paciente ->
             PacienteCard(paciente, navController)
         }
     }
 }
 
-
-@Composable
-fun SearchBar() {
-    var searchTerm by remember { mutableStateOf("") }
-    TextField(
-        modifier = Modifier
-            .fillMaxWidth(),
-        value = searchTerm,
-        onValueChange = { searchTerm = it },
-        placeholder = { Text(text = "Buscar") },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Buscador"
-            )
-        },
-        trailingIcon = {
-            if (searchTerm.isNotEmpty()) {
-                IconButton(
-                    onClick = { searchTerm = "" },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Borrar busqueda"
-                    )
-                }
-            }
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Search
-        ),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        singleLine = true
-    )
-}
-
 @Composable
 fun PacienteCard(paciente: Paciente, navController: NavHostController) {
+    // Refactor a ListItem?
     val onClick = {
         navController.navigate(Route.Paciente.routeTo(paciente.id))
     }
