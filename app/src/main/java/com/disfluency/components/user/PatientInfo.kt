@@ -23,6 +23,7 @@ import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PatientInfoCard(patient: Patient){
     Card(
@@ -32,7 +33,7 @@ fun PatientInfoCard(patient: Patient){
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.padding(top = 20.dp, bottom = 20.dp, start = 16.dp, end = 16.dp)
+            modifier = Modifier.height(122.dp).padding(16.dp)
         ) {
             Image(
                 painter = painterResource(id = patient.profilePic),
@@ -40,20 +41,21 @@ fun PatientInfoCard(patient: Patient){
                 modifier = Modifier.size(90.dp)
             )
 
-            //TODO: que se ajuste el texto cuando no hay espacio
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.fillMaxSize().padding(start = 16.dp),
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = patient.fullName(),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 2
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Row {
+                FlowRow {
                     IconLabeled(
                         icon = Icons.Outlined.CalendarMonth,
                         label = patient.weeklyTurn,
@@ -75,20 +77,22 @@ fun PatientInfoCard(patient: Patient){
 
 @Composable
 fun IconLabeled(icon: ImageVector, label: String, content: String){
-    Icon(
-        imageVector = icon,
-        contentDescription = content,
-        modifier = Modifier.size(20.dp)
-    )
-    Text(
-        text = label,
-        style = MaterialTheme.typography.labelMedium,
-        color = Color.Black,
-        modifier = Modifier
-            .padding(start = 2.dp)
-            .height(20.dp)
-            .wrapContentHeight()
-    )
+    Row {
+        Icon(
+            imageVector = icon,
+            contentDescription = content,
+            modifier = Modifier.size(20.dp)
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(start = 2.dp)
+                .height(20.dp)
+                .wrapContentHeight()
+        )
+    }
 }
 
 @Preview(showBackground = true)
