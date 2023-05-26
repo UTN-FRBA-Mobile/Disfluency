@@ -4,7 +4,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Assignment
 import androidx.compose.material.icons.outlined.Mic
@@ -20,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +40,9 @@ fun SinglePatientScreen(id: Int){
     val patient = PatientRepository.getPatientById(id)
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         PatientInfoCard(patient = patient)
@@ -108,7 +113,9 @@ fun ActivitiesOverview(patient: Patient){
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp)
+            .height(248.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
@@ -129,7 +136,9 @@ fun ActivityOverviewCard(title: String, number: Int){
             .fillMaxWidth(),
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
@@ -141,17 +150,18 @@ fun ActivityOverviewCard(title: String, number: Int){
                 Box(contentAlignment = Center){
                     Text(
                         text = number.toString(),
-                        style = TextStyle(color = Color.White, fontSize = 20.sp)
+                        style = TextStyle(color = Color.White, fontSize = 18.sp)
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.width(10.dp))
 
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
-                    .padding(start = 16.dp)
                     .fillMaxHeight()
                     .wrapContentHeight(),
                 maxLines = 2,
