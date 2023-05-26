@@ -8,26 +8,33 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.disfluency.screens.CuestionariosScreen
-import com.disfluency.screens.EjerciciosScreen
-import com.disfluency.screens.HomeScreen
-import com.disfluency.screens.PacientesScreen
+import androidx.navigation.navArgument
+import com.disfluency.screens.*
 
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
-    NavHost(navController, startDestination = BottomNavigationItem.Home.screenRoute) {
-        composable(BottomNavigationItem.Home.screenRoute) {
+    NavHost(navController, startDestination = BottomNavigationItem.Home.screenRoute.route) {
+        composable(BottomNavigationItem.Home.screenRoute.route) {
             HomeScreen()
         }
-        composable(BottomNavigationItem.Pacientes.screenRoute) {
-            PacientesScreen()
+        composable(BottomNavigationItem.Pacientes.screenRoute.route) {
+            PacientesScreen(navController)
         }
-        composable(BottomNavigationItem.Ejercicios.screenRoute) {
+        composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
             EjerciciosScreen()
         }
-        composable(BottomNavigationItem.Cuestionarios.screenRoute) {
+        composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
             CuestionariosScreen()
+        }
+        composable(
+            route = Route.Paciente.route,
+            arguments = listOf(navArgument("id") {  })
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(it.toInt()) }
+        }
+        composable(Route.NuevoPaciente.route) {
+            FormNewPatient()
         }
     }
 }
@@ -48,11 +55,11 @@ fun BottomNavigation(navController: NavController) {
         items.forEach { item ->
 
             NavigationBarItem(
-                selected = currentRoute == item.screenRoute,
-                icon = { Icon(item.icon, contentDescription = item.title) },
-                label = { Text(text = item.title) },
+                selected = currentRoute == item.screenRoute.route,
+                icon = { Icon(item.icon, contentDescription = item.screenRoute.title) },
+                label = { Text(text = item.screenRoute.title) },
                 onClick = {
-                    navController.navigate(item.screenRoute) {
+                    navController.navigate(item.screenRoute.route) {
 
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
