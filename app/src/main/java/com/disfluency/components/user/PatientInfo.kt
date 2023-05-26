@@ -35,7 +35,7 @@ fun PatientInfoCard(patient: Patient){
             modifier = Modifier.padding(top = 20.dp, bottom = 20.dp, start = 16.dp, end = 16.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.avatar_26),
+                painter = painterResource(id = patient.profilePic),
                 contentDescription = "User Thumbnail",
                 modifier = Modifier.size(90.dp)
             )

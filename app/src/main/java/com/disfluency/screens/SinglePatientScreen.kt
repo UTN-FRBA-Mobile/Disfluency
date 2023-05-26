@@ -4,9 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Assignment
 import androidx.compose.material.icons.outlined.Mic
@@ -35,7 +33,9 @@ import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
 
 @Composable
-fun SinglePatientScreen(patient: Patient){
+fun SinglePatientScreen(id: Int){
+    val patient = PatientRepository.getPatientById(id)
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -167,7 +167,7 @@ fun ActivityOverviewCard(title: String, number: Int){
 @Composable
 fun SinglePatientScreenPreview(){
     MyApplicationTheme() {
-        SinglePatientScreen(patient = PatientRepository.testPatient)
+        SinglePatientScreen(id = 40123864)
     }
 }
 
