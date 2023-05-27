@@ -30,8 +30,26 @@ fun NavigationGraph(navController: NavHostController) {
         composable(
             route = Route.Paciente.route,
             arguments = listOf(navArgument("id") {  })
-        ) { backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(it.toInt()) }
+        ) { backStackEntry -> //TODO: ver si hay forma de no tener que hacer el pasamanos de navController
+            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(id = it.toInt(), navController = navController) }
+        }
+        composable(
+            route = Route.PatientExercises.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { PatientExercisesScreen(id = it.toInt()) }
+        }
+        composable(
+            route = Route.PatientQuestionnaires.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { PatientQuestionnairesScreen(id = it.toInt()) }
+        }
+        composable(
+            route = Route.PatientSessions.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it.toInt()) }
         }
         composable(Route.NuevoPaciente.route) {
             FormNewPatient()

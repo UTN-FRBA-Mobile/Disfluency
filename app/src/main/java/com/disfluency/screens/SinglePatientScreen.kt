@@ -22,10 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.grid.TwoColumnGridItemSpan
 import com.disfluency.components.user.PatientInfoCard
 import com.disfluency.data.ExerciseRepository
@@ -33,10 +34,11 @@ import com.disfluency.data.PatientRepository
 import com.disfluency.data.QuestionnaireRepository
 import com.disfluency.data.TherapySessionRepository
 import com.disfluency.model.Patient
+import com.disfluency.navigation.Route
 import com.disfluency.ui.theme.MyApplicationTheme
 
 @Composable
-fun SinglePatientScreen(id: Int){
+fun SinglePatientScreen(id: Int, navController: NavController){
     val patient = PatientRepository.getPatientById(id)
 
     Column(
@@ -46,33 +48,33 @@ fun SinglePatientScreen(id: Int){
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         PatientInfoCard(patient = patient)
-        ButtonPanel(patient = patient)
+        ButtonPanel(patient = patient, navController = navController)
         ActivitiesOverview(patient = patient)
     }
 }
 
 
 @Composable
-fun ButtonPanel(patient: Patient){
+fun ButtonPanel(patient: Patient, navController: NavController){
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        ActivityButton(patient = patient, title = "Ejercicios", icon = Icons.Outlined.RecordVoiceOver)
-        ActivityButton(patient = patient, title = "Cuestionarios", icon = Icons.Outlined.Assignment)
-        ActivityButton(patient = patient, title = "Sesiones", icon = Icons.Outlined.Mic)
+        ActivityButton(title = "Ejercicios", icon = Icons.Outlined.RecordVoiceOver, onClick = { navController.navigate(Route.PatientExercises.routeTo(patient.id)) })
+        ActivityButton(title = "Cuestionarios", icon = Icons.Outlined.Assignment, onClick = { navController.navigate(Route.PatientQuestionnaires.routeTo(patient.id)) })
+        ActivityButton(title = "Sesiones", icon = Icons.Outlined.Mic, onClick = { navController.navigate(Route.PatientSessions.routeTo(patient.id)) })
     }
 }
 
 @Composable
-fun ActivityButton(patient: Patient, title: String, icon: ImageVector){
+fun ActivityButton(title: String, icon: ImageVector, onClick: () -> Unit){
     Column(
         horizontalAlignment = CenterHorizontally
     ) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onClick,
             modifier = Modifier.size(42.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary
@@ -177,7 +179,7 @@ fun ActivityOverviewCard(title: String, number: Int){
 @Composable
 fun SinglePatientScreenPreview(){
     MyApplicationTheme() {
-        SinglePatientScreen(id = 40123864)
+        SinglePatientScreen(id = 40123864, rememberNavController())
     }
 }
 
