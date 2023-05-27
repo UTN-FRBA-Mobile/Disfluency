@@ -1,5 +1,6 @@
 package com.disfluency
 
+import org.hamcrest.CoreMatchers
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -9,6 +10,13 @@ import org.junit.Assert.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+
+sealed class State
+
+object StateA: State()
+object StateB: State()
+object StateC: State()
+
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
