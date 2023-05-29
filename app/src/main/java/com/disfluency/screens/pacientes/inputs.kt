@@ -37,6 +37,69 @@ fun inputString(label: String, validations: List<(String)->Boolean> = Collection
 }
 
 @Composable
+fun inputDate(label: String): Input<LocalDate?>{
+    var dateValue: LocalDate? by remember {
+        mutableStateOf(null)
+    }
+    var formattedValue by rememberSaveable {
+        mutableStateOf("")
+    }
+
+    val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
+    var openDialog by remember {mutableStateOf(false)}
+
+    /* * * * */
+    val disableDialog = {openDialog = false}
+    var input: Input<LocalDate?>? = null
+
+    Box {
+        input = input(
+            label = label
+            , getRealValue = {dateValue}
+            , formattedValue = {formattedValue}, onValueChange = {}
+            , trailingIcon = {DateIcon()}
+        )
+
+        Box(modifier = Modifier
+            .matchParentSize()
+            .clickable { openDialog = true })
+    }
+
+    if (openDialog) {
+        DatePickerDialog(
+            onDismissRequest = disableDialog,
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        dateValue = millisecondsToLocalDate(datePickerState.selectedDateMillis!!)
+                        formattedValue = dateValue!!.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
+                        input?.validate()
+                        disableDialog()
+                    }
+                    , enabled = datePickerState.selectedDateMillis!=null
+                ) {
+                    Text("Ok")
+                }
+            },
+            dismissButton = {
+                TextButton(disableDialog) {
+                    Text("Cancelar")
+                }
+            },
+            content = {DatePicker(state = datePickerState, title = null, headline = null, showModeToggle = true)}
+        )
+    }
+
+    return input!!
+}
+
+fun millisecondsToLocalDate(milliseconds: Long): LocalDate{
+    return Instant.ofEpochMilli(milliseconds)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+}
+
+@Composable
 fun <T> input(
     formattedValue: ()->String, getRealValue: ()->T
     , enabled: Boolean = true
@@ -74,71 +137,10 @@ fun <T> input(
 
 @Composable
 fun ErrorIcon(){
-    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
+    Icon(Icons.Filled.Info, "Error")
 }
 
 @Composable
 fun DateIcon(){
     Icon(Icons.Filled.CalendarToday, "Fecha", tint = MaterialTheme.colorScheme.primary)
-}
-
-@Composable
-fun inputDate(label: String): Input<LocalDate?>{
-    var dateValue: LocalDate? by remember {
-        mutableStateOf(null)
-    }
-    var formattedValue by rememberSaveable {
-        mutableStateOf("")
-    }
-
-    val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
-    var openDialog by remember {mutableStateOf(false)}
-
-    /* * * * */
-    val disableDialog = {openDialog = false}
-    var input: Input<LocalDate?>? = null
-
-    Box {
-        input = input(
-            label = label
-            , getRealValue = {dateValue}
-            , formattedValue = {formattedValue}, onValueChange = {}
-            , trailingIcon = {DateIcon()}
-        )
-
-        Box(modifier =  Modifier.matchParentSize().clickable {openDialog = true })
-    }
-
-    if (openDialog) {
-        DatePickerDialog(
-            onDismissRequest = disableDialog,
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        dateValue = millisecondsToLocalDate(datePickerState.selectedDateMillis!!)
-                        formattedValue = dateValue!!.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-                        input?.validate()
-                        disableDialog()
-                    }
-                    , enabled = datePickerState.selectedDateMillis!=null
-                ) {
-                    Text("Ok")
-                }
-            },
-            dismissButton = {
-                TextButton(disableDialog) {
-                    Text("Cancelar")
-                }
-            },
-            content = {DatePicker(state = datePickerState, title = null, headline = null, showModeToggle = false)}
-        )
-    }
-
-    return input!!
-}
-
-fun millisecondsToLocalDate(milliseconds: Long): LocalDate{
-    return Instant.ofEpochMilli(milliseconds)
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()
 }
