@@ -3,7 +3,6 @@ package com.disfluency.screens.pacientes
 import androidx.compose.ui.tooling.preview.Preview
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -14,8 +13,8 @@ import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 //TODO: Investigar context, ver si vale la pena usar corrutinas
@@ -23,41 +22,35 @@ import androidx.compose.ui.unit.dp
 @Preview
 @Composable
 fun inputImage(): Input<Bitmap?>{
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var imageAsBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var image by remember { mutableStateOf<Bitmap?>(null) }
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) {
-        imageUri = it
-        if(imageUri != null) {
-            val source = ImageDecoder.createSource(context.contentResolver, imageUri!!)
-            imageAsBitmap = ImageDecoder.decodeBitmap(source)
+        if(it != null) {
+            val source = ImageDecoder.createSource(context.contentResolver, it)
+            image = ImageDecoder.decodeBitmap(source)
         }
     }
+    val buttonModifier = Modifier.size(150.dp).background(
+        color = MaterialTheme.colorScheme.primary
+        , shape = CircleShape
+    )
 
-    val onClick = { launcher.launch("image/*") }
-
-     val modifier = Modifier
-         .size(150.dp)
-         .border(border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary), shape = CircleShape)
-
-    if(imageUri == null){
-        Button(onClick, modifier) {
+    IconButton(
+        onClick = { launcher.launch("image/*") }
+        , buttonModifier
+    ) {
+        if(image == null){
             Icon(Icons.Outlined.Photo, "Add photo", tint = MaterialTheme.colorScheme.inverseSurface, modifier = Modifier.size(60.dp))
-        }
-    } else{
-        imageAsBitmap?.let {
+        } else{
             Image(
-                bitmap = it.asImageBitmap(),
-                contentDescription = "Selected Image"
-                , modifier = modifier
-                    .clip(CircleShape)
-                    .clickable(onClick = onClick)
-                    .background(color = MaterialTheme.colorScheme.primary)
+                bitmap = image!!.asImageBitmap()
+                , contentDescription = "Selected Image"
+                , contentScale = ContentScale.FillBounds
             )
         }
     }
 
-    return Input(imageAsBitmap, {false}, {})
+    return Input(image, {false}, {})
 }

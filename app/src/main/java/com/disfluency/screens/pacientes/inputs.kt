@@ -130,6 +130,9 @@ fun <T> input(
         , keyboardOptions = keyboardOptions
         , enabled = enabled
         , modifier = modifier
+        /*, supportingText = {
+            if (wrongValue && formattedValue().isNotBlank()) Text("Ingrese un $label valido")
+        }*/
     )
 
     return Input(getRealValue(), {wrongValue}, validate)

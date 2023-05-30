@@ -1,6 +1,8 @@
 package com.disfluency.screens.pacientes
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -21,9 +23,11 @@ fun PacientesScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .wrapContentSize(Alignment.Center)
     ) {
         if(displayedNewPatient){
+
             Column(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
