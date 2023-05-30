@@ -2,6 +2,7 @@ package com.disfluency.screens.pacientes
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
@@ -15,7 +16,6 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Collections
-
 data class Input<T>(val value: T, val wrongValue: ()->Boolean, val validate: (T)->Unit){
     fun validate() {
         validate(value)
@@ -37,7 +37,7 @@ fun inputString(label: String, validations: List<(String)->Boolean> = Collection
 }
 
 @Composable
-fun inputDate(label: String): Input<LocalDate?>{
+fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?>{
     var dateValue: LocalDate? by remember {
         mutableStateOf(null)
     }
@@ -86,7 +86,10 @@ fun inputDate(label: String): Input<LocalDate?>{
                     Text("Cancelar")
                 }
             },
-            content = {DatePicker(state = datePickerState, title = null, headline = null, showModeToggle = true)}
+            content = {DatePicker(state = datePickerState, title = null, headline = null, showModeToggle = true, dateValidator = {
+                val date = millisecondsToLocalDate(it)
+                maxDate!=null && date.isBefore(maxDate)
+            })}
         )
     }
 
@@ -130,9 +133,11 @@ fun <T> input(
         , keyboardOptions = keyboardOptions
         , enabled = enabled
         , modifier = modifier
-        /*, supportingText = {
-            if (wrongValue && formattedValue().isNotBlank()) Text("Ingrese un $label valido")
-        }*/
+        , supportingText = {
+            if(wrongValue)
+                if(formattedValue().isBlank()) Text(text = "Este campo es requerido")
+                else Text("Ingrese un $label válido")
+        }
     )
 
     return Input(getRealValue(), {wrongValue}, validate)

@@ -38,7 +38,7 @@ fun FormNewPatient(onSubmit: (_: Patient) -> Unit) {
 
     val todaysDate = LocalDate.now()
 
-    val patientBirthDate = inputDate("Fecha de Nacimiento")
+    val patientBirthDate = inputDate("Fecha de Nacimiento", maxDate = todaysDate)
 
 
     Button(
