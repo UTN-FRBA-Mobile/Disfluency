@@ -8,12 +8,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,8 +25,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.disfluency.data.PacienteRepository
-import com.disfluency.model.Paciente
+import com.disfluency.data.PatientRepository
+import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 
 @Composable
@@ -69,13 +71,13 @@ fun PacientesScreen(navController: NavHostController) {
                 }
             }
         }
-        PacientesList(PacienteRepository.longListForTest, navController, text)
+        PacientesList(PatientRepository.longListForTest, navController, text)
     }
     PacienteCreation(navController)
 }
 
 @Composable
-fun PacientesList(pacientes: List<Paciente>, navController: NavHostController, filter: String) {
+fun PacientesList(pacientes: List<Patient>, navController: NavHostController, filter: String) {
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(pacientes.filter {
@@ -86,7 +88,7 @@ fun PacientesList(pacientes: List<Paciente>, navController: NavHostController, f
 }
 
 @Composable
-fun PacienteCard(paciente: Paciente, navController: NavHostController) {
+fun PacienteCard(paciente: Patient, navController: NavHostController) {
     // Refactor a ListItem?
     val onClick = {
         navController.navigate(Route.Paciente.routeTo(paciente.id))

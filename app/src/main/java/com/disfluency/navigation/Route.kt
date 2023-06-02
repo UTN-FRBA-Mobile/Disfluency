@@ -11,17 +11,29 @@ sealed class Route(val route: String, val title: String){
         }
     }
     object NuevoPaciente: Route("nuevo-paciente", "Nuevo Paciente")
+
+    object PatientExercises: Route("paciente/{id}/ejercicios", "Ejercicios del Paciente"){
+        fun routeTo(patientId: Int): String{
+            return route.replace("{id}", patientId.toString())
+        }
+    }
+
+    object PatientQuestionnaires: Route("paciente/{id}/cuestionarios", "Cuestionarios del Paciente"){
+        fun routeTo(patientId: Int): String{
+            return route.replace("{id}", patientId.toString())
+        }
+    }
+
+    object PatientSessions: Route("paciente/{id}/sesiones", "Sesiones del Paciente"){
+        fun routeTo(patientId: Int): String{
+            return route.replace("{id}", patientId.toString())
+        }
+    }
 }
 
 fun getItemByRoute(route: String?): Route{
-    val items = listOf(
-        Route.Home,
-        Route.Pacientes,
-        Route.Cuestionarios,
-        Route.Ejercicios,
-        Route.Paciente,
-        Route.NuevoPaciente
-    )
+    //TODO: ver si hay forma de que esta lista se arme al compilar y no cada vez que se llama al metodo
+    val items = Route::class.nestedClasses.map { it.objectInstance as Route }
 
     if (route == null) return Route.Home
     return items.first { item -> item.route == route }

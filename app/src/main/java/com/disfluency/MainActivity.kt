@@ -12,6 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.disfluency.navigation.AppNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
 
+//TODO: migrar a ingles en todo lo que dejamos en español
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
