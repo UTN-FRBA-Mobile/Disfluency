@@ -1,14 +1,21 @@
 package com.disfluency.navigation
 
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.disfluency.components.text.AdjustableSizeText
+import com.disfluency.components.text.TEXT_SCALE_REDUCTION_INTERVAL
 import com.disfluency.screens.*
 
 
@@ -66,6 +73,11 @@ fun BottomNavigation(navController: NavController) {
         BottomNavigationItem.Cuestionarios
     )
 
+    var textSize by remember { mutableStateOf(15.sp) }
+    val onSizeChange = {
+        textSize = textSize.times(TEXT_SCALE_REDUCTION_INTERVAL)
+    }
+
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -75,7 +87,9 @@ fun BottomNavigation(navController: NavController) {
             NavigationBarItem(
                 selected = currentRoute == item.screenRoute.route,
                 icon = { Icon(item.icon, contentDescription = item.screenRoute.title) },
-                label = { Text(text = item.screenRoute.title) },
+                label = {
+                    AdjustableSizeText(text = item.screenRoute.title, textSize = textSize, onSizeChange = onSizeChange)
+                },
                 onClick = {
                     navController.navigate(item.screenRoute.route) {
 
@@ -92,3 +106,5 @@ fun BottomNavigation(navController: NavController) {
         }
     }
 }
+
+
