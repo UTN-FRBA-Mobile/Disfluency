@@ -1,12 +1,12 @@
 package com.disfluency.navigation
 
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -15,7 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.disfluency.components.text.AdjustableSizeText
-import com.disfluency.components.text.TEXT_SCALE_REDUCTION_INTERVAL
+import com.disfluency.components.text.AdjustableSizeUnit
 import com.disfluency.screens.*
 
 
@@ -73,10 +73,7 @@ fun BottomNavigation(navController: NavController) {
         BottomNavigationItem.Cuestionarios
     )
 
-    var textSize by remember { mutableStateOf(15.sp) }
-    val onSizeChange = {
-        textSize = textSize.times(TEXT_SCALE_REDUCTION_INTERVAL)
-    }
+    val textSize by remember { mutableStateOf(AdjustableSizeUnit(15.sp)) }
 
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -88,7 +85,7 @@ fun BottomNavigation(navController: NavController) {
                 selected = currentRoute == item.screenRoute.route,
                 icon = { Icon(item.icon, contentDescription = item.screenRoute.title) },
                 label = {
-                    AdjustableSizeText(text = item.screenRoute.title, textSize = textSize, onSizeChange = onSizeChange)
+                    AdjustableSizeText(text = item.screenRoute.title, adjustableSize = textSize)
                 },
                 onClick = {
                     navController.navigate(item.screenRoute.route) {
