@@ -1,4 +1,4 @@
-package com.disfluency.screens.pacientes
+package com.disfluency.components.inputs
 
 import androidx.compose.ui.tooling.preview.Preview
 import android.graphics.Bitmap
@@ -9,19 +9,24 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.disfluency.R
+
 //TODO: Investigar context, ver si vale la pena usar corrutinas
 
 @Preview
 @Composable
-fun inputImage(): Input<Bitmap?>{
+fun inputImage(): Input<Bitmap?> {
     var image by remember { mutableStateOf<Bitmap?>(null) }
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
@@ -32,22 +37,28 @@ fun inputImage(): Input<Bitmap?>{
             image = ImageDecoder.decodeBitmap(source)
         }
     }
-    val buttonModifier = Modifier.size(150.dp).background(
-        color = MaterialTheme.colorScheme.primary
-        , shape = CircleShape
-    )
 
-    IconButton(
-        onClick = { launcher.launch("image/*") }
-        , buttonModifier
-    ) {
-        if(image == null){
-            Icon(Icons.Outlined.Photo, "Add photo", tint = MaterialTheme.colorScheme.inverseSurface, modifier = Modifier.size(60.dp))
-        } else{
+    val onClick = { launcher.launch("image/*") }
+    val buttonModifier = Modifier.size(150.dp)
+
+    if(image == null){
+        //Icon(Icons.Outlined.AccountCircle, "Add photo", tint = MaterialTheme.colorScheme.inverseSurface, modifier = Modifier.fillMaxSize())
+        Image(
+            painter = painterResource(id = R.drawable.add_image),
+            contentDescription = "Add photo",
+            modifier = buttonModifier.clickable(onClick = onClick)
+        )
+    } else{
+        IconButton(onClick = onClick
+            , modifier = buttonModifier.background(
+                color = MaterialTheme.colorScheme.primary
+                , shape = CircleShape
+            )
+        ){
             Image(
-                bitmap = image!!.asImageBitmap()
-                , contentDescription = "Selected Image"
-                , contentScale = ContentScale.FillBounds
+                bitmap = image!!.asImageBitmap(),
+                contentDescription = "Change Image",
+                contentScale = ContentScale.FillBounds
             )
         }
     }

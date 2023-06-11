@@ -1,4 +1,4 @@
-package com.disfluency.screens.pacientes
+package com.disfluency.components.inputs
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,7 +23,7 @@ data class Input<T>(val value: T, val wrongValue: ()->Boolean, val validate: (T)
 }
 
 @Composable
-fun inputString(label: String, validations: List<(String)->Boolean> = Collections.emptyList(), keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Input<String>{
+fun inputString(label: String, validations: List<(String)->Boolean> = Collections.emptyList(), keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Input<String> {
     var value by remember { mutableStateOf("") }
 
     return input(
@@ -37,7 +37,7 @@ fun inputString(label: String, validations: List<(String)->Boolean> = Collection
 }
 
 @Composable
-fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?>{
+fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?> {
     var dateValue: LocalDate? by remember {
         mutableStateOf(null)
     }
@@ -58,7 +58,7 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?>{
             getRealValue = {dateValue},
             formattedValue = {formattedValue},
             onValueChange = {},
-            trailingIcon = {DateIcon()}
+            trailingIcon = { DateIcon() }
         )
 
         Box(modifier = Modifier
@@ -112,7 +112,7 @@ fun <T> input(
     label: String,
     validations: List<((T) -> Boolean)> = listOf(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
-): Input<T>{
+): Input<T> {
 
     val valueAsString = formattedValue()
     var wrongValue: Boolean by remember { mutableStateOf(false) }
