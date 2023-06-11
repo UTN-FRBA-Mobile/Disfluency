@@ -2,7 +2,6 @@ package com.disfluency.screens.pacientes
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
@@ -14,6 +13,7 @@ import androidx.compose.ui.Modifier
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Collections
 data class Input<T>(val value: T, val wrongValue: ()->Boolean, val validate: (T)->Unit){
@@ -26,13 +26,13 @@ data class Input<T>(val value: T, val wrongValue: ()->Boolean, val validate: (T)
 fun inputString(label: String, validations: List<(String)->Boolean> = Collections.emptyList(), keyboardOptions: KeyboardOptions = KeyboardOptions.Default): Input<String>{
     var value by remember { mutableStateOf("") }
 
-    return input(formattedValue = {value}
-        , getRealValue = {value}
-        , onValueChange = {value = it}
-        , enabled = true
-        , label = label
-        , keyboardOptions = keyboardOptions
-        , validations = validations
+    return input(
+        formattedValue = {value},
+        getRealValue = {value},
+        onValueChange = {value = it},
+        label = label,
+        keyboardOptions = keyboardOptions,
+        validations = validations
     )
 }
 
@@ -54,10 +54,11 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?>{
 
     Box {
         input = input(
-            label = label
-            , getRealValue = {dateValue}
-            , formattedValue = {formattedValue}, onValueChange = {}
-            , trailingIcon = {DateIcon()}
+            label = label,
+            getRealValue = {dateValue},
+            formattedValue = {formattedValue},
+            onValueChange = {},
+            trailingIcon = {DateIcon()}
         )
 
         Box(modifier = Modifier
@@ -65,6 +66,7 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?>{
             .clickable { openDialog = true })
     }
 
+    val maxDateAsLong: Long? = maxDate?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli()
     if (openDialog) {
         DatePickerDialog(
             onDismissRequest = disableDialog,
@@ -75,8 +77,8 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?>{
                         formattedValue = dateValue!!.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
                         input?.validate()
                         disableDialog()
-                    }
-                    , enabled = datePickerState.selectedDateMillis!=null
+                    },
+                    enabled = datePickerState.selectedDateMillis!=null
                 ) {
                     Text("Ok")
                 }
@@ -87,8 +89,7 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?>{
                 }
             },
             content = {DatePicker(state = datePickerState, title = null, headline = null, showModeToggle = true, dateValidator = {
-                val date = millisecondsToLocalDate(it)
-                maxDate!=null && date.isBefore(maxDate)
+                maxDateAsLong!=null && it < maxDateAsLong
             })}
         )
     }
@@ -104,14 +105,13 @@ fun millisecondsToLocalDate(milliseconds: Long): LocalDate{
 
 @Composable
 fun <T> input(
-    formattedValue: ()->String, getRealValue: ()->T
-    , enabled: Boolean = true
-    , onValueChange: (String)->Unit
-    , modifier: Modifier = Modifier
-    , trailingIcon: @Composable ()->Unit={}
-    , label: String
-    , validations: List<((T) -> Boolean)> = listOf()
-    , keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    formattedValue: ()->String, getRealValue: ()->T,
+    enabled: Boolean = true,
+    onValueChange: (String)->Unit, modifier: Modifier = Modifier,
+    trailingIcon: @Composable ()->Unit={},
+    label: String,
+    validations: List<((T) -> Boolean)> = listOf(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ): Input<T>{
 
     val valueAsString = formattedValue()
@@ -121,19 +121,19 @@ fun <T> input(
     }
 
     OutlinedTextField(
-        value = valueAsString
-        , onValueChange = {
+        value = valueAsString,
+        onValueChange = {
             onValueChange(it)
             validate(getRealValue())
-        }
-        , label = { Text(label) }
-        , singleLine = true
-        , isError = wrongValue
-        , trailingIcon = {if (wrongValue) ErrorIcon() else trailingIcon()}
-        , keyboardOptions = keyboardOptions
-        , enabled = enabled
-        , modifier = modifier
-        , supportingText = {
+        },
+        label = { Text(label) },
+        singleLine = true,
+        isError = wrongValue,
+        trailingIcon = {if (wrongValue) ErrorIcon() else trailingIcon()},
+        keyboardOptions = keyboardOptions,
+        enabled = enabled,
+        modifier = modifier,
+        supportingText = {
             if(wrongValue)
                 if(formattedValue().isBlank()) Text(text = "Este campo es requerido")
                 else Text("Ingrese un $label válido")
