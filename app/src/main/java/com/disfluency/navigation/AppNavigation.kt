@@ -15,7 +15,7 @@ fun AppNavigation(){
         composable("splash"){
             SplashScreen(navController = navController)
         }
-        composable(BottomNavigationItem.Home.screenRoute){
+        composable(BottomNavigationItem.Home.screenRoute.route){
             AppScaffold()
         }
     }

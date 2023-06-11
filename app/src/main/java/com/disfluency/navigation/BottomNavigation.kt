@@ -11,23 +11,51 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.disfluency.screens.CuestionariosScreen
 import com.disfluency.screens.EjerciciosScreen
 import com.disfluency.screens.HomeScreen
-import com.disfluency.screens.pacientes.PacientesScreen
+import androidx.navigation.navArgument
+import com.disfluency.screens.*
 
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
-    NavHost(navController, startDestination = BottomNavigationItem.Home.screenRoute) {
-        composable(BottomNavigationItem.Home.screenRoute) {
+    NavHost(navController, startDestination = BottomNavigationItem.Home.screenRoute.route) {
+        composable(BottomNavigationItem.Home.screenRoute.route) {
             HomeScreen()
         }
-        composable(BottomNavigationItem.Pacientes.screenRoute) {
-            PacientesScreen()
+        composable(BottomNavigationItem.Pacientes.screenRoute.route) {
+            PacientesScreen(navController)
         }
-        composable(BottomNavigationItem.Ejercicios.screenRoute) {
+        composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
             EjerciciosScreen()
         }
-        composable(BottomNavigationItem.Cuestionarios.screenRoute) {
+        composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
             CuestionariosScreen()
+        }
+        composable(
+            route = Route.Paciente.route,
+            arguments = listOf(navArgument("id") {  })
+        ) { backStackEntry -> //TODO: ver si hay forma de no tener que hacer el pasamanos de navController
+            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(id = it.toInt(), navController = navController) }
+        }
+        composable(
+            route = Route.PatientExercises.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { PatientExercisesScreen(id = it.toInt()) }
+        }
+        composable(
+            route = Route.PatientQuestionnaires.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { PatientQuestionnairesScreen(id = it.toInt()) }
+        }
+        composable(
+            route = Route.PatientSessions.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it.toInt()) }
+        }
+        composable(Route.NuevoPaciente.route) {
+            FormNewPatient(navController)
         }
     }
 }
@@ -48,15 +76,15 @@ fun BottomNavigation(navController: NavController) {
         items.forEach { item ->
 
             NavigationBarItem(
-                selected = currentRoute == item.screenRoute,
-                icon = { Icon(item.icon, contentDescription = item.title) },
-                label = { Text(text = item.title) },
+                selected = currentRoute == item.screenRoute.route,
+                icon = { Icon(item.icon, contentDescription = item.screenRoute.title) },
+                label = { Text(text = item.screenRoute.title) },
                 onClick = {
-                    navController.navigate(item.screenRoute) {
+                    navController.navigate(item.screenRoute.route) {
 
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
-                                saveState = true
+                                saveState = false
                             }
                         }
                         launchSingleTop = true
