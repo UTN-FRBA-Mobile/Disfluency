@@ -16,12 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import com.disfluency.R
+import com.disfluency.components.inputs.*
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
-import com.disfluency.components.inputs.inputDate
-import com.disfluency.components.inputs.inputImage
-import com.disfluency.components.inputs.inputAsString
 import java.time.LocalDate
 
 @Composable
@@ -57,6 +55,10 @@ fun FormNewPatient(navController: NavController) {
         val todaysDate = LocalDate.now()
         val patientBirthDate = inputDate("Fecha de Nacimiento", maxDate = todaysDate)
 
+        //TODO: Validar
+        val weeklyTurn = remember{ mutableStateOf("") }
+        DummyDaysOfWeekCheckbox(label="Día/s Asignado/s", state = weeklyTurn)
+        
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -78,8 +80,8 @@ fun FormNewPatient(navController: NavController) {
                              */
                             email = email.value,
                             joinedSince = todaysDate,
-                            weeklyHour = "",
-                            weeklyTurn = "",
+                            weeklyHour = "18:00", //TODO
+                            weeklyTurn = weeklyTurn.value,
                             profilePic = R.drawable.avatar_12
                         )
                         PatientRepository.addPatient(patient)

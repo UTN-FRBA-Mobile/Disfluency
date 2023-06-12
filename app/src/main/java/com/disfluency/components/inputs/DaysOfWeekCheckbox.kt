@@ -1,22 +1,39 @@
 package com.disfluency.components.inputs
 
+import android.content.res.Resources.Theme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Text
-import androidx.compose.material3.TriStateCheckbox
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.util.*
 
 @Preview
 @Composable
-fun DaysOfWeekCheckbox() {
+fun Preview(){
+    val state = remember { mutableStateOf("") }
+    DummyDaysOfWeekCheckbox("Elegir", state = state)
+    Button(onClick = { print("\n\n\"$state\"\n\n\n") }) {}
+}
+
+@Composable
+fun DummyDaysOfWeekCheckbox(label: String, state: MutableState<String>){
+    Text(text = label, color = MaterialTheme.colorScheme.primary)
+    DaysOfWeekCheckbox{
+        state.value = if(it.size>1) {
+            "${it.dropLast(1).joinToString(", ")} y ${it.last()}"
+        } else it.joinToString()
+    }
+}
+
+@Composable
+fun DaysOfWeekCheckbox(onChange: (List<String>)->Unit) {
     //Uso '=' en lugar de 'by' para poder settear el value sin conocer la variable.
     val mondaysChecked = remember {mutableStateOf(false)}
     val tuesdaysChecked = remember {mutableStateOf(false)}
@@ -29,47 +46,64 @@ fun DaysOfWeekCheckbox() {
     val weekChecks = arrayOf(mondaysChecked, tuesdaysChecked, wednesdaysChecked, thursdaysChecked, fridaysChecked, sathurdaysChecked, sundaysChecked)
 
     val allDaysChecked = remember(*weekChecks.map {it.value}.toTypedArray()) {
-        if (weekChecks.all { it.value })  ToggleableState.On
+        if      (weekChecks.all { it.value })ToggleableState.On
         else if (weekChecks.all {!it.value}) ToggleableState.Off
         else ToggleableState.Indeterminate
     }
 
-    Column(horizontalAlignment = Alignment.Start) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            TriStateCheckbox(
-                state = allDaysChecked,
-                onClick = {
-                    val state = allDaysChecked != ToggleableState.On
+    val daysOfWeek = arrayOf(
+        "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"
+    )
 
-                    for (weekCheck in weekChecks) {
-                        weekCheck.value = state
-                    }
-                }
-            )
-            Text(
-                modifier = Modifier.padding(start = 2.dp),
-                text = "Todos los días"
-            )
+    val notifyChange = {
+        val checksAsStringList = LinkedList<String>()
+        weekChecks.forEachIndexed{
+            index, isChecked -> if(isChecked.value) checksAsStringList.add(daysOfWeek[index])
         }
 
-        val daysOfWeek = arrayOf(
-            "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"
-        )
+        onChange(checksAsStringList)
+    }
+
+    Column(horizontalAlignment = Alignment.Start, modifier = Modifier.width(275.dp)) {
+        CheckboxAllOptions(allDaysChecked, "Todos los días", weekChecks, notifyChange)
 
         val checkboxForDay = @Composable{
-                index: Int, checkbox: MutableState<Boolean> ->
-            CheckBoxItem(
-                checked = checkbox,
-                dayName = daysOfWeek[index],
-                onCheckedChange = { checkbox.value = it }
-            )
+            index: Int, checkbox: MutableState<Boolean> ->
+                CheckBoxItem(
+                    checked = checkbox,
+                    dayName = daysOfWeek[index],
+                    onCheckedChange = {
+                        checkbox.value = it
+                        notifyChange()
+                    }
+                )
         }
 
-        LazyColumn{
-            items(weekChecks.size){
-                checkboxForDay(it, weekChecks[it])
-            }
+        for(i in (weekChecks.indices)){
+            checkboxForDay(i, weekChecks[i])
         }
+    }
+}
+
+@Composable
+private fun CheckboxAllOptions(state: ToggleableState, label: String, subCheckboxes: Array<MutableState<Boolean>>, onChange: () -> Unit){
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        TriStateCheckbox(
+            state = state,
+            onClick = {
+                val isChecked = state != ToggleableState.On
+
+                for (weekCheck in subCheckboxes) {
+                    weekCheck.value = isChecked
+                }
+
+                onChange()
+            }
+        )
+        Text(
+            modifier = Modifier.padding(start = 2.dp),
+            text = label
+        )
     }
 }
 
@@ -79,10 +113,7 @@ private fun CheckBoxItem(
     dayName: String,
     onCheckedChange: (Boolean) -> Unit,
 ) {
-    Row(
-        modifier = Modifier.padding(start = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(checked.value, onCheckedChange)
         Text(
             modifier = Modifier.padding(start = 2.dp),
