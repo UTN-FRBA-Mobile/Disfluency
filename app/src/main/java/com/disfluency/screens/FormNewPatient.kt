@@ -21,7 +21,7 @@ import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 import com.disfluency.components.inputs.inputDate
 import com.disfluency.components.inputs.inputImage
-import com.disfluency.components.inputs.inputString
+import com.disfluency.components.inputs.inputAsString
 import java.time.LocalDate
 
 @Composable
@@ -37,20 +37,20 @@ fun FormNewPatient(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val NEXT_INPUT_ON_ENTER = KeyboardOptions(imeAction = ImeAction.Next)
-        val CAPITALIZE_WORDS =
+        val NEXT_AND_CAPITALIZE_WORDS =
             NEXT_INPUT_ON_ENTER.copy(capitalization = KeyboardCapitalization.Words)
 
         val patientPhoto = inputImage()
 
-        val patientName = inputString("Nombre", keyboardOptions = CAPITALIZE_WORDS)
-        val patientLastname = inputString(label = "Apellido", keyboardOptions = CAPITALIZE_WORDS)
-        val patientDNI = inputString(
+        val patientName = inputAsString("Nombre", keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
+        val patientLastname = inputAsString(label = "Apellido", keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
+        val patientDNI = inputAsString(
             "DNI",
             validations = listOf { it.isDigitsOnly() },
             keyboardOptions = NEXT_INPUT_ON_ENTER.copy(keyboardType = KeyboardType.NumberPassword)
         )
 
-        val email = inputString(label = "Correo Electrónico", keyboardOptions = KeyboardOptions(
+        val email = inputAsString(label = "Correo Electrónico", keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email, imeAction = ImeAction.Done
         ), validations = listOf { Patterns.EMAIL_ADDRESS.asPredicate().test(it) })
 
@@ -72,6 +72,10 @@ fun FormNewPatient(navController: NavController) {
                             lastName = patientLastname.value,
                             id = patientDNI.value.toInt(),
                             dateOfBirth = patientBirthDate.value!!,
+                            /* Este value es nullable porque la fecha hasta que se elija va a ser null.
+                             * Al agregar !! "casteo" de nullable a no nullable (si fuera null, romperia).
+                             * En el validate se valida que no sea null.
+                             */
                             email = email.value,
                             joinedSince = todaysDate,
                             weeklyHour = "",
