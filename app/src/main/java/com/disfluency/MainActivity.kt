@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
 import com.disfluency.navigation.AppNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
 
@@ -17,6 +18,13 @@ import com.disfluency.ui.theme.MyApplicationTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(android.Manifest.permission.RECORD_AUDIO),
+            0
+        )
+
         setContent {
             MyApp(content = { AppNavigation() } )
         }
