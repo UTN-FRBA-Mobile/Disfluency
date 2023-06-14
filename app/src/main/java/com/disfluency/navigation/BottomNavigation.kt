@@ -1,14 +1,21 @@
 package com.disfluency.navigation
 
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.disfluency.components.text.AdjustableSizeText
+import com.disfluency.components.text.AdjustableSizeUnit
 import com.disfluency.screens.*
 
 
@@ -66,6 +73,8 @@ fun BottomNavigation(navController: NavController) {
         BottomNavigationItem.Cuestionarios
     )
 
+    val textSize by remember { mutableStateOf(AdjustableSizeUnit(15.sp)) }
+
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -75,7 +84,9 @@ fun BottomNavigation(navController: NavController) {
             NavigationBarItem(
                 selected = currentRoute == item.screenRoute.route,
                 icon = { Icon(item.icon, contentDescription = item.screenRoute.title) },
-                label = { Text(text = item.screenRoute.title) },
+                label = {
+                    AdjustableSizeText(text = item.screenRoute.title, adjustableSize = textSize)
+                },
                 onClick = {
                     navController.navigate(item.screenRoute.route) {
 
@@ -92,3 +103,5 @@ fun BottomNavigation(navController: NavController) {
         }
     }
 }
+
+
