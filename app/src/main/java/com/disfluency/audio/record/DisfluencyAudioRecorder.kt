@@ -42,6 +42,7 @@ class DisfluencyAudioRecorder(private val context: Context) {
 
             CoroutineScope(Dispatchers.Default).launch {
                 while (recorder != null){
+                    //TODO: hacer mucha prueba, me ha saltado una que otra vez un ConcurrentModificationException
                     trimAmplitudeList()
 
                     audioAmplitudes.add(getRecordingAmplitude())

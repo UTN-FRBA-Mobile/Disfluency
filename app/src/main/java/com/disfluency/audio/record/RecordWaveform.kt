@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun LiveWaveform(amplitudes: MutableList<Float>, maxSpikes: Int, maxHeight: Float){
+fun LiveWaveform(amplitudes: MutableList<Float>, maxSpikes: Int, maxHeight: Float){ //TODO: maxHeight en dp
     val color = MaterialTheme.colorScheme.secondary
 
     Box(modifier = Modifier
@@ -23,7 +23,6 @@ fun LiveWaveform(amplitudes: MutableList<Float>, maxSpikes: Int, maxHeight: Floa
         .drawWithCache {
             onDrawWithContent {
                 amplitudes
-                    .takeLast(maxSpikes)
                     .forEachIndexed { index, amp ->
 
                         val x = index * (size.width / maxSpikes)

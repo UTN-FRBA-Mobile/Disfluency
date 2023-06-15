@@ -2,9 +2,7 @@ package com.disfluency.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -20,10 +18,12 @@ import com.disfluency.audio.playback.DisfluencyAudioPlayer
 import com.disfluency.audio.record.DisfluencyAudioRecorder
 import com.disfluency.audio.record.MAX_SPIKES
 import com.disfluency.audio.record.LiveWaveform
+import com.disfluency.components.button.PressAndReleaseButton
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.navigation.BottomNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
 import java.io.File
+import kotlin.random.Random
 
 @Composable
 @Preview(showBackground = true)
@@ -45,7 +45,18 @@ fun RecordExercisePreview(){
                 Box(modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)) {
-                    RecordExercise(id = 1)
+
+
+                    Column(modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceEvenly) {
+
+                        PressAndReleaseButton(
+                            onClick = { println("Pressed!" + Random.nextFloat()) },
+                            onRelease = { println("Released!" + Random.nextFloat()) },
+                            content = { Icon(Icons.Filled.Mic, contentDescription = null) }
+                        )
+                    }
                 }
             }
         )
@@ -77,12 +88,12 @@ fun RecordExercise(id: Long){
             //TODO: se puede dejar mas espacio sacando el assignment y agregando algun boton para poder verlo
             // se me ocurre un boton de info al lado del titulo que al tocarlo te trae un pop up con la
             // descripcion del ej y el audio de ejemplo para reproducir
-            Text(
-                text = exercise.assignment,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(8.dp),
-            )
+//            Text(
+//                text = exercise.assignment,
+//                style = MaterialTheme.typography.bodyMedium,
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier.padding(8.dp),
+//            )
 
             Text(
                 text = "Repita la siguiente frase:",
@@ -98,9 +109,10 @@ fun RecordExercise(id: Long){
             )
         }
 
-        LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 100f)
+        LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 300f)
 
         RecordButton(audioRecorder)
+
     }
 }
 
@@ -115,88 +127,31 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
     val audioPlayer = DisfluencyAudioPlayer(context)
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        modifier = Modifier.height(100.dp).fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Button(
+        PressAndReleaseButton(
             onClick = {
                 File(context.cacheDir, "audio.mp3").also {
                     audioRecorder.start(it)
                     audioFile = it
                 }
             },
-            modifier = Modifier.size(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            ),
-            contentPadding = PaddingValues(1.dp)
-        ) {
-            Box {
-                Icon(
-                    imageVector = Icons.Outlined.Mic,
-                    contentDescription = "Record",
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-            }
-        }
-
-        Button(
-            onClick = {
+            onRelease = {
                 audioRecorder.stop()
+                audioRecorder.audioAmplitudes.clear() //es temporal esto
             },
-            modifier = Modifier.size(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            ),
-            contentPadding = PaddingValues(1.dp)
-        ) {
-            Box {
-                Icon(
-                    imageVector = Icons.Filled.Stop,
-                    contentDescription = "Stop",
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
-                )
+            content = {
+                Box {
+                    Icon(
+                        imageVector = Icons.Outlined.Mic,
+                        contentDescription = "Record",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
             }
-        }
-
-//        Button(
-//            onClick = {
-//                audioPlayer.play(audioFile ?: return@Button )
-//
-//            },
-//            modifier = Modifier.size(50.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = MaterialTheme.colorScheme.primary
-//            ),
-//            contentPadding = PaddingValues(1.dp)
-//        ) {
-//            Box {
-//                Icon(
-//                    imageVector = Icons.Outlined.PlayArrow,
-//                    contentDescription = "Play",
-//                    tint = MaterialTheme.colorScheme.onSecondaryContainer
-//                )
-//            }
-//        }
-//
-//        Button(
-//            onClick = {
-//                audioPlayer.stop()
-//            },
-//            modifier = Modifier.size(50.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = MaterialTheme.colorScheme.primary
-//            ),
-//            contentPadding = PaddingValues(1.dp)
-//        ) {
-//            Box {
-//                Icon(
-//                    imageVector = Icons.Filled.Stop,
-//                    contentDescription = "Stop",
-//                    tint = MaterialTheme.colorScheme.onSecondaryContainer
-//                )
-//            }
-//        }
+        )
     }
 
 
