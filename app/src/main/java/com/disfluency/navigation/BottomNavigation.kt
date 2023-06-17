@@ -10,11 +10,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.disfluency.screens.*
+import com.disfluency.screens.login.LoginScreen
+import com.disfluency.screens.login.LoginService
 
 
 @Composable
-fun NavigationGraph(navController: NavHostController) {
-    NavHost(navController, startDestination = BottomNavigationItem.Home.screenRoute.route) {
+fun NavigationGraph(navController: NavHostController, loginService: LoginService) {
+    NavHost(navController, startDestination = Route.Login.route) {
+        composable(Route.Login.route){
+            LoginScreen(navController, loginService)
+        }
         composable(BottomNavigationItem.Home.screenRoute.route) {
             HomeScreen()
         }
@@ -58,8 +63,8 @@ fun NavigationGraph(navController: NavHostController) {
 }
 
 @Composable
-fun BottomNavigation(navController: NavController) {
-    val items = listOf(
+fun   BottomNavigation(navController: NavController) {
+    val items = listOf(//TODO: Sacar esto
         BottomNavigationItem.Home,
         BottomNavigationItem.Pacientes,
         BottomNavigationItem.Ejercicios,
@@ -78,7 +83,6 @@ fun BottomNavigation(navController: NavController) {
                 label = { Text(text = item.screenRoute.title) },
                 onClick = {
                     navController.navigate(item.screenRoute.route) {
-
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
                                 saveState = true

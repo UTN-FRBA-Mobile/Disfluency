@@ -1,6 +1,7 @@
 package com.disfluency.navigation
 
 sealed class Route(val route: String, val title: String){
+    object Login: Route("login", "Iniciar Sesión")
     object Home: Route("home", "Home")
     object Pacientes: Route("pacientes", "Pacientes")
     object Cuestionarios: Route("cuestionarios", "Cuestionarios")
@@ -29,12 +30,11 @@ sealed class Route(val route: String, val title: String){
             return route.replace("{id}", patientId.toString())
         }
     }
+
 }
 
-fun getItemByRoute(route: String?): Route{
-    //TODO: ver si hay forma de que esta lista se arme al compilar y no cada vez que se llama al metodo
-    val items = Route::class.nestedClasses.map { it.objectInstance as Route }
-
-    if (route == null) return Route.Home
-    return items.first { item -> item.route == route }
+val items = Route::class.nestedClasses.map { it.objectInstance as Route }
+fun getItemByRoute(route: String): Route{
+    print("\n\nRoute.getItemByRoute($route) entre ${items.map{it.route}}\n\n")
+    return items.first { it.route == route }
 }

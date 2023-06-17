@@ -1,5 +1,6 @@
 package com.disfluency.model
 
+import com.disfluency.screens.login.Role
 import java.time.LocalDate
 import java.time.Period
 
@@ -13,7 +14,7 @@ data class Patient(
     val profilePic: Int,
     val weeklyTurn: String, //TODO: ver cual seria el tipo de dato para esto
     val weeklyHour: String //TODO: ver cual seria el tipo de dato para esto
-    ){
+    ): Role{
 
     fun initials(): String {
         return (name.first().toString() + lastName.first().toString()).uppercase()

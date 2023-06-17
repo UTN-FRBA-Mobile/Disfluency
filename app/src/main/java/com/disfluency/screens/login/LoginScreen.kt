@@ -1,7 +1,8 @@
 package com.disfluency.screens.login
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,11 +16,44 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import com.disfluency.model.Patient
+import com.disfluency.navigation.Route
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-@Preview
+
 @Composable
-fun LoginScreen(/*navController: NavController*/){
+fun LoginScreen(navController: NavController, loginService: LoginService) {
+    var retry by remember { mutableStateOf(false) }
+    var onAuthenticate by remember { mutableStateOf(false) }
+
+    //LaunchedEffect(onAuthenticate){
+        if(onAuthenticate){
+
+            when(loginService.getUser().role){
+                is Phono -> navController.navigate(Route.Home.route)
+                is Patient -> TODO()
+            }
+            onAuthenticate = false
+        }
+    //}
+
+    LoginForm(retry) { username, password ->
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                loginService.login(username, password)
+                onAuthenticate = true
+            } catch (_: UserNotFoundException) {
+                retry = true
+            }
+        }
+    }
+}
+
+@Composable
+fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
     var username by remember{ mutableStateOf("") }
     var password by remember{ mutableStateOf("") }
     var visiblePassword by remember { mutableStateOf(false) }
@@ -28,9 +62,9 @@ fun LoginScreen(/*navController: NavController*/){
         username.isNotBlank() && password.isNotBlank()
     }
 
-    val onSubmit = {print("\n\nenviar\n\n")}
+    val submit = {onSubmit(username, password)}
 
-    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(Modifier.fillMaxSize().wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
@@ -44,7 +78,7 @@ fun LoginScreen(/*navController: NavController*/){
             onValueChange = { password = it },
             placeholder = { Text("Contraseña") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onSend = {onSubmit()}),
+            keyboardActions = KeyboardActions(onSend = {submit()}),
             singleLine = true,
             visualTransformation = if(visiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -56,9 +90,12 @@ fun LoginScreen(/*navController: NavController*/){
                 }
             }
         )
-
-        Button(onClick = onSubmit, enabled = enabledButton) {
+        
+        Button(onClick = submit, enabled = enabledButton) {
             Text("Iniciar Sesión")
+        }
+        if(retry){
+            Text(text = "El usuario y/o la contraseña son incorrectos.", color=MaterialTheme.colorScheme.error)
         }
     }
 }

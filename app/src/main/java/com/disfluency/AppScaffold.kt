@@ -17,14 +17,18 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.navigation.BottomNavigation
 import com.disfluency.navigation.NavigationGraph
+import com.disfluency.navigation.Route
 import com.disfluency.navigation.getItemByRoute
+import com.disfluency.screens.login.LoginService
+
+val loginService = LoginService()
 
 @Composable
 fun AppScaffold() {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentRoute = navBackStackEntry?.destination?.route?: Route.Login.route
 
     Scaffold(
         topBar = {
@@ -39,7 +43,7 @@ fun AppScaffold() {
         },
         content = { paddingValues ->
             Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-                NavigationGraph(navController = navController)
+                NavigationGraph(navController = navController, loginService)
             }
         }
     )

@@ -1,10 +1,7 @@
 package com.disfluency.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Assignment
-import androidx.compose.material.icons.outlined.ContactMail
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.RecordVoiceOver
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavigationItem(val screenRoute: Route, val icon: ImageVector) {
