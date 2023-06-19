@@ -1,6 +1,6 @@
 package com.disfluency.model
 
-import com.disfluency.screens.login.Role
+import com.disfluency.screens.utils.Role
 import java.time.LocalDate
 import java.time.Period
 

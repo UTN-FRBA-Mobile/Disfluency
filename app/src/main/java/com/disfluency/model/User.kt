@@ -1,4 +1,4 @@
-package com.disfluency.screens.login
+package com.disfluency.screens.utils
 
 interface Role
 

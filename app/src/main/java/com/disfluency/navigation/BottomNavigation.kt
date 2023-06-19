@@ -10,27 +10,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.disfluency.screens.*
-import com.disfluency.screens.login.LoginScreen
-import com.disfluency.screens.login.LoginService
-
 
 @Composable
-fun NavigationGraph(navController: NavHostController, loginService: LoginService) {
-    NavHost(navController, startDestination = Route.Login.route) {
-        composable(Route.Login.route){
-            LoginScreen(navController, loginService)
-        }
-        composable(BottomNavigationItem.Home.screenRoute.route) {
-            HomeScreen()
+fun PhonoNavigationGraph(navController: NavHostController, onLogout: ()->Unit) {
+    NavHost(navController, startDestination = Route.HomePhono.route) {
+        composable(BottomNavigationItem.HomePhono.screenRoute.route) {
+            PhonoHomeScreen(onLogout)
         }
         composable(BottomNavigationItem.Pacientes.screenRoute.route) {
             PacientesScreen(navController)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            EjerciciosScreen()
+            PhonoEjerciciosScreen()
         }
         composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
-            CuestionariosScreen()
+            PhonoCuestionariosScreen()
         }
         composable(
             route = Route.Paciente.route,
@@ -63,13 +57,22 @@ fun NavigationGraph(navController: NavHostController, loginService: LoginService
 }
 
 @Composable
-fun   BottomNavigation(navController: NavController) {
-    val items = listOf(//TODO: Sacar esto
-        BottomNavigationItem.Home,
-        BottomNavigationItem.Pacientes,
-        BottomNavigationItem.Ejercicios,
-        BottomNavigationItem.Cuestionarios
-    )
+fun PatientNavigationGraph(navController: NavHostController, onLogout: ()->Unit) {
+    NavHost(navController, startDestination = Route.HomePatient.route) {
+        composable(BottomNavigationItem.HomePatient.screenRoute.route) {
+            EmptyScreen("Home Paciente", onLogout)
+        }
+        composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
+            EmptyScreen("Ejercicios Paciente", onLogout)
+        }
+        composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
+            EmptyScreen("Cuestionarios Paciente", onLogout)
+        }
+    }
+}
+
+@Composable
+fun BottomNavigation(navController: NavController, items: List<BottomNavigationItem>) {
 
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -83,6 +86,7 @@ fun   BottomNavigation(navController: NavController) {
                 label = { Text(text = item.screenRoute.title) },
                 onClick = {
                     navController.navigate(item.screenRoute.route) {
+
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
                                 saveState = true

@@ -1,4 +1,4 @@
-package com.disfluency.screens.login
+package com.disfluency.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,10 +19,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
+import com.disfluency.screens.utils.LoginService
+import com.disfluency.model.Phono
+import com.disfluency.screens.utils.Role
+import com.disfluency.screens.utils.UserNotFoundException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+class NotSuportedUserRoleException(role: Role): Exception(role::class.toString())
 
 @Composable
 fun LoginScreen(navController: NavController, loginService: LoginService) {
@@ -31,11 +36,15 @@ fun LoginScreen(navController: NavController, loginService: LoginService) {
 
     //LaunchedEffect(onAuthenticate){
         if(onAuthenticate){
+            val userRole = loginService.getUser().role
+            navController.navigate(
+                when(userRole){
+                    is Phono -> Route.HomePhono.route
+                    is Patient -> Route.HomePatient.route
+                    else -> throw NotSuportedUserRoleException(userRole)
+                }
+            )
 
-            when(loginService.getUser().role){
-                is Phono -> navController.navigate(Route.Home.route)
-                is Patient -> TODO()
-            }
             onAuthenticate = false
         }
     //}
