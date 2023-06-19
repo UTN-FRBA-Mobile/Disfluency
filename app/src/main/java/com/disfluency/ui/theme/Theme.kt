@@ -26,6 +26,8 @@ private val LightColorScheme = lightColorScheme(
     secondaryContainer = Blue70,
     onSecondaryContainer = Blue20,
 
+    surfaceVariant = Orange99,
+
     background = Color.White,
     onBackground = Blue10,
     surface = Orange99,

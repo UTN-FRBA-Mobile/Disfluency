@@ -1,4 +1,4 @@
-package com.disfluency.screens
+package com.disfluency.screens.patient
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -49,7 +49,7 @@ fun PacientesScreen(navController: NavHostController) {
                 onActiveChange = {
                     active = it
                 },
-                placeholder = { Text("Buscar paciente") },
+                placeholder = { Text("Buscar") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             ) {
                 LazyColumn(
@@ -71,24 +71,24 @@ fun PacientesScreen(navController: NavHostController) {
                 }
             }
         }
-        PacientesList(PatientRepository.longListForTest, navController, text)
+        PatientsList(PatientRepository.longListForTest, navController, text)
     }
-    PacienteCreation(navController)
+    PatientCreation(navController)
 }
 
 @Composable
-fun PacientesList(pacientes: List<Patient>, navController: NavHostController, filter: String) {
+fun PatientsList(pacientes: List<Patient>, navController: NavHostController, filter: String) {
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(pacientes.filter {
                 paciente -> paciente.fullName().contains(filter, true) }) {paciente ->
-            PacienteCard(paciente, navController)
+            PatientCard(paciente, navController)
         }
     }
 }
 
 @Composable
-fun PacienteCard(paciente: Patient, navController: NavHostController) {
+fun PatientCard(paciente: Patient, navController: NavHostController) {
     // Refactor a ListItem?
     val onClick = {
         navController.navigate(Route.Paciente.routeTo(paciente.id))
@@ -130,7 +130,7 @@ fun PacienteCard(paciente: Patient, navController: NavHostController) {
 }
 
 @Composable
-fun PacienteCreation(navController: NavHostController) {
+fun PatientCreation(navController: NavHostController) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd

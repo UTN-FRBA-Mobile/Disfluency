@@ -1,4 +1,4 @@
-package com.disfluency.screens
+package com.disfluency.screens.patient
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.disfluency.data.PatientRepository
 
 @Composable
-fun PatientSessionsScreen(id: Int) {
+fun PatientExercisesScreen(id: Int) {
     val patient = PatientRepository.getPatientById(id)
 
     Column(
@@ -23,7 +23,7 @@ fun PatientSessionsScreen(id: Int) {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Sesiones del Paciente: ${patient.name}",
+            text = "Ejercicios del Paciente: ${patient.name}",
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
             modifier = Modifier.align(Alignment.CenterHorizontally),
