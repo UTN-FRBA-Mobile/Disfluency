@@ -5,12 +5,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.disfluency.model.User
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.Route
 import com.disfluency.screens.phono.*
 
 @Composable
-fun PhonoNavigationGraph(navController: NavHostController, onLogout: ()->Unit) {
+fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout: () -> Unit) {
     NavHost(navController, startDestination = Route.HomePhono.route) {
         composable(BottomNavigationItem.HomePhono.screenRoute.route) {
             PhonoHomeScreen(onLogout)

@@ -15,13 +15,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-val loginService = LoginService()
-
 @Composable
 fun AppNavigation(){
+    val loginService: LoginService = remember { LoginService() }
     val navController = rememberNavController()
 
     var didLogout by remember { mutableStateOf(false) }
+
     if(didLogout){
         didLogout = false
         navController.navigate(Route.Login.route){
@@ -29,7 +29,11 @@ fun AppNavigation(){
                 inclusive = true
             }
         }
+        return /*TODO: <--Es un parche. Sin esto, al tocar logout, ejecuta lo de abajo,
+        * llega de alguna manera al .getUsuario() (que en este punto es null) y rompe
+        */
     }
+
     val onLogout: ()->Unit = {
         CoroutineScope(Dispatchers.IO).launch {
             loginService.logout()
@@ -51,7 +55,7 @@ fun AppNavigation(){
                 BottomNavigationItem.Ejercicios,
                 BottomNavigationItem.Cuestionarios
             )){
-                PhonoNavigationGraph(navController = it, onLogout)
+                PhonoNavigationGraph(navController = it, loginService.getUser(), onLogout)
             }
         }
         composable(Route.HomePatient.route){
@@ -60,7 +64,7 @@ fun AppNavigation(){
                 BottomNavigationItem.Ejercicios,
                 BottomNavigationItem.Cuestionarios
             )){
-                PatientNavigationGraph(navController = it, onLogout)
+                PatientNavigationGraph(navController = it, loginService.getUser(), onLogout)
             }
         }
     }
