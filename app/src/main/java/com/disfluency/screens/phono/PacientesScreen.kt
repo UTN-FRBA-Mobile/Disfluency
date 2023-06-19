@@ -27,10 +27,12 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
+import com.disfluency.model.Phono
+import com.disfluency.model.User
 import com.disfluency.navigation.Route
 
 @Composable
-fun PacientesScreen(navController: NavHostController) {
+fun PacientesScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
@@ -71,7 +73,7 @@ fun PacientesScreen(navController: NavHostController) {
                 }
             }
         }
-        PacientesList(PatientRepository.longListForTest, navController, text)
+        PacientesList(user.patients, navController, text)
     }
     PacienteCreation(navController)
 }

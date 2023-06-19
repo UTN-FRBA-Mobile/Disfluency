@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.disfluency.model.Phono
 import com.disfluency.model.User
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.Route
@@ -17,7 +18,7 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             PhonoHomeScreen(onLogout)
         }
         composable(BottomNavigationItem.Pacientes.screenRoute.route) {
-            PacientesScreen(navController)
+            PacientesScreen(navController, user.role as Phono)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
             PhonoEjerciciosScreen()
