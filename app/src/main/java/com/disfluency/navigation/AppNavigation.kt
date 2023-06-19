@@ -17,21 +17,29 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AppNavigation(){
+
     val loginService: LoginService = remember { LoginService() }
     val navController = rememberNavController()
 
     var didLogout by remember { mutableStateOf(false) }
+    /* el logout se ejecuta desde una corrutina (la idea es que pegue al backend), pero compose no
+     * deja hacer el navigate desde un hilo aparte. La manera que encontre es usar el observer del remember.
+     * El if de abajo lo suelen hacer con un LaunchedEffect(booleano) que lo probé y no me cambia nada.
+     */
 
     if(didLogout){
         didLogout = false
         navController.navigate(Route.Login.route){
             popUpTo(Route.Login.route){
-                inclusive = true
+                inclusive = true //Sin esto, al querer ir para atras desde la pantalla "login", me devuelve a la sesion del usuario.
             }
         }
-        return /*TODO: <--Es un parche. Sin esto, al tocar logout, ejecuta lo de abajo,
-        * llega de alguna manera al .getUsuario() (que en este punto es null) y rompe
-        */
+        return
+        /*TODO si no lo freno aca, ejecuta lo de abajo con la ruta actual igual a la pantalla en que este.
+         *Intenta volver a hacer el recorrido y al llegar al .getUsuario(), que como se hizo logout es null,
+         *rompe. Recien al finalizar la ejecucion de esta tanda, vuelve a correr toda la composicion ahora sí
+         *con ruta = "login". No se si es un bug mio o de compose.
+         */
     }
 
     val onLogout: ()->Unit = {
