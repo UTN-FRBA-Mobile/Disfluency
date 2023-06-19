@@ -1,4 +1,4 @@
-package com.disfluency.screens.utils
+package com.disfluency.model
 
 interface Role
 

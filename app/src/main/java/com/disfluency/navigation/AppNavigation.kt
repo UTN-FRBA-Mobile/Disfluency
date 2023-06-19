@@ -5,6 +5,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.AppScaffold
+import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
+import com.disfluency.navigation.navigationGraphs.PatientNavigationGraph
+import com.disfluency.navigation.navigationGraphs.PhonoNavigationGraph
 import com.disfluency.screens.LoginScreen
 import com.disfluency.screens.SplashScreen
 import com.disfluency.screens.utils.LoginService

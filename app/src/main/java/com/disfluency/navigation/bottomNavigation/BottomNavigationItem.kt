@@ -1,8 +1,9 @@
-package com.disfluency.navigation
+package com.disfluency.navigation.bottomNavigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.disfluency.navigation.Route
 
 sealed class BottomNavigationItem(val screenRoute: Route, val icon: ImageVector) {
 

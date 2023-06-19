@@ -1,15 +1,13 @@
-package com.disfluency.navigation
+package com.disfluency.navigation.navigationGraphs
 
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.disfluency.screens.*
+import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
+import com.disfluency.navigation.Route
+import com.disfluency.screens.phono.*
 
 @Composable
 fun PhonoNavigationGraph(navController: NavHostController, onLogout: ()->Unit) {
@@ -52,51 +50,6 @@ fun PhonoNavigationGraph(navController: NavHostController, onLogout: ()->Unit) {
         }
         composable(Route.NuevoPaciente.route) {
             FormNewPatient()
-        }
-    }
-}
-
-@Composable
-fun PatientNavigationGraph(navController: NavHostController, onLogout: ()->Unit) {
-    NavHost(navController, startDestination = Route.HomePatient.route) {
-        composable(BottomNavigationItem.HomePatient.screenRoute.route) {
-            EmptyScreen("Home Paciente", onLogout)
-        }
-        composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            EmptyScreen("Ejercicios Paciente", onLogout)
-        }
-        composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
-            EmptyScreen("Cuestionarios Paciente", onLogout)
-        }
-    }
-}
-
-@Composable
-fun BottomNavigation(navController: NavController, items: List<BottomNavigationItem>) {
-
-    NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
-        items.forEach { item ->
-
-            NavigationBarItem(
-                selected = currentRoute == item.screenRoute.route,
-                icon = { Icon(item.icon, contentDescription = item.screenRoute.title) },
-                label = { Text(text = item.screenRoute.title) },
-                onClick = {
-                    navController.navigate(item.screenRoute.route) {
-
-                        navController.graph.startDestinationRoute?.let { screen_route ->
-                            popUpTo(screen_route) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
         }
     }
 }

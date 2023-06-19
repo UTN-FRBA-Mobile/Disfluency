@@ -1,4 +1,4 @@
-package com.disfluency.screens
+package com.disfluency.screens.phono
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*

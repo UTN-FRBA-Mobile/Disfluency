@@ -21,8 +21,8 @@ import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 import com.disfluency.screens.utils.LoginService
 import com.disfluency.model.Phono
-import com.disfluency.screens.utils.Role
-import com.disfluency.screens.utils.UserNotFoundException
+import com.disfluency.model.Role
+import com.disfluency.data.UserNotFoundException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
