@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -20,6 +21,31 @@ import com.disfluency.R
 
 //TODO: Investigar context, ver si vale la pena usar corrutinas
 
+@Composable
+fun ImagePicker(state: MutableState<Int>){
+    Image(painterResource(id = state.value), "Pick photo",
+        Modifier.size(150.dp))
+
+    val pickableImage: @Composable (Int, Int)->Unit = { photo, index ->
+        Image(painterResource(id = photo),
+            "photo_$index",
+            Modifier.size(50.dp).clickable {
+                state.value = photo
+            }
+        )
+    }
+
+    Row(horizontalArrangement = Arrangement.Center){
+        listOf(
+            R.drawable.avatar_12,
+            R.drawable.avatar_17,
+            R.drawable.avatar_26,
+            R.drawable.avatar_30
+        ).forEachIndexed { index, photo -> pickableImage(photo, index) }
+    }
+}
+
+/*
 @Preview
 @Composable
 fun inputImage(): Input<Bitmap?> {
@@ -60,4 +86,4 @@ fun inputImage(): Input<Bitmap?> {
     }
 
     return Input(image, {false}, {})
-}
+}*/

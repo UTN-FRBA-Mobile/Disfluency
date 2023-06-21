@@ -38,7 +38,9 @@ fun FormNewPatient(navController: NavController) {
         val NEXT_AND_CAPITALIZE_WORDS =
             NEXT_INPUT_ON_ENTER.copy(capitalization = KeyboardCapitalization.Words)
 
-        val patientPhoto = inputImage()
+        val profilePic = remember { mutableStateOf(R.drawable.avatar_null) }
+        ImagePicker(profilePic)
+//        var selectedImage by remember { mutableStateOf() }
 
         val patientName = inputAsString("Nombre", keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
         val patientLastname = inputAsString(label = "Apellido", keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
@@ -82,7 +84,7 @@ fun FormNewPatient(navController: NavController) {
                             joinedSince = todaysDate,
                             weeklyHour = "18:00", //TODO
                             weeklyTurn = weeklyTurn.value,
-                            profilePic = R.drawable.avatar_12
+                            profilePic = profilePic.value
                         )
                         PatientRepository.addPatient(patient)
                         navController.navigate(Route.Paciente.routeTo(patient.id))

@@ -1,10 +1,7 @@
 package com.disfluency.components.inputs
 
 import android.content.res.Resources.Theme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -79,8 +76,10 @@ fun DaysOfWeekCheckbox(onChange: (List<String>)->Unit) {
                 )
         }
 
-        for(i in (weekChecks.indices)){
-            checkboxForDay(i, weekChecks[i])
+        Column(Modifier.fillMaxWidth()){
+            for(i in (weekChecks.indices)){
+                checkboxForDay(i, weekChecks[i])
+            }
         }
     }
 }
