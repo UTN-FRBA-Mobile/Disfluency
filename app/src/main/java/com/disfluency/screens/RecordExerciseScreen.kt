@@ -19,6 +19,7 @@ import com.disfluency.audio.record.DisfluencyAudioRecorder
 import com.disfluency.audio.record.MAX_SPIKES
 import com.disfluency.audio.record.LiveWaveform
 import com.disfluency.components.button.PressAndReleaseButton
+import com.disfluency.components.button.RecordSwipeButton
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.navigation.BottomNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
@@ -42,21 +43,19 @@ fun RecordExercisePreview(){
                 BottomNavigation(navController = rememberNavController())
             },
             content = { paddingValues ->
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)) {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
+                    RecordSwipeButton(
+                        onClick = { println("Press") },
+                        onRelease = { println("Released") },
+                        onSend = { println("Send") },
+                        onCancel = { println("Cancel") }
+                    )
 
-                    Column(modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceEvenly) {
-
-                        PressAndReleaseButton(
-                            onClick = { println("Pressed!" + Random.nextFloat()) },
-                            onRelease = { println("Released!" + Random.nextFloat()) },
-                            content = { Icon(Icons.Filled.Mic, contentDescription = null) }
-                        )
-                    }
                 }
             }
         )
@@ -127,7 +126,9 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
     val audioPlayer = DisfluencyAudioPlayer(context)
 
     Row(
-        modifier = Modifier.height(100.dp).fillMaxWidth(),
+        modifier = Modifier
+            .height(100.dp)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
