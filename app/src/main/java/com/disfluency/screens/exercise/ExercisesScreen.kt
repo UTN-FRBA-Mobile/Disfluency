@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -168,11 +169,12 @@ fun ExerciseCard(exercise: Exercise, navController: NavHostController) {
                         text = exercise.getFullInstructions(),
                         modifier = Modifier.padding(all = 4.dp),
                         maxLines = 1,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
         }
-        Play(exercise)
+//        Play(exercise)
     }
 }
