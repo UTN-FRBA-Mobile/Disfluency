@@ -1,4 +1,4 @@
-package com.disfluency.screens
+package com.disfluency.screens.exercise
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +11,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.disfluency.data.PatientRepository
+import com.disfluency.data.ExerciseRepository
 
 @Composable
-fun PatientExercisesScreen(id: Int) {
-    val patient = PatientRepository.getPatientById(id)
+fun SingleExerciseScreen(id: Int) {
+    val exercise = ExerciseRepository.getExerciseById(id)
 
     Column(
         modifier = Modifier
@@ -23,7 +23,7 @@ fun PatientExercisesScreen(id: Int) {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Ejercicios del Paciente: ${patient.name}",
+            text = "Ejercicio: ${exercise.title}",
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
             modifier = Modifier.align(Alignment.CenterHorizontally),
