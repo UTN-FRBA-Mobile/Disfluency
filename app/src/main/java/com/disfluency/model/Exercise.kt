@@ -5,7 +5,7 @@ data class Exercise(
     val therapistId: Int,
     val title: String,
     val instruction: String,
-    val phrase: String? = "",
+    val phrase: String? = null,
     val sampleAudioURL: String,
     val number: Int
 ) {

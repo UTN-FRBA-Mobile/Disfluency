@@ -18,8 +18,6 @@ object PatientRepository {
         Patient("Alexander", "Martinez", LocalDate.of(1995, 5, 4), 37186477, "amartinez@gmail.com", LocalDate.of(2023, 5, 15), R.drawable.avatar_17, "Miercoles", "19:00")
     )
 
-    val longListForTest = List(20){
-        patients.random()
-    }
+    val longListForTest = patients
 }
 

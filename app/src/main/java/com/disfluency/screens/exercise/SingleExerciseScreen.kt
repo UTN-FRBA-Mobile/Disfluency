@@ -1,17 +1,56 @@
 package com.disfluency.screens.exercise
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
+import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
+import com.disfluency.model.Exercise
+import com.disfluency.navigation.BottomNavigation
+import com.disfluency.ui.theme.MyApplicationTheme
+
+@Preview(showBackground = true)
+@Composable
+fun ExercisePreview(){
+    MyApplicationTheme() {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text(text = "Ejercicio") },
+                    navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
+                    actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
+                )
+            },
+            bottomBar = {
+                BottomNavigation(navController = rememberNavController())
+            },
+            content = { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    SingleExerciseScreen(id = 1)
+                }
+            }
+        )
+    }
+}
 
 @Composable
 fun SingleExerciseScreen(id: Int) {
@@ -20,15 +59,47 @@ fun SingleExerciseScreen(id: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = "Ejercicio: ${exercise.title}",
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = exercise.title,
+                style = MaterialTheme.typography.headlineSmall
+            )
+
+            Text(
+                text = exercise.instruction,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(8.dp),
+            )
+
+           exercise.phrase?.let{
+                Text(
+                    text = "Repita la siguiente frase:",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 24.dp)
+                )
+
+                Text(
+                    text = "\"${exercise.phrase}\"",
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    textAlign = TextAlign.Center,
+                    fontStyle = FontStyle.Italic
+                )
+            }
+        }
+        
+        ExampleRecording(exercise)
     }
+}
+
+@Composable
+fun ExampleRecording(exercise: Exercise){
+    AudioPlayer(url = exercise.sampleAudioURL)
 }
