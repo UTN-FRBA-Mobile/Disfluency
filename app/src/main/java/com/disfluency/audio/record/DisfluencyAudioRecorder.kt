@@ -42,9 +42,6 @@ class DisfluencyAudioRecorder(private val context: Context) {
 
             CoroutineScope(Dispatchers.Default).launch {
                 while (recorder != null){
-                    //TODO: hacer mucha prueba, me ha saltado una que otra vez un ConcurrentModificationException
-                    trimAmplitudeList()
-
                     audioAmplitudes.add(getRecordingAmplitude())
 
                     delay(AMPLITUDE_SAMPLE_TIME)
@@ -63,10 +60,4 @@ class DisfluencyAudioRecorder(private val context: Context) {
     private fun getRecordingAmplitude(): Float {
         return recorder?.maxAmplitude?.toFloat()?.div(MAX_AMPLITUDE_VALUE) ?: MIN_AMPLITUDE_VALUE
     }
-
-    private fun trimAmplitudeList(){
-        if (audioAmplitudes.size > MAX_SPIKES)
-            audioAmplitudes.removeRange(0, audioAmplitudes.size - MAX_SPIKES)
-    }
-
 }

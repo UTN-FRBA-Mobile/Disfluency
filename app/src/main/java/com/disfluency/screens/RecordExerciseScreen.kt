@@ -1,9 +1,12 @@
 package com.disfluency.screens
 
+import android.content.res.Resources
+import android.content.res.loader.ResourcesProvider
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,13 +21,12 @@ import com.disfluency.audio.playback.DisfluencyAudioPlayer
 import com.disfluency.audio.record.DisfluencyAudioRecorder
 import com.disfluency.audio.record.MAX_SPIKES
 import com.disfluency.audio.record.LiveWaveform
-import com.disfluency.components.button.PressAndReleaseButton
 import com.disfluency.components.button.RecordSwipeButton
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.navigation.BottomNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
 import java.io.File
-import kotlin.random.Random
+import java.io.FileInputStream
 
 @Composable
 @Preview(showBackground = true)
@@ -44,7 +46,9 @@ fun RecordExercisePreview(){
             },
             content = { paddingValues ->
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -108,15 +112,17 @@ fun RecordExercise(id: Long){
             )
         }
 
-        LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 300f)
+        LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 160.dp)
 
         RecordButton(audioRecorder)
 
     }
 }
 
-//TODO: la version final estaria bueno que sea de mantener apretado y tenga
-// que si deslizas para arriba lo bloqueas y si deslizas para abajo lo cortas
+//TODO: cuando dejo de grabar,
+// se tiene que ir el boton, y tiene que irse la onda y mostrarme la onda completa del audio (con reproductor)
+// y me aparece abajo un boton de enviar o confirmar
+
 @Composable
 fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
     val context = LocalContext.current
@@ -127,12 +133,12 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
 
     Row(
         modifier = Modifier
-            .height(100.dp)
+            .height(240.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        PressAndReleaseButton(
+        RecordSwipeButton(
             onClick = {
                 File(context.cacheDir, "audio.mp3").also {
                     audioRecorder.start(it)
@@ -141,20 +147,14 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
             },
             onRelease = {
                 audioRecorder.stop()
-                audioRecorder.audioAmplitudes.clear() //es temporal esto
             },
-            content = {
-                Box {
-                    Icon(
-                        imageVector = Icons.Outlined.Mic,
-                        contentDescription = "Record",
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
+            onSend = {
+                audioRecorder.stop()
+            },
+            onCancel = {
+                audioRecorder.stop()
+                audioRecorder.audioAmplitudes.clear() //es temporal esto
             }
         )
     }
-
-
-
 }

@@ -21,79 +21,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.math.MathUtils
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
-import kotlin.math.sign
-
-
-@Composable
-fun PressAndReleaseButton(
-    onClick: () -> Unit,
-    onRelease: () -> Unit,
-    content: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource =
-        remember { MutableInteractionSource() },
-) {
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    val animatedButtonColor = animateColorAsState(
-        targetValue = if (isPressed) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondary,
-        animationSpec = tween(200, 0, LinearEasing)
-    )
-
-    val animateSize = animateDpAsState(
-        targetValue = if (isPressed) 100.dp else 50.dp,
-        animationSpec = tween(200, 0, LinearEasing)
-    )
-
-    var actionOnce by remember { mutableStateOf(false) }
-
-    Button(
-        onClick = { },
-        colors = ButtonDefaults.buttonColors(containerColor = animatedButtonColor.value),
-        contentPadding = PaddingValues(1.dp),
-        modifier = modifier.size(animateSize.value),
-        interactionSource = interactionSource,
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary)
-    ) {
-        if (isPressed) {
-
-            if (!actionOnce){
-                onClick()
-                actionOnce = true
-            }
-
-            //Use if + DisposableEffect to wait for the press action is completed
-            DisposableEffect(Unit) {
-                onDispose {
-                    //released
-                    onRelease()
-                    actionOnce = false
-                }
-            }
-
-        }
-
-        content()
-    }
-}
-
 
 const val MAX_SWIPE_BAR_HEIGHT = 170
 const val ANIMATION_TIME = 200
+const val DRAG_LIMIT = MAX_SWIPE_BAR_HEIGHT * 1.1f
+const val DRAG_SEGMENT = (DRAG_LIMIT / 3) * 1.3
 
+//TODO: probar como se ve horizontal, el deslizar dejarlo igual,
+// pero cuando bloqueo, que se vaya lo de deslizar y solo aparezcan el boton de enviar y el de cancelar (botones de verdad no desliz)
 
 @Composable
 fun RecordSwipeButton(
     onClick: () -> Unit,
     onRelease: () -> Unit,
-    onSend: () -> Unit,
-    onCancel: () -> Unit, //TODO: agregar el callback este cuando suelto abajo
+    onSend: () -> Unit, //TODO: hace falta este o es lo mismo que onRelease?
+    onCancel: () -> Unit,
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
@@ -103,9 +52,7 @@ fun RecordSwipeButton(
     val isInteracting = isPressed || isDragged
 
     var offsetY by remember { mutableStateOf(0f) }
-
-    val maxDraggedValue = MAX_SWIPE_BAR_HEIGHT * 1.1f
-    val stage = (maxDraggedValue / 3) * 1.3
+    val currentStage = calculateStageFromOffset(offsetY)
 
     val animatedButtonColor = animateColorAsState(
         targetValue = if (isInteracting) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondary,
@@ -113,7 +60,7 @@ fun RecordSwipeButton(
     )
 
     val animateSize = animateDpAsState(
-        targetValue = if (isInteracting && offsetY.absoluteValue < stage) 75.dp else 50.dp,
+        targetValue = if (isInteracting && offsetY.absoluteValue < DRAG_SEGMENT) 75.dp else 50.dp,
         animationSpec = tween(ANIMATION_TIME, 0, LinearEasing)
     )
 
@@ -123,6 +70,11 @@ fun RecordSwipeButton(
     )
 
     var actionOnce by remember { mutableStateOf(false) }
+
+    val submit = {
+        actionOnce = false
+        offsetY = 0f
+    }
 
     Box(
         modifier = Modifier.height(240.dp),
@@ -150,11 +102,14 @@ fun RecordSwipeButton(
 
         Button(
             onClick = {
+                submit()
                 onSend()
             },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
             contentPadding = PaddingValues(1.dp),
-            modifier = modifier.size(50.dp).alpha(-offsetY / maxDraggedValue)
+            modifier = modifier
+                .size(50.dp)
+                .alpha(-offsetY / DRAG_LIMIT)
         ){
             Icon(imageVector = Icons.Outlined.Send, contentDescription = "Send", tint = MaterialTheme.colorScheme.onSecondaryContainer)
         }
@@ -171,13 +126,12 @@ fun RecordSwipeButton(
                         onDragStart = { isDragged = true },
                         onDragEnd = {
                             //End drag only if button was not locked
-                            if (offsetY > -maxDraggedValue) isDragged = false
-
+                            if (offsetY > -DRAG_LIMIT) isDragged = false
                         }
                     ) { change, dragAmount ->
                         change.consume()
 
-                        offsetY = MathUtils.clamp(offsetY + dragAmount.y, -maxDraggedValue, maxDraggedValue)
+                        offsetY = MathUtils.clamp(offsetY + dragAmount.y, -DRAG_LIMIT, DRAG_LIMIT)
                     }
                 },
             interactionSource = interactionSource,
@@ -193,42 +147,51 @@ fun RecordSwipeButton(
                 //Use if + DisposableEffect to wait for the press action is completed
                 DisposableEffect(Unit) {
                     onDispose {
-                        //released
-                        onRelease()
-                        actionOnce = false
-                        offsetY = 0f
+
+                        submit()
+
+                        when(calculateStageFromOffset(offsetY)){
+                            RecordButtonStage.RECORD -> onRelease()
+                            RecordButtonStage.CANCEL -> onCancel()
+                            else -> {}
+                        }
                     }
                 }
             }
 
-            Box {
-                Crossfade(targetState = offsetY, animationSpec = tween(ANIMATION_TIME / 4)) { offset ->
+            CrossfadeIcon(
+                targetState = currentStage,
+                iconConditionPairs = listOf(
+                    Pair(Icons.Outlined.Mic, RecordButtonStage.RECORD),
+                    Pair(Icons.Outlined.Cancel, RecordButtonStage.CANCEL),
+                    Pair(Icons.Outlined.Lock, RecordButtonStage.LOCK)
+                )
+            )
+        }
+    }
+}
 
-                    if (offset.absoluteValue < stage) {
-                        Icon(imageVector = Icons.Outlined.Mic, contentDescription = "Record", tint = MaterialTheme.colorScheme.onSecondaryContainer)
-                    } else if (offset > stage){
-                        Icon(imageVector = Icons.Outlined.Cancel, contentDescription = "Cancel", tint = MaterialTheme.colorScheme.onSecondaryContainer)
-                    } else if (offset < -stage){
-                        Icon(imageVector = Icons.Outlined.Lock, contentDescription = "Lock", tint = MaterialTheme.colorScheme.onSecondaryContainer)
-                    }
+private enum class RecordButtonStage(val enabledOnOffset: (Float) -> Boolean) {
+    RECORD({ offset -> offset.absoluteValue < DRAG_SEGMENT }),
+    LOCK({ offset -> offset < -DRAG_SEGMENT }),
+    CANCEL({ offset -> offset > DRAG_SEGMENT }),
+    SEND({ false })
+}
+
+private fun calculateStageFromOffset(offset: Float): RecordButtonStage {
+    return RecordButtonStage.values().first { it.enabledOnOffset(offset) }
+}
+
+@Composable
+fun <T> CrossfadeIcon(targetState: T, iconConditionPairs: List<Pair<ImageVector, T>>){
+    Box {
+        Crossfade(targetState = targetState, animationSpec = tween(ANIMATION_TIME)) { value ->
+
+            iconConditionPairs.forEach {
+                if (it.second == value){
+                    Icon(imageVector = it.first, contentDescription = "Icon", tint = MaterialTheme.colorScheme.onSecondaryContainer)
                 }
             }
         }
     }
 }
-
-//@Composable
-//fun CrossfadeRecordIcon(){
-//    Box {
-//        Crossfade(targetState = offsetY, animationSpec = tween(ANIMATION_TIME / 4)) { offset ->
-//
-//            if (offset.absoluteValue < stage) {
-//                Icon(imageVector = Icons.Outlined.Mic, contentDescription = "Record", tint = MaterialTheme.colorScheme.onSecondaryContainer)
-//            } else if (offset > stage){
-//                Icon(imageVector = Icons.Outlined.Cancel, contentDescription = "Cancel", tint = MaterialTheme.colorScheme.onSecondaryContainer)
-//            } else if (offset < -stage){
-//                Icon(imageVector = Icons.Outlined.Lock, contentDescription = "Lock", tint = MaterialTheme.colorScheme.onSecondaryContainer)
-//            }
-//        }
-//    }
-//}
