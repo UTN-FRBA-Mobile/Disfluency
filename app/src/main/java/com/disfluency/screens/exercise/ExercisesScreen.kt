@@ -32,7 +32,7 @@ import com.disfluency.navigation.Route
 @Composable
 fun ExercisesScreen(navController: NavHostController) {
     var text by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
             Modifier
@@ -40,36 +40,17 @@ fun ExercisesScreen(navController: NavHostController) {
                 .zIndex(1f)
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)) {
-            androidx.compose.material3.SearchBar(
+            //TODO: ver si se puede esconder el teclado cuando doy enter
+            SearchBar(
                 modifier = Modifier.align(Alignment.TopCenter),
                 query = text,
                 onQueryChange = { text = it },
-                onSearch = { active = false },
-                active = active,
-                onActiveChange = {
-                    active = it
-                },
+                onSearch = { },
+                active = false,
+                onActiveChange = { },
                 placeholder = { Text("Buscar") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    // Ultimas 5 busquedas?
-                    items(4) { idx ->
-                        val resultText = "Suggestion $idx"
-                        ListItem(
-                            headlineContent = { Text(resultText) },
-                            modifier = Modifier.clickable {
-                                text = resultText
-                                active = false
-                            }
-                        )
-                    }
-                }
-            }
+            ) {}
         }
         ExerciseList(ExerciseRepository.longListForTest, navController, text)
     }
