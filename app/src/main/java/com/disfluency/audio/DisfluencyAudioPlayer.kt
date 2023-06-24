@@ -57,42 +57,51 @@ class DisfluencyAudioPlayer(private val context: Context) {
     }
 
     fun play(){
-        println("Play!")
         isPlaying.value = true
-
         player?.start()
         evaluateProgress()
     }
 
     fun pause(){
-        println("Pause!")
         isPlaying.value = false
         player?.pause()
         progressTrackerJob?.cancel()
     }
 
     fun stop(){
-        println("Stop!")
-        isPlaying.value = false
-        player?.stop()
         progressTrackerJob?.cancel()
-        position.value = 0
+        isPlaying.value = false
+        asyncReady.value = false
 
-        //TODO: el release habria que hacerlo cuando salimos de la pantalla! tambien cancelar el job
-//        player?.release()
-//        player = null
+        seekTo(0)
+
+        player?.apply {
+            stop()
+            prepareAsync()
+            setOnPreparedListener {
+                asyncReady.value = true
+            }
+        }
     }
 
-    //TODO: cuando lo arrastro hasta el final termina pero no lo puedo volver a arrancar,
     fun seekTo(millis: Int){
-        println("Seek to: " + millis)
+        if (millis >= totalDuration.value && !isPlaying()){
+            return
+        }
 
-        if (millis >= totalDuration.value)
+        if (millis >= totalDuration.value) {
+            position.value = totalDuration.value
             stop()
-        else {
+        }else {
             player?.seekTo(millis)
             position.value = millis
         }
+    }
+
+    fun release(){
+        player?.release()
+        progressTrackerJob?.cancel()
+        player = null
     }
 
     private fun evaluateProgress(){
@@ -100,9 +109,6 @@ class DisfluencyAudioPlayer(private val context: Context) {
         progressTrackerJob = CoroutineScope(Dispatchers.Default).launch {
 
             while (isPlaying()){
-//                println(totalDuration.value)
-//                println(position.value)
-
                 position.value = player!!.currentPosition
 
                 if (position.value >= totalDuration.value) stop()
@@ -125,6 +131,4 @@ class DisfluencyAudioPlayer(private val context: Context) {
     fun asyncReady(): Boolean {
         return asyncReady.value
     }
-
-
 }

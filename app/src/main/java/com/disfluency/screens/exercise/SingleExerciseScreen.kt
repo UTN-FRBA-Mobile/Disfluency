@@ -8,13 +8,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
@@ -25,7 +22,7 @@ import com.disfluency.ui.theme.MyApplicationTheme
 @Preview(showBackground = true)
 @Composable
 fun ExercisePreview(){
-    MyApplicationTheme() {
+    MyApplicationTheme {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -45,7 +42,7 @@ fun ExercisePreview(){
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    SingleExerciseScreen(id = 1)
+                    SingleExerciseScreen(id = 4)
                 }
             }
         )
@@ -101,5 +98,16 @@ fun SingleExerciseScreen(id: Int) {
 
 @Composable
 fun ExampleRecording(exercise: Exercise){
-    AudioPlayer(url = exercise.sampleAudioURL)
+    Column {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            text = "Ejemplo generado por el profesional",
+            style = MaterialTheme.typography.labelMedium
+        )
+
+        AudioPlayer(url = exercise.sampleAudioURL)
+    }
+
 }

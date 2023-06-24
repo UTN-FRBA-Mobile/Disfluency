@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,14 +17,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import com.disfluency.audio.DisfluencyAudioPlayer
 import com.disfluency.utils.millisecondsAsMinutesAndSeconds
 
 @Composable
 fun AudioPlayer(url: String){
     val ctx = LocalContext.current
-    val mediaPlayer = DisfluencyAudioPlayer(ctx)
-    mediaPlayer.loadUrl(url)
+    val audioPlayer = DisfluencyAudioPlayer(ctx)
+    audioPlayer.loadUrl(url)
+
+    DisposableEffect(Lifecycle.Event.ON_STOP) {
+        onDispose {
+            audioPlayer.release()
+        }
+    }
 
     Surface(
         modifier = Modifier
@@ -44,15 +51,15 @@ fun AudioPlayer(url: String){
                 contentPadding = PaddingValues(1.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 onClick = {
-                    if (!mediaPlayer.isPlaying()){
-                        mediaPlayer.play()
+                    if (!audioPlayer.isPlaying()){
+                        audioPlayer.play()
                     } else {
-                        mediaPlayer.pause()
+                        audioPlayer.pause()
                     }
                 },
-                enabled = mediaPlayer.asyncReady()
+                enabled = audioPlayer.asyncReady()
             ) {
-                if (mediaPlayer.isPlaying())
+                if (audioPlayer.isPlaying())
                     Icon(imageVector = Icons.Filled.Pause, contentDescription = "Pause")
                 else
                     Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
@@ -65,12 +72,11 @@ fun AudioPlayer(url: String){
                 Slider(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
                         .clip(CircleShape),
-                    value = mediaPlayer.position().toFloat(),
-                    valueRange = 0f..mediaPlayer.duration().toFloat(),
+                    value = audioPlayer.position().toFloat(),
+                    valueRange = 0f..audioPlayer.duration().toFloat(),
                     onValueChange = { sliderValue ->
-                        mediaPlayer.seekTo(sliderValue.toInt())
+                        audioPlayer.seekTo(sliderValue.toInt())
                     },
                     colors = SliderDefaults.colors(
                         thumbColor = MaterialTheme.colorScheme.primary,
@@ -91,7 +97,7 @@ fun AudioPlayer(url: String){
                         .fillMaxSize()
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                         .wrapContentSize(align = Alignment.BottomStart),
-                    text = millisecondsAsMinutesAndSeconds(mediaPlayer.position().toLong()),
+                    text = millisecondsAsMinutesAndSeconds(audioPlayer.position().toLong()),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.Gray,
                 )
