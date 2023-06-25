@@ -12,12 +12,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.disfluency.data.PatientRepository
+import com.disfluency.screens.analysis.Transcription
 
 @Composable
 fun PatientSessionsScreen(id: Int) {
     val patient = PatientRepository.getPatientById(id)
 
-    Column(
+    Transcription(id)
+    /*Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
@@ -30,5 +32,5 @@ fun PatientSessionsScreen(id: Int) {
             textAlign = TextAlign.Center,
             fontSize = 20.sp
         )
-    }
+    }*/
 }

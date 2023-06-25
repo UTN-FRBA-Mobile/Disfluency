@@ -8,9 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Assignment
-import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.RecordVoiceOver
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.grid.TwoColumnGridItemSpan
+import com.disfluency.components.user.IconLabeledDetails
 import com.disfluency.components.user.PatientInfoCard
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.data.PatientRepository
@@ -47,7 +46,10 @@ fun SinglePatientScreen(id: Int, navController: NavController){
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        PatientInfoCard(patient = patient)
+        PatientInfoCard(patient = patient,
+            firstLabel = IconLabeledDetails(Icons.Outlined.CalendarMonth, patient.weeklyTurn, "Turn"),
+            secondLabel = IconLabeledDetails(Icons.Outlined.AccessTime, patient.weeklyHour, "Time")
+        )
         ButtonPanel(patient = patient, navController = navController)
         ActivitiesOverview(patient = patient)
     }

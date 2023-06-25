@@ -18,14 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.disfluency.R
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PatientInfoCard(patient: Patient){
+fun PatientInfoCard(patient: Patient, firstLabel: IconLabeledDetails,
+                    secondLabel: IconLabeledDetails){
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         modifier = Modifier
@@ -57,17 +57,17 @@ fun PatientInfoCard(patient: Patient){
 
                 FlowRow {
                     IconLabeled(
-                        icon = Icons.Outlined.CalendarMonth,
-                        label = patient.weeklyTurn,
-                        content = "Turn"
+                        icon = firstLabel.icon,
+                        label = firstLabel.label,
+                        content = firstLabel.content
                     )
                     
                     Spacer(modifier = Modifier.width(8.dp))
                     
                     IconLabeled(
-                        icon = Icons.Outlined.AccessTime,
-                        label = patient.weeklyHour,
-                        content = "Time"
+                        icon = secondLabel.icon,
+                        label = secondLabel.label,
+                        content = secondLabel.content
                     )
                 }
             }
@@ -95,10 +95,17 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
     }
 }
 
+data class IconLabeledDetails(val icon: ImageVector,
+                              val label: String,
+                              val content: String)
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewInfoCard(){
+    val patient = PatientRepository.testPatient
     MyApplicationTheme() {
-        PatientInfoCard(patient = PatientRepository.testPatient)
+        PatientInfoCard(patient = patient,
+            IconLabeledDetails(Icons.Outlined.CalendarMonth, patient.weeklyTurn, "Turn"),
+            IconLabeledDetails(Icons.Outlined.AccessTime, patient.weeklyHour, "Time"))
     }
 }
