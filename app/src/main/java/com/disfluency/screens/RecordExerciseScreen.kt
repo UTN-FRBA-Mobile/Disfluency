@@ -1,14 +1,11 @@
 package com.disfluency.screens
 
-import android.content.res.Resources
-import android.content.res.loader.ResourcesProvider
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,16 +14,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.disfluency.audio.playback.DisfluencyAudioPlayer
 import com.disfluency.audio.record.DisfluencyAudioRecorder
-import com.disfluency.audio.record.MAX_SPIKES
 import com.disfluency.audio.record.LiveWaveform
-import com.disfluency.components.button.RecordSwipeButton
+import com.disfluency.audio.record.MAX_SPIKES
+import com.disfluency.components.button.RecordAudioButton
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.navigation.BottomNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
 import java.io.File
-import java.io.FileInputStream
 
 @Composable
 @Preview(showBackground = true)
@@ -53,7 +48,7 @@ fun RecordExercisePreview(){
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    RecordSwipeButton(
+                    RecordAudioButton(
                         onClick = { println("Press") },
                         onRelease = { println("Released") },
                         onSend = { println("Send") },
@@ -72,6 +67,11 @@ fun RecordExercise(id: Long){
 
     val audioRecorder = DisfluencyAudioRecorder(LocalContext.current)
 
+    var recordingDone by remember { mutableStateOf(false) }
+    val changeRecordingState = {
+        recordingDone = !recordingDone
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -88,16 +88,6 @@ fun RecordExercise(id: Long){
                 style = MaterialTheme.typography.headlineSmall
             )
 
-            //TODO: se puede dejar mas espacio sacando el assignment y agregando algun boton para poder verlo
-            // se me ocurre un boton de info al lado del titulo que al tocarlo te trae un pop up con la
-            // descripcion del ej y el audio de ejemplo para reproducir
-//            Text(
-//                text = exercise.assignment,
-//                style = MaterialTheme.typography.bodyMedium,
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier.padding(8.dp),
-//            )
-
             Text(
                 text = "Repita la siguiente frase:",
                 style = MaterialTheme.typography.bodyMedium,
@@ -112,24 +102,35 @@ fun RecordExercise(id: Long){
             )
         }
 
-        LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 160.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(160.dp),
+            contentAlignment = Alignment.Center
+        ){
 
-        RecordButton(audioRecorder)
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ){
+//                if (recordingDone)
+//
+//                else
+                    LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 160.dp)
+            }
+        }
+
+        RecordButton(audioRecorder, changeRecordingState)
 
     }
 }
 
-//TODO: cuando dejo de grabar,
-// se tiene que ir el boton, y tiene que irse la onda y mostrarme la onda completa del audio (con reproductor)
-// y me aparece abajo un boton de enviar o confirmar
-
 @Composable
-fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
+fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: () -> Unit){
     val context = LocalContext.current
 
     var audioFile: File? = null
 
-    val audioPlayer = DisfluencyAudioPlayer(context)
+//    val audioPlayer = DisfluencyAudioPlayer(context)
 
     Row(
         modifier = Modifier
@@ -138,24 +139,23 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RecordSwipeButton(
+        RecordAudioButton(
             onClick = {
-                println("Start!")
                 File(context.cacheDir, "audio.mp3").also {
                     audioRecorder.start(it)
                     audioFile = it
                 }
             },
             onRelease = {
-                println("Release!")
                 audioRecorder.stop()
+                changeRecordingState()
             },
             onSend = {
-                println("Send!")
                 audioRecorder.stop()
+                //TODO: send
             },
             onCancel = {
-                println("Cancel!")
+                changeRecordingState()
                 audioRecorder.stop()
                 audioRecorder.audioAmplitudes.clear() //es temporal esto
             }
