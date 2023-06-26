@@ -20,6 +20,8 @@ class DisfluencyAudioRecorder(private val context: Context) {
 
     private var recorder: MediaRecorder? = null
 
+    private var amplitudeTrackerJob: Job? = null
+
     val audioAmplitudes = mutableStateListOf(MIN_AMPLITUDE_VALUE)
 
     private fun createRecorder(): MediaRecorder{
@@ -40,7 +42,8 @@ class DisfluencyAudioRecorder(private val context: Context) {
 
             recorder = this
 
-            CoroutineScope(Dispatchers.Default).launch {
+            amplitudeTrackerJob?.cancel()
+            amplitudeTrackerJob = CoroutineScope(Dispatchers.Default).launch {
                 while (recorder != null){
                     audioAmplitudes.add(getRecordingAmplitude())
 
@@ -51,6 +54,8 @@ class DisfluencyAudioRecorder(private val context: Context) {
     }
 
     fun stop(){
+        amplitudeTrackerJob?.cancel()
+        amplitudeTrackerJob = null
         recorder?.stop()
         recorder?.reset()
         recorder?.release()

@@ -133,25 +133,29 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder){
 
     Row(
         modifier = Modifier
-            .height(240.dp)
+            .wrapContentHeight()
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         RecordSwipeButton(
             onClick = {
+                println("Start!")
                 File(context.cacheDir, "audio.mp3").also {
                     audioRecorder.start(it)
                     audioFile = it
                 }
             },
             onRelease = {
+                println("Release!")
                 audioRecorder.stop()
             },
             onSend = {
+                println("Send!")
                 audioRecorder.stop()
             },
             onCancel = {
+                println("Cancel!")
                 audioRecorder.stop()
                 audioRecorder.audioAmplitudes.clear() //es temporal esto
             }
