@@ -17,6 +17,11 @@ import androidx.navigation.navArgument
 import com.disfluency.components.text.AdjustableSizeText
 import com.disfluency.components.text.AdjustableSizeUnit
 import com.disfluency.screens.*
+import com.disfluency.screens.exercise.ExercisesScreen
+import com.disfluency.screens.exercise.FormNewExercise
+import com.disfluency.screens.exercise.SingleExerciseScreen
+import com.disfluency.screens.patient.*
+import com.disfluency.screens.questionnaire.CuestionariosScreen
 
 
 @Composable
@@ -29,7 +34,7 @@ fun NavigationGraph(navController: NavHostController) {
             PacientesScreen(navController)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            EjerciciosScreen()
+            ExercisesScreen(navController)
         }
         composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
             CuestionariosScreen()
@@ -60,6 +65,15 @@ fun NavigationGraph(navController: NavHostController) {
         }
         composable(Route.NuevoPaciente.route) {
             FormNewPatient()
+        }
+        composable(Route.NuevoEjercicio.route) {
+            FormNewExercise()
+        }
+        composable(
+            route = Route.Ejercicio.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { SingleExerciseScreen(id = it.toInt()) }
         }
     }
 }
@@ -92,7 +106,7 @@ fun BottomNavigation(navController: NavController) {
 
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
-                                saveState = true
+                                saveState = false
                             }
                         }
                         launchSingleTop = true

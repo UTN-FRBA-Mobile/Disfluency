@@ -1,4 +1,4 @@
-package com.disfluency.screens
+package com.disfluency.screens.exercise
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,16 +14,14 @@ import androidx.compose.ui.unit.sp
 import com.disfluency.data.PatientRepository
 
 @Composable
-fun PatientQuestionnairesScreen(id: Int) {
-    val patient = PatientRepository.getPatientById(id)
-
+fun FormNewExercise() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Cuestionarios del Paciente: ${patient.name}",
+            text = "Nuevo ejercicio",
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
             modifier = Modifier.align(Alignment.CenterHorizontally),

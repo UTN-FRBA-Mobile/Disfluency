@@ -1,4 +1,4 @@
-package com.disfluency.screens
+package com.disfluency.screens.patient
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

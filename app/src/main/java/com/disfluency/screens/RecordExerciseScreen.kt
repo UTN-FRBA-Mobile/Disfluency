@@ -1,5 +1,6 @@
 package com.disfluency.screens
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -17,17 +19,21 @@ import androidx.navigation.compose.rememberNavController
 import com.disfluency.audio.record.DisfluencyAudioRecorder
 import com.disfluency.audio.record.LiveWaveform
 import com.disfluency.audio.record.MAX_SPIKES
+import com.disfluency.components.audio.AudioMediaType
+import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.button.RecordAudioButton
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.navigation.BottomNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
 import java.io.File
 
+const val LOCAL_RECORD_FILE = "disfluency_exercise_recording.mp3"
+
 @Composable
 @Preview(showBackground = true)
 fun RecordExercisePreview(){
 
-    MyApplicationTheme() {
+    MyApplicationTheme {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -48,12 +54,7 @@ fun RecordExercisePreview(){
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    RecordAudioButton(
-                        onClick = { println("Press") },
-                        onRelease = { println("Released") },
-                        onSend = { println("Send") },
-                        onCancel = { println("Cancel") }
-                    )
+                    RecordExercise(id = 4)
 
                 }
             }
@@ -62,7 +63,7 @@ fun RecordExercisePreview(){
 }
 
 @Composable
-fun RecordExercise(id: Long){
+fun RecordExercise(id: Int){
     val exercise = ExerciseRepository.getExerciseById(id)
 
     val audioRecorder = DisfluencyAudioRecorder(LocalContext.current)
@@ -109,14 +110,12 @@ fun RecordExercise(id: Long){
             contentAlignment = Alignment.Center
         ){
 
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ){
-//                if (recordingDone)
-//
-//                else
-                    LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 160.dp)
-            }
+            //TODO: fade in out on change
+
+            if (recordingDone)
+                AudioPlayer(audio = LOCAL_RECORD_FILE, type = AudioMediaType.FILE)
+            else
+                LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 160.dp)
         }
 
         RecordButton(audioRecorder, changeRecordingState)
@@ -130,8 +129,6 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
 
     var audioFile: File? = null
 
-//    val audioPlayer = DisfluencyAudioPlayer(context)
-
     Row(
         modifier = Modifier
             .wrapContentHeight()
@@ -141,7 +138,7 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
     ) {
         RecordAudioButton(
             onClick = {
-                File(context.cacheDir, "audio.mp3").also {
+                File(context.cacheDir, LOCAL_RECORD_FILE).also {
                     audioRecorder.start(it)
                     audioFile = it
                 }
@@ -152,7 +149,9 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
             },
             onSend = {
                 audioRecorder.stop()
-                //TODO: send
+                //TODO: subir el audio y crear el objeto de ejericio resuelto
+
+                //TODO: borrar el audio local cuando me vaya de esta pantalla
             },
             onCancel = {
                 changeRecordingState()
