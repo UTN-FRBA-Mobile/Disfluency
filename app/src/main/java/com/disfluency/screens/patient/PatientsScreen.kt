@@ -55,6 +55,7 @@ fun PacientesScreen(navController: NavHostController) {
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             ) {}
         }
+
         PatientsList(PatientRepository.longListForTest, navController, text)
     }
     PatientCreation(navController)

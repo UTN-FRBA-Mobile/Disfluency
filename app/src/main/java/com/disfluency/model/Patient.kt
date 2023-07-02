@@ -2,13 +2,14 @@ package com.disfluency.model
 
 import java.time.LocalDate
 import java.time.Period
+import java.time.temporal.ChronoUnit
 
 data class Patient(
     val name: String,
     val lastName: String,
     val dateOfBirth: LocalDate,
     val id: Int,
-    val account: String,
+    val email: String,
     val joinedSince: LocalDate,
     val profilePic: Int,
     val weeklyTurn: String, //TODO: ver cual seria el tipo de dato para esto

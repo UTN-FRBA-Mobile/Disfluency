@@ -13,15 +13,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.disfluency.screens.questionnaire.QuestionnaireScreen
+import com.disfluency.screens.HomeScreen
 import androidx.navigation.navArgument
 import com.disfluency.components.text.AdjustableSizeText
 import com.disfluency.components.text.AdjustableSizeUnit
-import com.disfluency.screens.*
 import com.disfluency.screens.exercise.ExercisesScreen
 import com.disfluency.screens.exercise.FormNewExercise
 import com.disfluency.screens.exercise.SingleExerciseScreen
 import com.disfluency.screens.patient.*
-import com.disfluency.screens.questionnaire.CuestionariosScreen
 
 
 @Composable
@@ -37,7 +37,7 @@ fun NavigationGraph(navController: NavHostController) {
             ExercisesScreen(navController)
         }
         composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
-            CuestionariosScreen()
+            QuestionnaireScreen()
         }
         composable(
             route = Route.Paciente.route,
@@ -64,7 +64,7 @@ fun NavigationGraph(navController: NavHostController) {
             backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it.toInt()) }
         }
         composable(Route.NuevoPaciente.route) {
-            FormNewPatient()
+            FormNewPatient(navController)
         }
         composable(Route.NuevoEjercicio.route) {
             FormNewExercise()
