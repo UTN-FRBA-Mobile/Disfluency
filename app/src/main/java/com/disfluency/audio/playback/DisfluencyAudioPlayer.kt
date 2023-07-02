@@ -86,7 +86,8 @@ abstract class DisfluencyAudioPlayer(private val context: Context) {
     }
 
     fun release(){
-        pause()
+        isPlaying.value = false
+        progressTrackerJob?.cancel()
         player?.release()
         player = null
     }

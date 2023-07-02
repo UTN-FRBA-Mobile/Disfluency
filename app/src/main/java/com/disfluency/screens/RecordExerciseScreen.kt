@@ -1,29 +1,33 @@
 package com.disfluency.screens
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.audio.record.DisfluencyAudioRecorder
-import com.disfluency.audio.record.LiveWaveform
+import com.disfluency.components.audio.LiveWaveform
 import com.disfluency.audio.record.MAX_SPIKES
 import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.button.RecordAudioButton
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.navigation.BottomNavigation
+import com.disfluency.navigation.Route
 import com.disfluency.ui.theme.MyApplicationTheme
 import java.io.File
 
@@ -32,6 +36,7 @@ const val LOCAL_RECORD_FILE = "disfluency_exercise_recording.mp3"
 @Composable
 @Preview(showBackground = true)
 fun RecordExercisePreview(){
+    val navController = rememberNavController()
 
     MyApplicationTheme {
         Scaffold(
@@ -43,7 +48,7 @@ fun RecordExercisePreview(){
                 )
             },
             bottomBar = {
-                BottomNavigation(navController = rememberNavController())
+                BottomNavigation(navController = navController)
             },
             content = { paddingValues ->
                 Column(
@@ -54,7 +59,9 @@ fun RecordExercisePreview(){
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    RecordExercise(id = 4)
+                    RecordExercise(id = 4, onSend = {
+                        println("Send")
+                    }, navController = navController)
 
                 }
             }
@@ -63,15 +70,13 @@ fun RecordExercisePreview(){
 }
 
 @Composable
-fun RecordExercise(id: Int){
+fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController){
     val exercise = ExerciseRepository.getExerciseById(id)
 
     val audioRecorder = DisfluencyAudioRecorder(LocalContext.current)
 
     var recordingDone by remember { mutableStateOf(false) }
-    val changeRecordingState = {
-        recordingDone = !recordingDone
-    }
+    val changeRecordingState = { recordingDone = !recordingDone }
 
     Column(
         modifier = Modifier
@@ -84,9 +89,28 @@ fun RecordExercise(id: Int){
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = exercise.title,
-                style = MaterialTheme.typography.headlineSmall
+            Layout(
+                content = {
+                    Text(text = exercise.title, style = MaterialTheme.typography.headlineSmall)
+
+                    IconButton(
+                        modifier = Modifier.size(40.dp).padding(start = 4.dp),
+                        onClick = { navController.navigate(Route.Ejercicio.routeTo(exercise.id)) }
+                    ) {
+                        Icon(imageVector = Icons.Filled.Info, contentDescription = "Info", tint = MaterialTheme.colorScheme.primary)
+                    }
+                },
+                measurePolicy = { measurables, constraints ->
+                    val text = measurables[0].measure(constraints)
+                    val icon = measurables[1].measure(constraints)
+                    layout(
+                        width = text.width + icon.width * 2,
+                        height = maxOf(text.height, icon.height, constraints.minHeight)
+                    ) {
+                        text.placeRelative(icon.width, 0)
+                        icon.placeRelative(text.width + icon.width, -5)
+                    }
+                }
             )
 
             Text(
@@ -110,7 +134,7 @@ fun RecordExercise(id: Int){
             contentAlignment = Alignment.Center
         ){
 
-            //TODO: fade in out on change
+            //TODO: animacion al cambio
 
             if (recordingDone)
                 AudioPlayer(audio = LOCAL_RECORD_FILE, type = AudioMediaType.FILE)
@@ -118,13 +142,13 @@ fun RecordExercise(id: Int){
                 LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 160.dp)
         }
 
-        RecordButton(audioRecorder, changeRecordingState)
+        RecordButton(audioRecorder, changeRecordingState, onSend)
 
     }
 }
 
 @Composable
-fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: () -> Unit){
+fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: () -> Unit, onSend: (File) -> Unit){
     val context = LocalContext.current
 
     var audioFile: File? = null
@@ -144,19 +168,18 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
                 }
             },
             onRelease = {
-                audioRecorder.stop()
                 changeRecordingState()
+                audioRecorder.stop()
             },
             onSend = {
                 audioRecorder.stop()
-                //TODO: subir el audio y crear el objeto de ejericio resuelto
-
-                //TODO: borrar el audio local cuando me vaya de esta pantalla
+                audioFile?.let(onSend)
             },
             onCancel = {
                 changeRecordingState()
-                audioRecorder.stop()
-                audioRecorder.audioAmplitudes.clear() //es temporal esto
+                audioRecorder.audioAmplitudes.clear()
+                audioFile?.apply { delete() }
+                audioFile = null
             }
         )
     }

@@ -1,7 +1,11 @@
 package com.disfluency.data
 
 import com.disfluency.model.Exercise
+import com.disfluency.model.ExerciseAssignment
+import com.disfluency.model.ExercisePractice
 import com.disfluency.model.Patient
+import java.io.File
+import java.time.LocalDate
 
 object ExerciseRepository {
     private var testUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
@@ -51,8 +55,25 @@ object ExerciseRepository {
 
     val longListForTest = exercises
 
+    val assignments = listOf(
+        ExerciseAssignment(id = 1, exerciseId = 6, patientId = 40123864, data = LocalDate.of(2023, 6, 26)),
+        ExerciseAssignment(id = 2, exerciseId = 4, patientId = 40123864, data = LocalDate.of(2023, 6, 25))
+    )
+
     fun getExerciseById(id: Int): Exercise{
         return exercises.first { exercise -> exercise.id == id }
+    }
+
+    fun getAssignmentById(id: Int): ExerciseAssignment {
+        return assignments.first { assignment -> assignment.id == id }
+    }
+
+    fun saveExercisePractice(assignmentId: Int, audio: File){
+        val practice = ExercisePractice(
+            id = assignmentId,
+            audioUrl = "", //TODO: subir audio
+            date = LocalDate.now()
+        )
     }
 
     fun getCompletedExercisesCountByPatient(patient: Patient): Int {
