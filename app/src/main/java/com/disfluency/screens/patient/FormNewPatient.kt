@@ -1,4 +1,4 @@
-package com.disfluency.screens;
+package com.disfluency.screens.patient;
 
 import android.util.Patterns
 import androidx.compose.foundation.layout.*

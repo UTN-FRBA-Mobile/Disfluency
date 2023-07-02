@@ -23,8 +23,6 @@ object PatientRepository {
     ))
 
 
-    val longListForTest = List(20){
-        patients.random()
-    }
+    val longListForTest = patients
 }
 
