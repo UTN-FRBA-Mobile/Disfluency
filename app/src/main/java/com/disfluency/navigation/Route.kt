@@ -13,6 +13,14 @@ sealed class Route(val route: String, val title: String){
     }
     object NuevoPaciente: Route("nuevo-paciente", "Nuevo Paciente")
 
+    object NuevoEjercicio: Route("nuevo-ejercicio", "Nuevo Ejercicio")
+
+
+    object Ejercicio: Route("ejercicio/{id}", "Detalle del ejercicio"){
+        fun routeTo(ejercicioId: Int): String{
+            return route.replace("{id}", ejercicioId.toString())
+        }
+    }
     object PatientExercises: Route("paciente/{id}/ejercicios", "Ejercicios del Paciente"){
         fun routeTo(patientId: Int): String{
             return route.replace("{id}", patientId.toString())

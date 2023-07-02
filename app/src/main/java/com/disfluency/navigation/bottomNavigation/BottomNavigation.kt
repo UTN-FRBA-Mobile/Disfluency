@@ -24,7 +24,7 @@ fun BottomNavigation(navController: NavController, items: List<BottomNavigationI
 
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
-                                saveState = true
+                                saveState = false
                             }
                         }
                         launchSingleTop = true

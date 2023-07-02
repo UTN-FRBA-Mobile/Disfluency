@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -25,16 +26,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
-import com.disfluency.model.User
 import com.disfluency.navigation.Route
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PacientesScreen(navController: NavHostController, user: Phono) {
+fun PatientsScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
             Modifier
@@ -42,55 +42,36 @@ fun PacientesScreen(navController: NavHostController, user: Phono) {
                 .zIndex(1f)
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)) {
+            //TODO: ver si se puede esconder el teclado cuando doy enter
             SearchBar(
                 modifier = Modifier.align(Alignment.TopCenter),
                 query = text,
                 onQueryChange = { text = it },
-                onSearch = { active = false },
-                active = active,
-                onActiveChange = {
-                    active = it
-                },
-                placeholder = { Text("Buscar paciente") },
+                onSearch = { },
+                active = false,
+                onActiveChange = { },
+                placeholder = { Text("Buscar") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    // Ultimas 5 busquedas?
-                    items(4) { idx ->
-                        val resultText = "Suggestion $idx"
-                        ListItem(
-                            headlineContent = { Text(resultText) },
-                            modifier = Modifier.clickable {
-                                text = resultText
-                                active = false
-                            }
-                        )
-                    }
-                }
-            }
+            ) {}
         }
-        PacientesList(user.patients, navController, text)
+        PatientsList(user.patients, navController, text)
     }
-    PacienteCreation(navController)
+    PatientCreation(navController)
 }
 
 @Composable
-fun PacientesList(pacientes: List<Patient>, navController: NavHostController, filter: String) {
+fun PatientsList(pacientes: List<Patient>, navController: NavHostController, filter: String) {
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(pacientes.filter {
                 paciente -> paciente.fullName().contains(filter, true) }) {paciente ->
-            PacienteCard(paciente, navController)
+            PatientCard(paciente, navController)
         }
     }
 }
 
 @Composable
-fun PacienteCard(paciente: Patient, navController: NavHostController) {
+fun PatientCard(paciente: Patient, navController: NavHostController) {
     // Refactor a ListItem?
     val onClick = {
         navController.navigate(Route.Paciente.routeTo(paciente.id))
@@ -132,7 +113,7 @@ fun PacienteCard(paciente: Patient, navController: NavHostController) {
 }
 
 @Composable
-fun PacienteCreation(navController: NavHostController) {
+fun PatientCreation(navController: NavHostController) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd

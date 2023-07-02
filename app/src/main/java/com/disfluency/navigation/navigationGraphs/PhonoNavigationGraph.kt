@@ -9,6 +9,11 @@ import com.disfluency.model.Phono
 import com.disfluency.model.User
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.Route
+import com.disfluency.screens.exercise.ExercisesScreen
+import com.disfluency.screens.exercise.SingleExerciseScreen
+import com.disfluency.screens.phono.PatientQuestionnairesScreen
+import com.disfluency.screens.phono.PatientSessionsScreen
+import com.disfluency.screens.patient.SinglePatientScreen
 import com.disfluency.screens.phono.*
 
 @Composable
@@ -18,13 +23,13 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             PhonoHomeScreen(onLogout)
         }
         composable(BottomNavigationItem.Pacientes.screenRoute.route) {
-            PacientesScreen(navController, user.role as Phono)
+            PatientsScreen(navController, user.role as Phono)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            PhonoEjerciciosScreen()
+            ExercisesScreen(navController)
         }
         composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
-            PhonoCuestionariosScreen()
+            PhonoQuestionnaireScreen()
         }
         composable(
             route = Route.Paciente.route,
@@ -36,7 +41,7 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             route = Route.PatientExercises.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PatientExercisesScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { PhonoExercisesScreen(id = it.toInt()) }
         }
         composable(
             route = Route.PatientQuestionnaires.route,
@@ -51,7 +56,18 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it.toInt()) }
         }
         composable(Route.NuevoPaciente.route) {
-            FormNewPatient()
+            FormNewPatient(navController, user.role as Phono)
+        }
+
+        composable(
+            route = Route.Ejercicio.route,
+            arguments = listOf(navArgument("id") {  })
+        ){ backStackEntry ->
+            backStackEntry.arguments?.getString("id")?.let { SingleExerciseScreen(id = it.toInt()) }
+        }
+
+        composable(Route.NuevoEjercicio.route) {
+            FormNewExercise()
         }
     }
 }

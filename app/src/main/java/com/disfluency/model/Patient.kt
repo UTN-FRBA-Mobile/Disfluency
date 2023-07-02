@@ -2,13 +2,14 @@ package com.disfluency.model
 
 import java.time.LocalDate
 import java.time.Period
+import java.time.temporal.ChronoUnit
 
 data class Patient(
     val name: String,
     val lastName: String,
     val dateOfBirth: LocalDate,
     val id: Int,
-    val account: String,
+    val email: String,
     val joinedSince: LocalDate,
     val profilePic: Int,
     val weeklyTurn: String, //TODO: ver cual seria el tipo de dato para esto
@@ -19,15 +20,15 @@ data class Patient(
         return (name.first().toString() + lastName.first().toString()).uppercase()
     }
 
-    fun fullName(): String{
+    fun fullName(): String {
         return "$name $lastName"
     }
 
-    fun fullNameFormal(): String{
+    fun fullNameFormal(): String {
         return "$lastName, $name"
     }
 
-    fun age(): Int{
+    fun age(): Int {
         return Period.between(
             dateOfBirth,
             LocalDate.now()

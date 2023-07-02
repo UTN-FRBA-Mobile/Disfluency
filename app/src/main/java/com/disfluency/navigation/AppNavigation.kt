@@ -60,8 +60,8 @@ fun AppNavigation(){
             AppScaffold(listOf(
                 BottomNavigationItem.HomePhono,
                 BottomNavigationItem.Pacientes,
-                BottomNavigationItem.Ejercicios,
-                BottomNavigationItem.Cuestionarios
+                BottomNavigationItem.Ejercicios
+//                BottomNavigationItem.Cuestionarios
             )){
                 PhonoNavigationGraph(navController = it, loginService.getUser(), onLogout)
             }
@@ -69,8 +69,8 @@ fun AppNavigation(){
         composable(Route.HomePatient.route){
             AppScaffold(listOf(
                 BottomNavigationItem.HomePatient,
-                BottomNavigationItem.Ejercicios,
-                BottomNavigationItem.Cuestionarios
+                BottomNavigationItem.Ejercicios
+//                BottomNavigationItem.Cuestionarios
             )){
                 PatientNavigationGraph(navController = it, loginService.getUser(), onLogout)
             }
