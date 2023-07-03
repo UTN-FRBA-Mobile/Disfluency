@@ -1,22 +1,28 @@
-package com.disfluency.screens
+package com.disfluency.screens.exercise
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.audio.record.DisfluencyAudioRecorder
@@ -26,6 +32,7 @@ import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.button.RecordAudioButton
 import com.disfluency.data.ExerciseRepository
+import com.disfluency.model.Exercise
 import com.disfluency.navigation.BottomNavigation
 import com.disfluency.navigation.Route
 import com.disfluency.ui.theme.MyApplicationTheme
@@ -89,27 +96,10 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Layout(
-                content = {
-                    Text(text = exercise.title, style = MaterialTheme.typography.headlineSmall)
-
-                    IconButton(
-                        modifier = Modifier.size(40.dp).padding(start = 4.dp),
-                        onClick = { navController.navigate(Route.Ejercicio.routeTo(exercise.id)) }
-                    ) {
-                        Icon(imageVector = Icons.Filled.Info, contentDescription = "Info", tint = MaterialTheme.colorScheme.primary)
-                    }
-                },
-                measurePolicy = { measurables, constraints ->
-                    val text = measurables[0].measure(constraints)
-                    val icon = measurables[1].measure(constraints)
-                    layout(
-                        width = text.width + icon.width * 2,
-                        height = maxOf(text.height, icon.height, constraints.minHeight)
-                    ) {
-                        text.placeRelative(icon.width, 0)
-                        icon.placeRelative(text.width + icon.width, -5)
-                    }
+            ExerciseTitleWithInfo(
+                exercise = exercise,
+                onInfoButtonClick = {
+                    navController.navigate(Route.Ejercicio.routeTo(exercise.id))
                 }
             )
 
@@ -144,6 +134,28 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
 
         RecordButton(audioRecorder, changeRecordingState, onSend)
 
+    }
+}
+
+@Composable
+private fun ExerciseTitleWithInfo(exercise: Exercise, onInfoButtonClick: () -> Unit){
+    val modifier = Modifier.size(26.dp).padding(horizontal = 2.dp)
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = modifier)
+
+        Text(text = exercise.title, style = MaterialTheme.typography.headlineSmall)
+
+        IconButton(
+            modifier = modifier.offset(y = 2.dp),
+            onClick = onInfoButtonClick
+        ) {
+            Icon(imageVector = Icons.Filled.Info, contentDescription = "Info", tint = MaterialTheme.colorScheme.primary)
+        }
     }
 }
 
