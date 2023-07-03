@@ -13,7 +13,8 @@ data class Patient(
     val joinedSince: LocalDate,
     val profilePic: Int,
     val weeklyTurn: String, //TODO: ver cual seria el tipo de dato para esto
-    val weeklyHour: String //TODO: ver cual seria el tipo de dato para esto
+    val weeklyHour: String, //TODO: ver cual seria el tipo de dato para esto
+    val exercises: MutableList<Exercise> = ArrayList()
     ): Role {
 
     fun initials(): String {
@@ -33,5 +34,9 @@ data class Patient(
             dateOfBirth,
             LocalDate.now()
         ).years
+    }
+
+    fun addExercise(exercise: Exercise){
+        this.exercises.add(exercise)
     }
 }

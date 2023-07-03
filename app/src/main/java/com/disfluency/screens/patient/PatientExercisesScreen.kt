@@ -11,24 +11,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.disfluency.data.ExerciseRepository
 import com.disfluency.data.PatientRepository
+import com.disfluency.model.Patient
+import com.disfluency.screens.exercise.ExerciseList
 
 @Composable
-fun PatientExercisesScreen(id: Int) {
-    val patient = PatientRepository.getPatientById(id)
+fun PatientExercisesScreen(navController: NavHostController, patient: Patient) {
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
-        Text(
-            text = "Ejercicios del Paciente: ${patient.name}",
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
+        //TODO: Distinguir si esta resuelto y agregar fecha.
+        ExerciseList(patient.exercises.reversed(), navController, "")
     }
 }
