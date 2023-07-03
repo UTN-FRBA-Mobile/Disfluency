@@ -16,9 +16,9 @@ import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
-import com.disfluency.navigation.BottomNavigation
+import com.disfluency.navigation.bottomNavigation.BottomNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun ExercisePreview(){
@@ -47,7 +47,7 @@ fun ExercisePreview(){
             }
         )
     }
-}
+}*/
 
 @Composable
 fun SingleExerciseScreen(id: Int) {

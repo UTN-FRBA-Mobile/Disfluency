@@ -1,4 +1,4 @@
-package com.disfluency.screens.questionnaire
+package com.disfluency.screens.phono
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun QuestionnaireScreen() {
+fun PhonoQuestionnaireScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()

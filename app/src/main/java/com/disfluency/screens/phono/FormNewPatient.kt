@@ -1,4 +1,4 @@
-package com.disfluency.screens.patient;
+package com.disfluency.screens.phono;
 
 import android.util.Patterns
 import androidx.compose.foundation.layout.*
@@ -19,11 +19,12 @@ import com.disfluency.R
 import com.disfluency.components.inputs.*
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
+import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
 import java.time.LocalDate
 
 @Composable
-fun FormNewPatient(navController: NavController) {
+fun FormNewPatient(navController: NavController, phono: Phono) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,6 +87,8 @@ fun FormNewPatient(navController: NavController) {
                             weeklyTurn = weeklyTurn.value,
                             profilePic = profilePic.value
                         )
+
+                        phono.addPatient(patient)
                         PatientRepository.addPatient(patient)
                         navController.navigate(Route.Paciente.routeTo(patient.id))
                     }
