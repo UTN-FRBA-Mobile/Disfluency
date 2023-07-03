@@ -1,4 +1,4 @@
-package com.disfluency.screens.patient
+package com.disfluency.screens.phono
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -20,20 +20,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
+import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PacientesScreen(navController: NavHostController) {
+fun PatientsScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -55,7 +54,7 @@ fun PacientesScreen(navController: NavHostController) {
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             ) {}
         }
-        PatientsList(PatientRepository.longListForTest, navController, text)
+        PatientsList(user.patients, navController, text)
     }
     PatientCreation(navController)
 }
