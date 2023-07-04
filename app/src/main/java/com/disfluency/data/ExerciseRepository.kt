@@ -1,6 +1,7 @@
 package com.disfluency.data
 
 import com.disfluency.model.Exercise
+import com.disfluency.model.ExerciseAssignment
 import com.disfluency.model.Patient
 
 object ExerciseRepository {
@@ -17,5 +18,9 @@ object ExerciseRepository {
 
     fun getPendingExercisesCountByPatient(patient: Patient): Int {
         return 2; //TODO: implement
+    }
+
+    fun getAssignmentById(id: String): ExerciseAssignment{
+        return MockedData.assignments.first { it.id == id }
     }
 }
