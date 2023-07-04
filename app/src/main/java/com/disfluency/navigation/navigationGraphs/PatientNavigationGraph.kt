@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.disfluency.model.Patient
 import com.disfluency.model.User
-import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.Route
-import com.disfluency.screens.patient.PatientExercisesScreen
-import com.disfluency.screens.phono.PhonoExercisesScreen
+import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
+import com.disfluency.screens.exercise.ExerciseAssignmentDetail
+import com.disfluency.screens.patient.PatientExerciseAssignmentsScreen
 import com.disfluency.screens.utils.EmptyScreen
 
 @Composable
@@ -19,12 +20,13 @@ fun PatientNavigationGraph(navController: NavHostController, user: User, onLogou
             EmptyScreen("Home Paciente", onLogout)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            PatientExercisesScreen(id = (user.role as Patient).id) //TODO: Revisar
+            PatientExerciseAssignmentsScreen(navController, user.role as Patient) //TODO: Revisar
         }
 
-/*        composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
-            EmptyScreen("Cuestionarios Paciente", onLogout)
+        composable(Route.PatientExerciseAssignmentDetail.route, listOf(navArgument("id"){})){
+            it.arguments?.getString("id")?.let {id->
+                ExerciseAssignmentDetail(id, navController)
+            }
         }
- */
     }
 }

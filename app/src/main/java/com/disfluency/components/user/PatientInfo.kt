@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
+import com.disfluency.data.MockedData
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
@@ -99,6 +100,6 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
 @Composable
 fun PreviewInfoCard(){
     MyApplicationTheme() {
-        PatientInfoCard(patient = PatientRepository.testPatient)
+        PatientInfoCard(patient = MockedData.patients.first())
     }
 }
