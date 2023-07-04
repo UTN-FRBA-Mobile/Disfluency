@@ -17,6 +17,7 @@ sealed class Route(val route: String, val title: String){
 
     object NuevoEjercicio: Route("nuevo-ejercicio", "Nuevo Ejercicio")
 
+    object Assignment: Route("asignacion", "Asignar")
 
     object Ejercicio: Route("ejercicio/{id}", "Detalle del ejercicio"){
         fun routeTo(ejercicioId: Int): String{
