@@ -8,4 +8,7 @@ data class ExerciseAssignment(
     val dateOfAssignment: LocalDate,
     val practiceAttempts: List<ExercisePractice>
 ) {
+    fun attemptsCount(): Int {
+        return practiceAttempts.size
+    }
 }
