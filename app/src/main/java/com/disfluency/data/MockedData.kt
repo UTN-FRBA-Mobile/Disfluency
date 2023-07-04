@@ -1,39 +1,14 @@
 package com.disfluency.data
 
 import com.disfluency.R
-import com.disfluency.model.Exercise
-import com.disfluency.model.Patient
-import com.disfluency.model.Phono
-import com.disfluency.model.User
+import com.disfluency.model.*
 import java.time.LocalDate
 
 object MockedData {
-    val testPatient = Patient("Agustin", "Cragno", LocalDate.of(1998, 7, 30), 40123864, "acragno@frba.utn.edu.ar", LocalDate.of(2023, 1, 9), R.drawable.avatar_26, "Lunes y Miercoles", "18:00")
 
-    val patients: MutableList<Patient> = arrayListOf(
-        testPatient,
-        Patient("Jose", "Bruzzoni", LocalDate.of(1991, 2, 3), 43181238, "jbruzzoni@frba.utn.edu.ar", LocalDate.of(2018, 12, 9), R.drawable.avatar_12, "Martes y Jueves", "19:00"),
-        Patient("Alexander", "Martinez", LocalDate.of(1995, 5, 4), 37186477, "amartinez@gmail.com", LocalDate.of(2023, 5, 15), R.drawable.avatar_17, "Miercoles", "19:00")
-    )
+    private const val testUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
 
-    val users: MutableList<User> = ArrayList()
-    val exercises = stubExercises()
-
-
-    init{
-        exercises.subList(0,2).forEach(testPatient::addExercise)
-        users.addAll(
-            patients.map { User(it.name, "123", it) } + listOf(
-                User("beto", "123", Phono(patients = ArrayList(patients))),
-                User("Matias", "123", Phono(patients = mutableListOf(testPatient)))
-            )
-        )
-    }
-}
-
-private fun stubExercises(): MutableList<Exercise>{
-    val testUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-    return arrayListOf(
+    val exercises: MutableList<Exercise> = arrayListOf(
         Exercise(id = 1, therapistId = 1, title = "Presentarse", instruction = "Di tu nombre y apellido", sampleAudioURL = testUrl, number = 1),
         Exercise(id = 2, therapistId = 1, title = "Repetir", instruction = "Repite la siguiente frase", phrase = "Tres tigres comen trigo Tres tigres comen trigoTres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo v Tres tigres comen trigo Tres tigres comen trigo", sampleAudioURL = testUrl, number = 2),
         Exercise(id = 3, therapistId = 1, title = "Repetir 2", instruction = "Repita la siguiente frase", phrase = "Pablito clavó un clavito", sampleAudioURL = testUrl, number = 3),
@@ -75,4 +50,28 @@ private fun stubExercises(): MutableList<Exercise>{
             number = 7
         )
     )
+
+    val practices = arrayListOf(
+        ExercisePractice("1", LocalDate.of(2023, 7, 3), testUrl),
+        ExercisePractice("2", LocalDate.of(2023, 4, 26), testUrl)
+    )
+
+    val assignments = arrayListOf(
+        ExerciseAssignment("1", exercises[4], LocalDate.of(2021, 8, 5), practices),
+        ExerciseAssignment("2", exercises[3], LocalDate.of(2023, 1, 9), arrayListOf(practices[0])),
+        ExerciseAssignment("3", exercises[5], LocalDate.of(2018, 12, 9), emptyList())
+    )
+
+    val patients: MutableList<Patient> = arrayListOf(
+        Patient("Agustin", "Cragno", LocalDate.of(1998, 7, 30), 40123864, "acragno@frba.utn.edu.ar", LocalDate.of(2023, 1, 9), R.drawable.avatar_26, "Lunes y Miercoles", "18:00", assignments),
+        Patient("Jose", "Bruzzoni", LocalDate.of(1991, 2, 3), 43181238, "jbruzzoni@frba.utn.edu.ar", LocalDate.of(2018, 12, 9), R.drawable.avatar_12, "Martes y Jueves", "19:00", assignments),
+        Patient("Alexander", "Martinez", LocalDate.of(1995, 5, 4), 37186477, "amartinez@gmail.com", LocalDate.of(2023, 5, 15), R.drawable.avatar_17, "Miercoles", "19:00", assignments)
+    )
+
+    val therapists: MutableList<Phono> = arrayListOf(
+        Phono("1", "Lionel", "Scaloni", R.drawable.avatar_12, patients, exercises),
+        Phono("2", "Jorge", "Sampaoli", R.drawable.avatar_26, patients, exercises)
+    )
+
+    val users: List<User> = patients.map { User(it.name, "123", it) } + therapists.map { User(it.name, "123", it) }
 }

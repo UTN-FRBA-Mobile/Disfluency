@@ -100,6 +100,6 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
 @Composable
 fun PreviewInfoCard(){
     MyApplicationTheme() {
-        PatientInfoCard(patient = MockedData.testPatient)
+        PatientInfoCard(patient = MockedData.patients.first())
     }
 }
