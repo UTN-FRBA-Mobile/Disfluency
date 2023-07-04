@@ -47,6 +47,19 @@ sealed class Route(val route: String, val title: String){
         }
     }
 
+    //TODO: esta ok esta ruta?!
+    object PatientExercisePracticeDetail: Route("ejercicio-resuelto/{id}", "Resolucion de Ejercicio"){
+        fun routeTo(practiceId: String): String{
+            return route.replace("{id}", practiceId)
+        }
+    }
+
+    object PatientExerciseRecordPractice: Route("ejercicio-asignado/{id}/grabar", "Practica de Ejercicio"){
+        fun routeTo(exerciseAssignmentId: String): String{
+            return route.replace("{id}", exerciseAssignmentId)
+        }
+    }
+
     //TODO
     object HomePatient : Route("patient/home", "Home")
 
