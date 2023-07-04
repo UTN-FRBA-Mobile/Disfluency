@@ -1,80 +1,33 @@
 package com.disfluency.screens.exercise
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.disfluency.audio.record.DisfluencyAudioRecorder
-import com.disfluency.components.audio.LiveWaveform
 import com.disfluency.audio.record.MAX_SPIKES
 import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
+import com.disfluency.components.audio.LiveWaveform
 import com.disfluency.components.button.RecordAudioButton
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
-import com.disfluency.navigation.BottomNavigation
 import com.disfluency.navigation.Route
-import com.disfluency.ui.theme.MyApplicationTheme
 import java.io.File
 
 const val LOCAL_RECORD_FILE = "disfluency_exercise_recording.mp3"
 
-@Composable
-@Preview(showBackground = true)
-fun RecordExercisePreview(){
-    val navController = rememberNavController()
-
-    MyApplicationTheme {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(text = "Ejercicio") },
-                    navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
-                    actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
-                )
-            },
-            bottomBar = {
-                BottomNavigation(navController = navController)
-            },
-            content = { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    RecordExercise(id = 4, onSend = {
-                        println("Send")
-                    }, navController = navController)
-
-                }
-            }
-        )
-    }
-}
 
 @Composable
 fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController){
