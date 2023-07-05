@@ -29,11 +29,9 @@ fun AssignmentScreen(navController: NavHostController, phono: Phono) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "Pacientes",
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
-                .padding(start = 2.dp)
-                .height(20.dp)
-                .wrapContentHeight()
+                .padding(16.dp)
         )
         Row(modifier = Modifier.weight(1f)) {
             Box(
@@ -48,18 +46,16 @@ fun AssignmentScreen(navController: NavHostController, phono: Phono) {
         }
         Text(
             text = "Ejercicios",
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
-                .padding(start = 2.dp)
-                .height(20.dp)
-                .wrapContentHeight()
+                .padding(16.dp)
         )
         Row(modifier = Modifier.weight(1f)) {
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 ExercisesColumn(ExerciseRepository.exercises, checkedExercises, navController)
@@ -73,7 +69,7 @@ fun AssignmentScreen(navController: NavHostController, phono: Phono) {
 fun PatientsColumn(patients: List<Patient>, checkedPatients: MutableList<Int>, navController: NavHostController) {
     Column(modifier = Modifier.fillMaxHeight()) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
+            LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(4.dp)){
                 items(patients){ patient ->
                     PatientAssignmentCard(patient, checkedPatients, navController)
@@ -87,7 +83,7 @@ fun PatientsColumn(patients: List<Patient>, checkedPatients: MutableList<Int>, n
 fun ExercisesColumn(exercises: List<Exercise>, checkedExercises: MutableList<Int>, navController: NavHostController) {
     Column(modifier = Modifier.fillMaxHeight()) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
+            LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(4.dp)){
                 items(exercises){ ex ->
                     ExerciseAssignmentCard(ex, checkedExercises, navController)
