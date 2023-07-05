@@ -21,6 +21,8 @@ object ExerciseRepository {
             recordingUrl = "", //TODO: subir audio
             date = LocalDate.now()
         )
+
+        println("Saved audio recording: $audio")
     }
 
     fun getCompletedExercisesCountByPatient(patient: Patient): Int {

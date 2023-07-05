@@ -25,7 +25,7 @@ const val ANIMATION_TIME = 200
 fun RecordAudioButton(
     onClick: () -> Unit,
     onRelease: () -> Unit,
-    onSend: () -> Unit, //TODO: hace falta este o es lo mismo que onRelease?
+    onSend: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },

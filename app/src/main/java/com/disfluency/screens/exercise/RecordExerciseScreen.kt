@@ -38,6 +38,8 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
     var recordingDone by remember { mutableStateOf(false) }
     val changeRecordingState = { recordingDone = !recordingDone }
 
+    //TODO: if recording done y trata de salir de la pantalla, mostrar un dialog preguntando si esta seguro.
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -137,8 +139,8 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
                 audioRecorder.stop()
             },
             onSend = {
-                audioRecorder.stop()
-                audioFile?.let(onSend)
+                File(context.cacheDir, LOCAL_RECORD_FILE).let(onSend)
+                //TODO: algun pequeño efecto o animacion y volver para atras
             },
             onCancel = {
                 changeRecordingState()

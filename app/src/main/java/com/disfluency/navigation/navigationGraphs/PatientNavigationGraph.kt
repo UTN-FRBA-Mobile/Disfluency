@@ -12,6 +12,7 @@ import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.screens.exercise.ExerciseAssignmentDetail
 import com.disfluency.screens.exercise.ExercisePracticeDetailScreen
 import com.disfluency.screens.exercise.ExerciseRecordingScreen
+import com.disfluency.screens.exercise.SingleExerciseScreen
 import com.disfluency.screens.patient.PatientExerciseAssignmentsScreen
 import com.disfluency.screens.utils.EmptyScreen
 
@@ -38,6 +39,11 @@ fun PatientNavigationGraph(navController: NavHostController, user: User, onLogou
         composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){})){
             it.arguments?.getString("id")?.let {id->
                 ExercisePracticeDetailScreen(practiceId = id)
+            }
+        }
+        composable(Route.Ejercicio.route, listOf(navArgument("id"){})){
+            it.arguments?.getString("id")?.let { id ->
+                SingleExerciseScreen(id = id.toInt())
             }
         }
     }
