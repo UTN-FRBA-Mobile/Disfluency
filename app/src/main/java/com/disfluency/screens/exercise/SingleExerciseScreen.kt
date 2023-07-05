@@ -1,54 +1,19 @@
 package com.disfluency.screens.exercise
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
-import com.disfluency.navigation.bottomNavigation.BottomNavigation
-import com.disfluency.ui.theme.MyApplicationTheme
-/*
-@Preview(showBackground = true)
-@Composable
-fun ExercisePreview(){
-    MyApplicationTheme {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(text = "Ejercicio") },
-                    navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
-                    actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
-                )
-            },
-            bottomBar = {
-                BottomNavigation(navController = rememberNavController())
-            },
-            content = { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SingleExerciseScreen(id = 4)
-                }
-            }
-        )
-    }
-}*/
+
 
 @Composable
 fun SingleExerciseScreen(id: Int) {
@@ -99,7 +64,7 @@ fun SingleExerciseScreen(id: Int) {
 
 @Composable
 fun ExampleRecording(exercise: Exercise){
-    Column {
+    Column(modifier = Modifier.padding(top = 16.dp)) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()

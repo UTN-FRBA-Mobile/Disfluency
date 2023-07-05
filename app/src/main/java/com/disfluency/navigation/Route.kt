@@ -1,5 +1,7 @@
 package com.disfluency.navigation
 
+import com.disfluency.model.ExerciseAssignment
+
 sealed class Route(val route: String, val title: String){
     object Login: Route("login", "Iniciar Sesión")
     object HomePhono: Route("home", "Home")
@@ -36,6 +38,25 @@ sealed class Route(val route: String, val title: String){
     object PatientSessions: Route("paciente/{id}/sesiones", "Sesiones del Paciente"){
         fun routeTo(patientId: Int): String{
             return route.replace("{id}", patientId.toString())
+        }
+    }
+
+    object PatientExerciseAssignmentDetail: Route("ejercicio-asignado/{id}", "Ejercicio Asignado"){
+        fun routeTo(exerciseAssignmentId: String): String{
+            return route.replace("{id}", exerciseAssignmentId)
+        }
+    }
+
+    //TODO: esta ok esta ruta?!
+    object PatientExercisePracticeDetail: Route("ejercicio-resuelto/{id}", "Resolucion de Ejercicio"){
+        fun routeTo(practiceId: String): String{
+            return route.replace("{id}", practiceId)
+        }
+    }
+
+    object PatientExerciseRecordPractice: Route("ejercicio-asignado/{id}/grabar", "Practica de Ejercicio"){
+        fun routeTo(exerciseAssignmentId: String): String{
+            return route.replace("{id}", exerciseAssignmentId)
         }
     }
 

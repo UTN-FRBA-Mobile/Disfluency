@@ -3,8 +3,8 @@ package com.disfluency.model
 import java.time.LocalDate
 
 data class ExercisePractice(
-    val id: Int,
+    val id: String,
     val date: LocalDate,
-    val audioUrl: String
+    val recordingUrl: String
 ) {
 }
