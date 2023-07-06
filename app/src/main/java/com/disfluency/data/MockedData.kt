@@ -2,7 +2,7 @@ package com.disfluency.data
 
 import com.disfluency.R
 import com.disfluency.model.*
-import java.time.DayOfWeek
+import com.disfluency.model.utils.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -66,13 +66,15 @@ object MockedData {
 
     val patients: MutableList<Patient> = arrayListOf(
         Patient("Agustin", "Cragno", LocalDate.of(1998, 7, 30), 40123864, "acragno@frba.utn.edu.ar", LocalDate.of(2023, 1, 9), R.drawable.avatar_26, listOf(DayOfWeek.MONDAY, DayOfWeek.THURSDAY), LocalTime.of(18, 0), assignments),
-        Patient("Jose", "Bruzzoni", LocalDate.of(1991, 2, 3), 43181238, "jbruzzoni@frba.utn.edu.ar", LocalDate.of(2018, 12, 9), R.drawable.avatar_12, listOf(DayOfWeek.THURSDAY, DayOfWeek.THURSDAY), LocalTime.of(19, 0), assignments),
+        Patient("Jose", "Bruzzoni", LocalDate.of(1991, 2, 3), 43181238, "jbruzzoni@frba.utn.edu.ar", LocalDate.of(2018, 12, 9), R.drawable.avatar_12, listOf(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY), LocalTime.of(19, 0), assignments),
         Patient("Alexander", "Martinez", LocalDate.of(1995, 5, 4), 37186477, "amartinez@gmail.com", LocalDate.of(2023, 5, 15), R.drawable.avatar_17, listOf(DayOfWeek.WEDNESDAY), LocalTime.of(19, 0), assignments)
     )
 
     val therapists: MutableList<Phono> = arrayListOf(
-        Phono("1", "Lionel", "Scaloni", R.drawable.avatar_12, patients, exercises),
-        Phono("2", "Jorge", "Sampaoli", R.drawable.avatar_26, patients, exercises)
+        Phono("1", "Matias", "Anzorandía", R.drawable.avatar_12, patients, exercises),
+        Phono("2", "Jorge", "Sampaoli", R.drawable.avatar_26, patients, exercises),
+        Phono("3", "Lionel", "Scaloni", R.drawable.avatar_17, patients, exercises),
+        Phono("4", "beto", "Asaber", R.drawable.avatar_30, patients, exercises),
     )
 
     val users: List<User> = patients.map { User(it.name, "123", it) } + therapists.map { User(it.name, "123", it) }

@@ -11,8 +11,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.disfluency.R
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 
@@ -32,7 +34,7 @@ fun PatientExerciseAssignmentsScreen(navController: NavHostController, patient: 
                 ListItem(
                     headlineContent = { Text(text = ex.exercise.title) },
                     supportingContent = { Text(text = ex.dateOfAssignment.toString()) },
-                    trailingContent = { Text(text = "${ex.attemptsCount()} resoluciones") },
+                    trailingContent = { Text(text = "${ex.attemptsCount()} ${stringResource(R.string.resoluciones)}") },
                     modifier = Modifier.clickable {
                         navController.navigate(Route.PatientExerciseAssignmentDetail.routeTo(ex.id))
                     }

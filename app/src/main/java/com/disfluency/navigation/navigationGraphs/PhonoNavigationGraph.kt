@@ -1,10 +1,14 @@
 package com.disfluency.navigation.navigationGraphs
 
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.disfluency.R
 import com.disfluency.model.Phono
 import com.disfluency.model.User
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
@@ -13,14 +17,17 @@ import com.disfluency.screens.exercise.ExercisesScreen
 import com.disfluency.screens.exercise.SingleExerciseScreen
 import com.disfluency.screens.phono.PatientQuestionnairesScreen
 import com.disfluency.screens.phono.PatientSessionsScreen
-import com.disfluency.screens.patient.SinglePatientScreen
+import com.disfluency.screens.phono.SinglePatientScreen
 import com.disfluency.screens.phono.*
 
 @Composable
 fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout: () -> Unit) {
     NavHost(navController, startDestination = Route.HomePhono.route) {
         composable(BottomNavigationItem.HomePhono.screenRoute.route) {
-            PhonoHomeScreen(onLogout)
+            PhonoHomeScreen()
+            Button(onClick = onLogout) {
+                Text(stringResource(id = R.string.logout))
+            }
         }
         composable(BottomNavigationItem.Pacientes.screenRoute.route) {
             PatientsScreen(navController, user.role as Phono)

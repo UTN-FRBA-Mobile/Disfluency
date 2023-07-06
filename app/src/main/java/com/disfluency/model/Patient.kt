@@ -1,10 +1,9 @@
 package com.disfluency.model
 
-import java.time.DayOfWeek
+import com.disfluency.model.utils.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Period
-import java.time.temporal.ChronoUnit
 
 data class Patient(
     val name: String,

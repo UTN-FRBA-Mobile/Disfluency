@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun EmptyScreen(title: String, onLogout: ()->Unit) {
+fun EmptyScreen(title: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -28,9 +28,5 @@ fun EmptyScreen(title: String, onLogout: ()->Unit) {
             textAlign = TextAlign.Center,
             fontSize = 20.sp
         )
-
-        Button(onClick = onLogout) {
-            Text("Cerrar Sesión")
-        }
     }
 }

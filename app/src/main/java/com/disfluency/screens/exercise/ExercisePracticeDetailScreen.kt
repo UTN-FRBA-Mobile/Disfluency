@@ -5,7 +5,5 @@ import com.disfluency.screens.utils.EmptyScreen
 
 @Composable
 fun ExercisePracticeDetailScreen(practiceId: String){
-    EmptyScreen(title = "Detalle de una resolucion") {
-
-    }
+    EmptyScreen(title = "Detalle de una resolucion")
 }

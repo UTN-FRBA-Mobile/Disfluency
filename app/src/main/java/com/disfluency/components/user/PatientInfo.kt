@@ -15,15 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
 import com.disfluency.data.MockedData
-import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
+import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.ui.theme.MyApplicationTheme
-import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -36,7 +36,9 @@ fun PatientInfoCard(patient: Patient){
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.height(122.dp).padding(16.dp)
+            modifier = Modifier
+                .height(122.dp)
+                .padding(16.dp)
         ) {
             Image(
                 painter = painterResource(id = patient.profilePic),
@@ -45,7 +47,9 @@ fun PatientInfoCard(patient: Patient){
             )
 
             Column(
-                modifier = Modifier.fillMaxSize().padding(start = 16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -78,10 +82,15 @@ fun PatientInfoCard(patient: Patient){
     }
 }
 
+@Composable
 fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
-    return if(weeklyTurn.size>1)
-        "${weeklyTurn.dropLast(1).joinToString(", ")} y ${weeklyTurn.last()}"
-    else weeklyTurn.joinToString()
+    return if(weeklyTurn.size>1){
+        val lastDay = stringResource(weeklyTurn.last().stringId)
+        val daysBeforeLast = weeklyTurn.dropLast(1).map{ stringResource(it.stringId) }
+        "${daysBeforeLast.joinToString(", ")} ${stringResource(id = R.string.symbol_and)} $lastDay"
+    }
+
+    else weeklyTurn.map{ stringResource(it.stringId)}.joinToString()
 }
 
 @Composable

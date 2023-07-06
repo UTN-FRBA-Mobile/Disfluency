@@ -4,4 +4,46 @@
     <string name="pacientes">Pacientes</string>
     <string name="ejercicios">Ejercicios</string>
     <string name="cuestionarios">Cuestionarios</string>
+    <!-- Generales -->
+    <string name="logout">Cerrar Sesión</string>
+
+    <!-- Días de Semana -->
+    <string name="day1">Lunes</string>
+    <string name="day2">Martes</string>
+    <string name="day3">Miércoles</string>
+    <string name="day4">Jueves</string>
+    <string name="day5">Viernes</string>
+    <string name="day6">Sábado</string>
+    <string name="day7">Domingo</string>
+
+    <!-- Roles -->
+    <!-- Paciente -->
+    <!-- Pantalla Mis Ejercicios -->
+    <string name="resoluciones">Resoluciones</string>
+
+    <!-- Fonoaudiologo -->
+    <!-- Pantalla crear paciente -->
+    <string name="new_patient_label_name">Nombre</string>
+    <string name="new_patient_label_lastname">Apellido</string>
+    <string name="new_patient_label_dni">DNI</string>
+    <string name="new_patient_label_email">Correo Electrónico</string>
+    <string name="new_patient_label_dayOfBirth">Fecha de Nacimiento</string>
+    <string name="new_patient_label_weeklyTurn">Día/s Asignado/s</string>
+    <string name="new_patient_button_submit">Crear</string>
+    <string name="new_patient_button_cancel">Cancelar</string>
+    <!-- Pantalla mis pacientes -->
+    <string name="search_placeholder">Buscar</string>
+    <string name="years_old_unit">años</string>
+    <!-- Pantalla Paciente individual -->
+    <string name="symbol_and">y</string>
+    <string name="single_patient_button_exercises">Ejercicios</string>
+    <string name="single_patient_button_questionnaires">Cuestionarios</string>
+    <string name="single_patient_button_sessions">Sesiones</string>
+    <string name="single_patient_button_solved_exercises">Ejercicios Resueltos</string>
+    <string name="single_patient_button_pending_exercises">Ejercicios Pendientes</string>
+    <string name="single_patient_button_solved_questionnaires">Cuestionarios Resueltos</string>
+    <string name="single_patient_button_pending_questionnaires">Cuestionarios Pendientes</string>
+    <string name="single_patient_button_registered_sessions">Sesiones Grabadas</string>
+
+
 </resources>

@@ -6,7 +6,5 @@ import com.disfluency.screens.utils.EmptyScreen
 
 @Composable
 fun ExerciseRecordingScreen(assignmentId: String, navController: NavController){
-    EmptyScreen(title = "Grabar resolucion de ejercicio") {
-
-    }
+    EmptyScreen(title = "Grabar resolucion de ejercicio")
 }
