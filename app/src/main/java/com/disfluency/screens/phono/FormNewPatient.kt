@@ -21,7 +21,9 @@ import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalTime
 
 @Composable
 fun FormNewPatient(navController: NavController, phono: Phono) {
@@ -59,7 +61,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
         val patientBirthDate = inputDate("Fecha de Nacimiento", maxDate = todaysDate)
 
         //TODO: Validar
-        val weeklyTurn = remember{ mutableStateOf("") }
+        val weeklyTurn: MutableState<List<DayOfWeek>> = remember{ mutableStateOf(emptyList()) }
         DummyDaysOfWeekCheckbox(label="Día/s Asignado/s", state = weeklyTurn)
         
         Row(
@@ -83,7 +85,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                              */
                             email = email.value,
                             joinedSince = todaysDate,
-                            weeklyHour = "18:00", //TODO
+                            weeklyHour = LocalTime.of(18,0), //TODO
                             weeklyTurn = weeklyTurn.value,
                             profilePic = profilePic.value
                         )

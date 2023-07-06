@@ -23,6 +23,8 @@ import com.disfluency.data.MockedData
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
+import java.time.DayOfWeek
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -59,7 +61,7 @@ fun PatientInfoCard(patient: Patient){
                 FlowRow {
                     IconLabeled(
                         icon = Icons.Outlined.CalendarMonth,
-                        label = patient.weeklyTurn,
+                        label = weeklyTurnFormat(patient.weeklyTurn),
                         content = "Turn"
                     )
                     
@@ -67,13 +69,19 @@ fun PatientInfoCard(patient: Patient){
                     
                     IconLabeled(
                         icon = Icons.Outlined.AccessTime,
-                        label = patient.weeklyHour,
+                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern("hh:mm")),
                         content = "Time"
                     )
                 }
             }
         }
     }
+}
+
+fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
+    return if(weeklyTurn.size>1)
+        "${weeklyTurn.dropLast(1).joinToString(", ")} y ${weeklyTurn.last()}"
+    else weeklyTurn.joinToString()
 }
 
 @Composable

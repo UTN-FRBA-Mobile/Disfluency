@@ -1,6 +1,8 @@
 package com.disfluency.model
 
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.Period
 import java.time.temporal.ChronoUnit
 
@@ -12,8 +14,8 @@ data class Patient(
     val email: String,
     val joinedSince: LocalDate,
     val profilePic: Int,
-    val weeklyTurn: String, //TODO: ver cual seria el tipo de dato para esto
-    val weeklyHour: String, //TODO: ver cual seria el tipo de dato para esto
+    val weeklyTurn: List<DayOfWeek>, //TODO: ver cual seria el tipo de dato para esto
+    val weeklyHour: LocalTime, //TODO: ver cual seria el tipo de dato para esto
     val exercises: MutableList<ExerciseAssignment> = ArrayList()
     ): Role {
 
