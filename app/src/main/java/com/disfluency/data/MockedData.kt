@@ -60,7 +60,7 @@ object MockedData {
     val assignments = arrayListOf(
         ExerciseAssignment("1", exercises[4], LocalDate.of(2021, 8, 5), arrayListOf(practices[0], practices[1])),
         ExerciseAssignment("2", exercises[3], LocalDate.of(2023, 1, 9), arrayListOf(practices[2])),
-        ExerciseAssignment("3", exercises[5], LocalDate.of(2018, 12, 9), emptyList())
+        ExerciseAssignment("3", exercises[5], LocalDate.of(2018, 12, 9), arrayListOf())
     )
 
     val patients: MutableList<Patient> = arrayListOf(

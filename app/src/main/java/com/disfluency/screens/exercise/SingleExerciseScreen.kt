@@ -74,7 +74,7 @@ fun ExampleRecording(sampleAudioUrl: String, subtitle: String? = null){
             )
         }
 
-        AudioPlayer(url = sampleAudioUrl)
+        AudioPlayer(audio = sampleAudioUrl, type = AudioMediaType.URL)
     }
 
 }
