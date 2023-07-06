@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
@@ -23,8 +24,8 @@ fun LiveWaveform(amplitudes: MutableList<Float>, maxSpikes: Int = MAX_SPIKES, ma
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(24.dp)
-        .drawWithContent {
-            val iterate = amplitudes.takeLast(maxSpikes).listIterator()
+        .drawBehind {
+            val iterate = amplitudes.toList().takeLast(maxSpikes).listIterator()
 
             while (iterate.hasNext()){
                 val index = iterate.nextIndex()
