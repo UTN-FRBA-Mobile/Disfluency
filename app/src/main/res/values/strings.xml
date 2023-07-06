@@ -5,7 +5,11 @@
     <string name="ejercicios">Ejercicios</string>
     <string name="cuestionarios">Cuestionarios</string>
     <!-- Generales -->
-        <!-- Días de Semana -->
+        <!-- Formato Fechas -->
+            <string name="date_format">dd/MM/yyyy</string>
+            <string name="time_format">hh:mm</string>
+
+    <!-- Días de Semana -->
             <string name="day1">Lunes</string>
             <string name="day2">Martes</string>
             <string name="day3">Miércoles</string>
@@ -25,18 +29,23 @@
     <!-- Roles -->
         <!-- Comunes -->
             <string name="logout">Cerrar Sesión</string>
+            <string name="exercises_title">Ejercicios</string>
 
-        <!-- Paciente -->
+    <!-- Paciente -->
             <!-- Home -->
                 <string name="pa_home_title">Home</string>
             <!-- Pantalla Mis Ejercicios -->
                 <string name="resoluciones">Resoluciones</string>
             <!-- Pantalla de Ejercicio Individual -->
                 <string name="pa_exercise_title">Ejercicio Asignado</string>
-            <!-- Pantalla Mis Respuestas de Ejercicio -->
+                <string name="exercise_asignment">Repita la siguiente frase:</string>
+                <string name="exercise_example">Ejemplo generado por el profesional</string>
+
+    <!-- Pantalla Mis Respuestas de Ejercicio -->
                 <string name="pa_exercise_answer_title">Resolucion de Ejercicio</string>
             <!-- Pantalla Responder ejercicio -->
                 <string name="pa_exercise_answer_new_title">Practica de Ejercicio</string>
+                <string name="exercise_answer_prefix">"Resolucion del "</string>
 
         <!-- Fonoaudiologo -->
             <!-- Home -->
@@ -49,7 +58,7 @@
                 <string name="new_patient_label_email">Correo Electrónico</string>
                 <string name="new_patient_label_dayOfBirth">Fecha de Nacimiento</string>
                 <string name="new_patient_label_weeklyTurn">Día/s Asignado/s</string>
-                <string name="new_patient_dateOfBirth_button_accept">OK</string>
+                <string name="new_patient_dateOfBirth_button_accept">Confirmar</string>
                 <string name="new_patient_dateOfBirth_button_return">Volver</string>
                 <string name="new_patient_button_submit">Crear</string>
                 <string name="new_patient_button_cancel">Cancelar</string>
@@ -70,10 +79,10 @@
                 <string name="single_patient_button_registered_sessions">Sesiones Grabadas</string>
             <!-- Ejercicios del paciente -->
                 <string name="ph_single_patient_exercises_title">Ejercicios del Paciente</string>
-            <!-- Pantalla Ejercicios -->
-                <string name="ph_exercises_title">Ejercicios</string>
+                <string name="exercises_search_placeholder">Buscar</string>
             <!-- Pantalla Ejercicio -->
                 <string name="exercise_detail_title">Detalle del ejercicio</string>
+
     <!-- sin uso -->
         <string name="questionnaires_title">Cuestionarios</string>
         <string name="ph_new_exercise_title">Nuevo Ejercicio</string>

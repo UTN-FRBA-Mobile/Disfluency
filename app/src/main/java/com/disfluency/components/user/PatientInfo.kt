@@ -73,7 +73,7 @@ fun PatientInfoCard(patient: Patient){
                     
                     IconLabeled(
                         icon = Icons.Outlined.AccessTime,
-                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern("hh:mm")),
+                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(R.string.time_format))),
                         content = "Time"
                     )
                 }

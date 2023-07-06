@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import com.disfluency.R
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun PatientExerciseAssignmentsScreen(navController: NavHostController, patient: Patient) {
@@ -33,7 +34,7 @@ fun PatientExerciseAssignmentsScreen(navController: NavHostController, patient: 
                 //TODO: Mejorar diseño
                 ListItem(
                     headlineContent = { Text(text = ex.exercise.title) },
-                    supportingContent = { Text(text = ex.dateOfAssignment.toString()) },
+                    supportingContent = { Text(text = ex.dateOfAssignment.format(DateTimeFormatter.ofPattern(stringResource(R.string.date_format)))) },
                     trailingContent = { Text(text = "${ex.attemptsCount()} ${stringResource(R.string.resoluciones)}") },
                     modifier = Modifier.clickable {
                         navController.navigate(Route.PatientExerciseAssignmentDetail.routeTo(ex.id))

@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
 import com.disfluency.navigation.Route
@@ -48,7 +50,7 @@ fun ExercisesScreen(navController: NavHostController) {
                 onSearch = { },
                 active = false,
                 onActiveChange = { },
-                placeholder = { Text("Buscar") },
+                placeholder = { Text(stringResource(R.string.exercises_search_placeholder)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             ) {}
         }
