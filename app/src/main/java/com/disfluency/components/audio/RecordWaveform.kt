@@ -14,8 +14,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 
+const val MAX_SPIKES = 30
+
 @Composable
-fun LiveWaveform(amplitudes: MutableList<Float>, maxSpikes: Int, maxHeight: Dp){
+fun LiveWaveform(amplitudes: MutableList<Float>, maxSpikes: Int = MAX_SPIKES, maxHeight: Dp){
     val color = MaterialTheme.colorScheme.secondary
 
     Box(modifier = Modifier

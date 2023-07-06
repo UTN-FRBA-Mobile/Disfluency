@@ -1,22 +1,21 @@
 package com.disfluency.screens.exercise
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.audio.record.DisfluencyAudioRecorder
-import com.disfluency.audio.record.MAX_SPIKES
 import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.audio.LiveWaveform
@@ -38,7 +37,25 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
     var recordingDone by remember { mutableStateOf(false) }
     val changeRecordingState = { recordingDone = !recordingDone }
 
-    //TODO: if recording done y trata de salir de la pantalla, mostrar un dialog preguntando si esta seguro.
+    var openDialog by remember { mutableStateOf(false) }
+    var exitActionBack by remember { mutableStateOf(true) }
+
+    BackHandler(enabled = recordingDone) {
+        exitActionBack = true
+        openDialog = true
+    }
+
+    if (openDialog){
+        ExitDialog(
+            closeDialog = { openDialog = false },
+            exit = {
+                openDialog = false
+                recordingDone = false
+                if (exitActionBack) navController.popBackStack()
+                else navController.navigate(Route.Ejercicio.routeTo(exercise.id))
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -54,7 +71,12 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
             ExerciseTitleWithInfo(
                 exercise = exercise,
                 onInfoButtonClick = {
-                    navController.navigate(Route.Ejercicio.routeTo(exercise.id))
+                    if (recordingDone){
+                        exitActionBack = false
+                        openDialog = true
+                    } else {
+                        navController.navigate(Route.Ejercicio.routeTo(exercise.id))
+                    }
                 }
             )
 
@@ -84,7 +106,7 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
             if (recordingDone)
                 AudioPlayer(audio = LOCAL_RECORD_FILE, type = AudioMediaType.FILE)
             else
-                LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxSpikes = MAX_SPIKES, maxHeight = 160.dp)
+                LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxHeight = 160.dp)
         }
 
         RecordButton(audioRecorder, changeRecordingState, onSend)
@@ -94,7 +116,9 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
 
 @Composable
 private fun ExerciseTitleWithInfo(exercise: Exercise, onInfoButtonClick: () -> Unit){
-    val modifier = Modifier.size(26.dp).padding(horizontal = 2.dp)
+    val modifier = Modifier
+        .size(26.dp)
+        .padding(horizontal = 2.dp)
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -140,7 +164,6 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
             },
             onSend = {
                 File(context.cacheDir, LOCAL_RECORD_FILE).let(onSend)
-                //TODO: algun pequeño efecto o animacion y volver para atras
             },
             onCancel = {
                 changeRecordingState()
@@ -149,5 +172,49 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
                 audioFile = null
             }
         )
+    }
+}
+
+
+@Composable
+fun ExitDialog(closeDialog: () -> Unit, exit: () -> Unit){
+    AlertDialog(
+        onDismissRequest = { }
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)) {
+                Text(
+                    text = "¿Esta seguro que desea salir?",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge)
+
+                Text(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    text = "Se perdera la grabacion realizada. Antes de salir deberia confirmar la resolucion del ejercicio o descartarla.",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextButton(onClick = exit) {
+                        Text(text = "Salir")
+                    }
+                    TextButton(onClick = closeDialog) {
+                        Text(text = "Cancelar")
+                    }
+                }
+            }
+        }
     }
 }

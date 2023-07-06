@@ -14,7 +14,6 @@ private const val MIN_AMPLITUDE_VALUE = 0f
 private const val MAX_AMPLITUDE_VALUE = 7000f
 
 private const val AMPLITUDE_SAMPLE_TIME = 50L
-const val MAX_SPIKES = 30
 
 class DisfluencyAudioRecorder(private val context: Context) {
 
