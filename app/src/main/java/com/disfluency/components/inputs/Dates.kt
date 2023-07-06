@@ -8,6 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.disfluency.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -60,12 +62,12 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?> {
                     },
                     enabled = datePickerState.selectedDateMillis!=null
                 ) {
-                    Text("Ok")
+                    Text(stringResource(R.string.new_patient_dateOfBirth_button_accept))
                 }
             },
             dismissButton = {
                 TextButton(disableDialog) {
-                    Text("Cancelar")
+                    Text(stringResource(R.string.new_patient_dateOfBirth_button_return))
                 }
             },
             content = {

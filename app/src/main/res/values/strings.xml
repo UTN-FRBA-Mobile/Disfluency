@@ -15,6 +15,7 @@
     <string name="day5">Viernes</string>
     <string name="day6">Sábado</string>
     <string name="day7">Domingo</string>
+    <string name="all_days">Todos los días</string>
 
     <!-- Pantalla Login -->
     <string name="login_title">Iniciar Sesión</string>
@@ -51,6 +52,8 @@
     <string name="new_patient_label_email">Correo Electrónico</string>
     <string name="new_patient_label_dayOfBirth">Fecha de Nacimiento</string>
     <string name="new_patient_label_weeklyTurn">Día/s Asignado/s</string>
+    <string name="new_patient_dateOfBirth_button_accept">OK</string>
+    <string name="new_patient_dateOfBirth_button_return">Volver</string>
     <string name="new_patient_button_submit">Crear</string>
     <string name="new_patient_button_cancel">Cancelar</string>
     <!-- Pantalla mis pacientes -->

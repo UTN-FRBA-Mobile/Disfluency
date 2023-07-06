@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
+import com.disfluency.R
 import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.model.utils.daysOfWeek
 import java.util.*
@@ -60,7 +61,7 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
     }
 
     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.width(275.dp)) {
-        CheckboxAllOptions(allDaysChecked, "Todos los días", weekChecks, notifyChange)
+        CheckboxAllOptions(allDaysChecked, stringResource(R.string.all_days), weekChecks, notifyChange)
 
         val checkboxForDay = @Composable{
             index: Int, checkbox: MutableState<Boolean> ->
