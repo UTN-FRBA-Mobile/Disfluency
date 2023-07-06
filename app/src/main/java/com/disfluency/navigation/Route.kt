@@ -64,7 +64,12 @@ sealed class Route(val route: String, val title: String){
     //TODO
     object HomePatient : Route("patient/home", "Home")
 
+    object PracticeSuccess: Route("ejercicio-resuelto-completado", "Grabacion Exitosa")
+
 }
+
+//Routes that are supposed to be displayed without top or nav bar
+val noSupportBarsRoutes = listOf(Route.PracticeSuccess).map { it.route }
 
 val items = Route::class.nestedClasses.map { it.objectInstance as Route }
 fun getItemByRoute(route: String): Route{

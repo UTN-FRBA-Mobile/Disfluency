@@ -1,5 +1,6 @@
 package com.disfluency.components.audio
 
+import android.content.Context
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -18,14 +19,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import com.disfluency.audio.DisfluencyAudioPlayer
+import com.disfluency.audio.playback.DisfluencyAudioFilePlayer
+import com.disfluency.audio.playback.DisfluencyAudioPlayer
+import com.disfluency.audio.playback.DisfluencyAudioUrlPlayer
 import com.disfluency.utils.millisecondsAsMinutesAndSeconds
 
+enum class AudioMediaType(val getPlayer: (Context) -> DisfluencyAudioPlayer){
+    FILE({ context -> DisfluencyAudioFilePlayer(context) }),
+    URL({ context -> DisfluencyAudioUrlPlayer(context) })
+}
+
 @Composable
-fun AudioPlayer(url: String){
+fun AudioPlayer(audio: String, type: AudioMediaType){
     val ctx = LocalContext.current
-    val audioPlayer = DisfluencyAudioPlayer(ctx)
-    audioPlayer.loadUrl(url)
+    val audioPlayer = type.getPlayer(ctx)
+    audioPlayer.load(audio)
 
     DisposableEffect(Lifecycle.Event.ON_STOP) {
         onDispose {
@@ -106,4 +114,3 @@ fun AudioPlayer(url: String){
         }
     }
 }
-
