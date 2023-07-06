@@ -53,12 +53,13 @@ object MockedData {
 
     val practices = arrayListOf(
         ExercisePractice("1", LocalDate.of(2023, 7, 3), testUrl),
-        ExercisePractice("2", LocalDate.of(2023, 4, 26), testUrl)
+        ExercisePractice("2", LocalDate.of(2023, 4, 26), testUrl),
+        ExercisePractice("3", LocalDate.of(2023, 4, 28), testUrl)
     )
 
     val assignments = arrayListOf(
-        ExerciseAssignment("1", exercises[4], LocalDate.of(2021, 8, 5), practices),
-        ExerciseAssignment("2", exercises[3], LocalDate.of(2023, 1, 9), arrayListOf(practices[0])),
+        ExerciseAssignment("1", exercises[4], LocalDate.of(2021, 8, 5), arrayListOf(practices[0], practices[1])),
+        ExerciseAssignment("2", exercises[3], LocalDate.of(2023, 1, 9), arrayListOf(practices[2])),
         ExerciseAssignment("3", exercises[5], LocalDate.of(2018, 12, 9), emptyList())
     )
 
