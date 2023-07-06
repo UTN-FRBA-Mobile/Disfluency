@@ -16,6 +16,12 @@
     <string name="day6">Sábado</string>
     <string name="day7">Domingo</string>
 
+    <!-- Pantalla Login -->
+    <string name="login_label_username">Nombre de Usuario</string>
+    <string name="login_label_password">Contraseña</string>
+    <string name="login_button_submit">Iniciar Sesión</string>
+    <string name="login_error_message">El usuario y/o la contraseña son incorrectos.</string>
+
     <!-- Roles -->
     <!-- Paciente -->
     <!-- Pantalla Mis Ejercicios -->
@@ -44,6 +50,4 @@
     <string name="single_patient_button_solved_questionnaires">Cuestionarios Resueltos</string>
     <string name="single_patient_button_pending_questionnaires">Cuestionarios Pendientes</string>
     <string name="single_patient_button_registered_sessions">Sesiones Grabadas</string>
-
-
 </resources>

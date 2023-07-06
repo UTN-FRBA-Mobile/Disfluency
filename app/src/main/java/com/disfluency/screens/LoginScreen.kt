@@ -12,11 +12,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
+import com.disfluency.R
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 import com.disfluency.screens.utils.LoginService
@@ -73,11 +75,14 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
 
     val submit = {onSubmit(username, password)}
 
-    Column(Modifier.fillMaxSize().wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            placeholder = { Text("Nombre de Usuario") },
+            placeholder = { Text(stringResource(R.string.login_label_username)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
@@ -85,7 +90,7 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            placeholder = { Text("Contraseña") },
+            placeholder = { Text(stringResource(R.string.login_label_password)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send, keyboardType = KeyboardType.Password),
             keyboardActions = KeyboardActions(onSend = {submit()}),
             singleLine = true,
@@ -101,10 +106,10 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         )
         
         Button(onClick = submit, enabled = enabledButton) {
-            Text("Iniciar Sesión")
+            Text(stringResource(R.string.login_button_submit))
         }
         if(retry){
-            Text(text = "El usuario y/o la contraseña son incorrectos.", color=MaterialTheme.colorScheme.error)
+            Text(stringResource(R.string.login_error_message), color=MaterialTheme.colorScheme.error)
         }
     }
 }
