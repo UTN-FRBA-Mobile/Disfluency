@@ -16,12 +16,7 @@ object ExerciseRepository {
     }
 
     fun saveExercisePractice(assignmentId: String, audio: File){
-        val practice = ExercisePractice(
-            id = assignmentId,
-            recordingUrl = "", //TODO: subir audio
-            date = LocalDate.now()
-        )
-
+        MockedPracticeSaver().save(assignmentId, audio)
         println("Saved audio recording: $audio")
     }
 
@@ -36,4 +31,21 @@ object ExerciseRepository {
     fun getAssignmentById(id: String): ExerciseAssignment{
         return MockedData.assignments.first { it.id == id }
     }
+}
+
+interface ExercisePracticeSaver{
+    fun save(assignmentId: String, audio: File)
+}
+
+class MockedPracticeSaver: ExercisePracticeSaver{
+    override fun save(assignmentId: String, audio: File) {
+        val practice = ExercisePractice(
+            id = assignmentId,
+            recordingUrl = MockedData.testUrl,
+            date = LocalDate.now()
+        )
+
+        ExerciseRepository.getAssignmentById(assignmentId).practiceAttempts.add(practice)
+    }
+
 }

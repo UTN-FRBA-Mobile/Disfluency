@@ -3,10 +3,8 @@ package com.disfluency.screens.exercise
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -15,9 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.data.ExerciseRepository
@@ -63,6 +59,13 @@ fun RecordSuccessScreen(navController: NavController){
 
     var animateVisibility by remember { mutableStateOf(true) }
 
+    LaunchedEffect(key1 = true, block = {
+        delay(waitTime)
+        animateVisibility = false
+        delay((ON_SUCCESS_ANIMATION_TIME * 0.4).toLong())
+        navController.popBackStack()
+    })
+
     Box(modifier = Modifier.fillMaxSize()) {
         AnimatedVisibility(
             visible = animateVisibility,
@@ -71,14 +74,6 @@ fun RecordSuccessScreen(navController: NavController){
             exit = fadeOut(tween(ON_SUCCESS_ANIMATION_TIME))
         ) {
             Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primary){}
-
-            LaunchedEffect(key1 = true, block = {
-                //On enter animation finished
-                delay(waitTime)
-                animateVisibility = false
-                delay((ON_SUCCESS_ANIMATION_TIME * 0.4).toLong())
-                navController.popBackStack()
-            })
         }
 
         AnimatedVisibility(

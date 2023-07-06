@@ -1,7 +1,7 @@
 package com.disfluency.screens.exercise
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +19,7 @@ import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.audio.LiveWaveform
 import com.disfluency.components.button.RecordAudioButton
+import com.disfluency.components.dialog.ExitDialog
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
 import com.disfluency.navigation.Route
@@ -27,11 +27,10 @@ import java.io.File
 
 const val LOCAL_RECORD_FILE = "disfluency_exercise_recording.mp3"
 
-
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController){
     val exercise = ExerciseRepository.getExerciseById(id)
-
     val audioRecorder = DisfluencyAudioRecorder(LocalContext.current)
 
     var recordingDone by remember { mutableStateOf(false) }
@@ -47,7 +46,9 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
 
     if (openDialog){
         ExitDialog(
-            closeDialog = { openDialog = false },
+            title = "¿Esta seguro que desea salir?",
+            content = "Se perdera la grabacion realizada. Antes de salir deberia confirmar la resolucion del ejercicio o descartarla.",
+            cancel = { openDialog = false },
             exit = {
                 openDialog = false
                 recordingDone = false
@@ -64,53 +65,45 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ExerciseTitleWithInfo(
-                exercise = exercise,
-                onInfoButtonClick = {
-                    if (recordingDone){
-                        exitActionBack = false
-                        openDialog = true
-                    } else {
-                        navController.navigate(Route.Ejercicio.routeTo(exercise.id))
-                    }
-                }
-            )
+        ExercisePhraseDetail(exercise = exercise, onInfoButtonClick = {
+            if (recordingDone){
+                exitActionBack = false
+                openDialog = true
+            } else {
+                //TODO: ver como queda con un dialog en vez de salir
+                navController.navigate(Route.Ejercicio.routeTo(exercise.id))
+            }
+        })
 
-            Text(
-                text = "Repita la siguiente frase:",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 24.dp)
-            )
+        RecordingVisualizer(audioRecorder = audioRecorder, hasRecorded = recordingDone)
 
-            Text(
-                text = "\"${exercise.phrase}\"",
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                textAlign = TextAlign.Center,
-                fontStyle = FontStyle.Italic
-            )
-        }
+        RecordButton(audioRecorder = audioRecorder, changeRecordingState = changeRecordingState, onSend = onSend)
+    }
+}
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp),
-            contentAlignment = Alignment.Center
-        ){
+@Composable
+fun ExercisePhraseDetail(exercise: Exercise, onInfoButtonClick: () -> Unit){
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ExerciseTitleWithInfo(
+            exercise = exercise,
+            onInfoButtonClick = onInfoButtonClick
+        )
 
-            //TODO: animacion al cambio
+        Text(
+            text = "Repita la siguiente frase:",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 24.dp)
+        )
 
-            if (recordingDone)
-                AudioPlayer(audio = LOCAL_RECORD_FILE, type = AudioMediaType.FILE)
-            else
-                LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxHeight = 160.dp)
-        }
-
-        RecordButton(audioRecorder, changeRecordingState, onSend)
-
+        Text(
+            text = "\"${exercise.phrase}\"",
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            textAlign = TextAlign.Center,
+            fontStyle = FontStyle.Italic
+        )
     }
 }
 
@@ -134,6 +127,32 @@ private fun ExerciseTitleWithInfo(exercise: Exercise, onInfoButtonClick: () -> U
             onClick = onInfoButtonClick
         ) {
             Icon(imageVector = Icons.Filled.Info, contentDescription = "Info", tint = MaterialTheme.colorScheme.primary)
+        }
+    }
+}
+
+@Composable
+fun RecordingVisualizer(audioRecorder: DisfluencyAudioRecorder, hasRecorded: Boolean){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp),
+        contentAlignment = Alignment.Center
+    ){
+        AnimatedVisibility(
+            visible = hasRecorded,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            AudioPlayer(audio = LOCAL_RECORD_FILE, type = AudioMediaType.FILE)
+        }
+
+        AnimatedVisibility(
+            visible = !hasRecorded,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            LiveWaveform(amplitudes = audioRecorder.audioAmplitudes, maxHeight = 160.dp)
         }
     }
 }
@@ -172,49 +191,5 @@ fun RecordButton(audioRecorder: DisfluencyAudioRecorder, changeRecordingState: (
                 audioFile = null
             }
         )
-    }
-}
-
-
-@Composable
-fun ExitDialog(closeDialog: () -> Unit, exit: () -> Unit){
-    AlertDialog(
-        onDismissRequest = { }
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            shape = MaterialTheme.shapes.large
-        ) {
-            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)) {
-                Text(
-                    text = "¿Esta seguro que desea salir?",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge)
-
-                Text(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    text = "Se perdera la grabacion realizada. Antes de salir deberia confirmar la resolucion del ejercicio o descartarla.",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TextButton(onClick = exit) {
-                        Text(text = "Salir")
-                    }
-                    TextButton(onClick = closeDialog) {
-                        Text(text = "Cancelar")
-                    }
-                }
-            }
-        }
     }
 }
