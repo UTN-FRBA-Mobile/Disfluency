@@ -31,6 +31,16 @@ object ExerciseRepository {
     fun getAssignmentById(id: String): ExerciseAssignment{
         return MockedData.assignments.first { it.id == id }
     }
+    
+    fun getPracticeById(id: String): ExercisePractice {
+        return MockedData.practices.first { it.id == id }
+    }
+
+    fun getExerciseDetailOfPractice(id: String): Exercise {
+        return MockedData.assignments.first {
+            it.practiceAttempts.map(ExercisePractice::id).contains(id)
+        }.exercise
+    }
 }
 
 interface ExercisePracticeSaver{
@@ -47,5 +57,4 @@ class MockedPracticeSaver: ExercisePracticeSaver{
 
         ExerciseRepository.getAssignmentById(assignmentId).practiceAttempts.add(practice)
     }
-
 }
