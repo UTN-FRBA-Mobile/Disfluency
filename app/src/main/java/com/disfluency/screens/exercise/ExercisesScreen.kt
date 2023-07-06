@@ -54,7 +54,7 @@ fun ExercisesScreen(navController: NavHostController) {
         }
         ExerciseList(ExerciseRepository.longListForTest, navController, text)
     }
-    ExerciseCreation(navController)
+  //  ExerciseCreation(navController) //TODO
 }
 
 @Composable

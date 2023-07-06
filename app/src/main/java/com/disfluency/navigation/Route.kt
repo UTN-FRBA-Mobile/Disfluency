@@ -1,7 +1,10 @@
 package com.disfluency.navigation
 
+import com.disfluency.model.ExerciseAssignment
+
 sealed class Route(val route: String, val title: String){
-    object Home: Route("home", "Home")
+    object Login: Route("login", "Iniciar Sesión")
+    object HomePhono: Route("home", "Home")
     object Pacientes: Route("pacientes", "Pacientes")
     object Cuestionarios: Route("cuestionarios", "Cuestionarios")
     object Ejercicios: Route("ejercicios", "Ejercicios")
@@ -37,12 +40,32 @@ sealed class Route(val route: String, val title: String){
             return route.replace("{id}", patientId.toString())
         }
     }
+
+    object PatientExerciseAssignmentDetail: Route("ejercicio-asignado/{id}", "Ejercicio Asignado"){
+        fun routeTo(exerciseAssignmentId: String): String{
+            return route.replace("{id}", exerciseAssignmentId)
+        }
+    }
+
+    //TODO: esta ok esta ruta?!
+    object PatientExercisePracticeDetail: Route("ejercicio-resuelto/{id}", "Resolucion de Ejercicio"){
+        fun routeTo(practiceId: String): String{
+            return route.replace("{id}", practiceId)
+        }
+    }
+
+    object PatientExerciseRecordPractice: Route("ejercicio-asignado/{id}/grabar", "Practica de Ejercicio"){
+        fun routeTo(exerciseAssignmentId: String): String{
+            return route.replace("{id}", exerciseAssignmentId)
+        }
+    }
+
+    //TODO
+    object HomePatient : Route("patient/home", "Home")
+
 }
 
-fun getItemByRoute(route: String?): Route{
-    //TODO: ver si hay forma de que esta lista se arme al compilar y no cada vez que se llama al metodo
-    val items = Route::class.nestedClasses.map { it.objectInstance as Route }
-
-    if (route == null) return Route.Home
-    return items.first { item -> item.route == route }
+val items = Route::class.nestedClasses.map { it.objectInstance as Route }
+fun getItemByRoute(route: String): Route{
+    return items.first { it.route == route }
 }

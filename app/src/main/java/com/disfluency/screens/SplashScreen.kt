@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.R
-import com.disfluency.navigation.BottomNavigationItem
+import com.disfluency.navigation.Route
 import kotlinx.coroutines.delay
 
 @Composable
@@ -22,7 +22,7 @@ fun SplashScreen(navController: NavController){
     LaunchedEffect(key1 = true){
         delay(3000)
         navController.popBackStack()
-        navController.navigate(BottomNavigationItem.Home.screenRoute.route)
+        navController.navigate(Route.Login.route)
     }
 
     Splash()

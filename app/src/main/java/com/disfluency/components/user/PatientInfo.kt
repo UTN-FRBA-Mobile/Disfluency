@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.disfluency.data.PatientRepository
+import com.disfluency.data.MockedData
 import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
 
@@ -102,7 +102,7 @@ data class IconLabeledDetails(val icon: ImageVector,
 @Preview(showBackground = true)
 @Composable
 fun PreviewInfoCard(){
-    val patient = PatientRepository.testPatient
+    val patient = MockedData.patients.first()
     MyApplicationTheme() {
         PatientInfoCard(patient = patient,
             IconLabeledDetails(Icons.Outlined.CalendarMonth, patient.weeklyTurn, "Turn"),
