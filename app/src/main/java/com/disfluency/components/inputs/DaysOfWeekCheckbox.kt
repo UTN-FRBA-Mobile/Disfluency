@@ -9,6 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import com.disfluency.model.utils.DayOfWeek
+import com.disfluency.model.utils.daysOfWeek
 import java.util.*
 /*
 @Preview
@@ -46,7 +47,7 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
         else ToggleableState.Indeterminate
     }
 
-    val daysOfWeekAsEnum = DayOfWeek.values()
+    val daysOfWeekAsEnum = daysOfWeek()
     val daysOfWeek = daysOfWeekAsEnum.map { stringResource(it.stringId) }
 
     val notifyChange = {

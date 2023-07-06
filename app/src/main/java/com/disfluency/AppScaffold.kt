@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -30,7 +31,7 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = getItemByRoute(currentRoute).title) },
+                title = { Text(text = stringResource(getItemByRoute(currentRoute).title)) },
                 navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
                 actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
             )
@@ -39,7 +40,9 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
             BottomNavigation(navController, bottomNavigationItems)
         },
         content = { paddingValues ->
-            Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)) {
                 content(navController)
             }
         }

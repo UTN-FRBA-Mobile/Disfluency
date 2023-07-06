@@ -10,9 +10,8 @@ sealed class DayOfWeek(val stringId: Int) {
     object FRIDAY: DayOfWeek(R.string.day5)
     object SATHURDAY: DayOfWeek(R.string.day6)
     object SUNDAY: DayOfWeek(R.string.day7)
-    companion object {
-        fun values(): List<DayOfWeek> {
-            return DayOfWeek::class.nestedClasses.map { it.objectInstance as DayOfWeek }
-        }
-    }
+}
+
+fun daysOfWeek(): List<DayOfWeek> {
+    return DayOfWeek::class.nestedClasses.map { it.objectInstance as DayOfWeek }
 }

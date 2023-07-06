@@ -17,18 +17,34 @@
     <string name="day7">Domingo</string>
 
     <!-- Pantalla Login -->
+    <string name="login_title">Iniciar Sesión</string>
     <string name="login_label_username">Nombre de Usuario</string>
     <string name="login_label_password">Contraseña</string>
     <string name="login_button_submit">Iniciar Sesión</string>
     <string name="login_error_message">El usuario y/o la contraseña son incorrectos.</string>
 
     <!-- Roles -->
+    <!-- Comunes -->
+    <string name="exercises_title">Ejercicios</string>
+
     <!-- Paciente -->
+    <!-- Home -->
+    <string name="pa_home_title">Home</string>
     <!-- Pantalla Mis Ejercicios -->
     <string name="resoluciones">Resoluciones</string>
+    <!-- Pantalla de Ejercicio Individual -->
+    <string name="pa_exercise_title">Ejercicio Asignado</string>
+    <!-- Pantalla Mis Respuestas de Ejercicio -->
+    <string name="pa_exercise_answer_title">Resolucion de Ejercicio</string>
+    <!-- Pantalla Responder ejercicio -->
+    <string name="pa_exercise_answer_new_title">Practica de Ejercicio</string>
+
 
     <!-- Fonoaudiologo -->
+    <!-- Home -->
+    <string name="ph_home_title">Home</string>
     <!-- Pantalla crear paciente -->
+    <string name="ph_new_patient_title">Nuevo Paciente</string>
     <string name="new_patient_label_name">Nombre</string>
     <string name="new_patient_label_lastname">Apellido</string>
     <string name="new_patient_label_dni">DNI</string>
@@ -38,9 +54,11 @@
     <string name="new_patient_button_submit">Crear</string>
     <string name="new_patient_button_cancel">Cancelar</string>
     <!-- Pantalla mis pacientes -->
+    <string name="ph_patients_title">Pacientes</string>
     <string name="search_placeholder">Buscar</string>
     <string name="years_old_unit">años</string>
     <!-- Pantalla Paciente individual -->
+    <string name="ph_single_patient_title">Detalle del Paciente</string>
     <string name="symbol_and">y</string>
     <string name="single_patient_button_exercises">Ejercicios</string>
     <string name="single_patient_button_questionnaires">Cuestionarios</string>
@@ -50,4 +68,16 @@
     <string name="single_patient_button_solved_questionnaires">Cuestionarios Resueltos</string>
     <string name="single_patient_button_pending_questionnaires">Cuestionarios Pendientes</string>
     <string name="single_patient_button_registered_sessions">Sesiones Grabadas</string>
+    <!-- Ejercicios del paciente -->
+    <string name="ph_single_patient_exercises_title">Ejercicios del Paciente</string>
+
+    <!-- Pantalla Ejercicio -->
+    <string name="exercise_detail_title">Detalle del ejercicio</string>
+
+
+    <!-- sin uso -->
+    <string name="questionnaires_title">Cuestionarios</string>
+    <string name="ph_new_exercise_title">Nuevo Ejercicio</string>
+    <string name="ph_single_patient_questionnaires_title">Cuestionarios del Paciente</string>
+    <string name="ph_single_patients_sessions_title">Sesiones del Paciente</string>
 </resources>
