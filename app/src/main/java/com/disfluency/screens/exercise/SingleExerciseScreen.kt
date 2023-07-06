@@ -11,7 +11,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
-import com.disfluency.model.Exercise
 
 
 @Composable
@@ -57,22 +56,24 @@ fun SingleExerciseScreen(id: Int) {
             }
         }
         
-        ExampleRecording(exercise)
+        ExampleRecording(sampleAudioUrl = exercise.sampleAudioURL, subtitle = "Ejemplo generado por el profesional")
     }
 }
 
 @Composable
-fun ExampleRecording(exercise: Exercise){
+fun ExampleRecording(sampleAudioUrl: String, subtitle: String? = null){
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            text = "Ejemplo generado por el profesional",
-            style = MaterialTheme.typography.labelMedium
-        )
+        subtitle?.let {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                text = it,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
 
-        AudioPlayer(url = exercise.sampleAudioURL)
+        AudioPlayer(url = sampleAudioUrl)
     }
 
 }
