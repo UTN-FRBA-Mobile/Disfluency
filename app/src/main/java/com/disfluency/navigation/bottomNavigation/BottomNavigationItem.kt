@@ -12,6 +12,8 @@ sealed class BottomNavigationItem(val screenRoute: Route, val icon: ImageVector)
     object Pacientes : BottomNavigationItem(Route.Pacientes, Icons.Outlined.ContactMail)
     object Cuestionarios : BottomNavigationItem(Route.Cuestionarios, Icons.Outlined.Assignment)
     object Ejercicios : BottomNavigationItem(Route.Ejercicios, Icons.Outlined.RecordVoiceOver)
+    object Asignaciones : BottomNavigationItem(Route.Assignment, Icons.Outlined.Assignment)
+
 
     object HomePatient : BottomNavigationItem(Route.HomePatient, Icons.Outlined.Home)
 }
