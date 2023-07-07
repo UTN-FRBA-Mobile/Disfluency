@@ -32,7 +32,6 @@ import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PatientsScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }

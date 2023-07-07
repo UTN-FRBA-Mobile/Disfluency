@@ -1,6 +1,5 @@
 package com.disfluency.screens
 
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,8 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -22,17 +21,17 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.R
+import com.disfluency.data.UserNotFoundException
 import com.disfluency.model.Patient
-import com.disfluency.navigation.Route
-import com.disfluency.screens.utils.LoginService
 import com.disfluency.model.Phono
 import com.disfluency.model.Role
-import com.disfluency.data.UserNotFoundException
+import com.disfluency.navigation.Route
+import com.disfluency.screens.utils.LoginService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class NotSuportedUserRoleException(role: Role): Exception(role::class.toString())
+class NotSupportedUserRoleException(role: Role): Exception(role::class.toString())
 
 @Composable
 fun LoginScreen(navController: NavController, loginService: LoginService) {
@@ -46,7 +45,7 @@ fun LoginScreen(navController: NavController, loginService: LoginService) {
                 when(userRole){
                     is Phono -> Route.HomePhono.route
                     is Patient -> Route.HomePatient.route
-                    else -> throw NotSuportedUserRoleException(userRole)
+                    else -> throw NotSupportedUserRoleException(userRole)
                 }
             )
 

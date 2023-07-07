@@ -10,11 +10,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.disfluency.R
 import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
-import com.disfluency.model.Exercise
-import com.disfluency.R
 
 @Composable
 fun SingleExerciseScreen(id: Int) {

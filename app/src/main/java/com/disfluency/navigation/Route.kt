@@ -1,6 +1,5 @@
 package com.disfluency.navigation
 
-import androidx.compose.ui.res.stringResource
 import com.disfluency.R
 
 sealed class Route(val route: String, val title: Int){
@@ -10,7 +9,7 @@ sealed class Route(val route: String, val title: Int){
     object Cuestionarios: Route("cuestionarios", R.string.questionnaires_title)
     object Ejercicios: Route("ejercicios", R.string.exercises_title)
     object Paciente: Route("paciente/{id}", R.string.ph_single_patient_title){
-        fun routeTo(idPaciente: Int): String{
+        fun routeTo(idPaciente: String): String{
             return "paciente/$idPaciente"
         }
     }
@@ -26,19 +25,19 @@ sealed class Route(val route: String, val title: Int){
         }
     }
     object PatientExercises: Route("paciente/{id}/ejercicios", R.string.ph_single_patient_exercises_title){
-        fun routeTo(patientId: Int): String{
+        fun routeTo(patientId: String): String{
             return route.replace("{id}", patientId.toString())
         }
     }
 
     object PatientQuestionnaires: Route("paciente/{id}/cuestionarios", R.string.ph_single_patient_questionnaires_title){
-        fun routeTo(patientId: Int): String{
+        fun routeTo(patientId: String): String{
             return route.replace("{id}", patientId.toString())
         }
     }
 
     object PatientSessions: Route("paciente/{id}/sesiones", R.string.ph_single_patients_sessions_title){
-        fun routeTo(patientId: Int): String{
+        fun routeTo(patientId: String): String{
             return route.replace("{id}", patientId.toString())
         }
     }

@@ -6,7 +6,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,12 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import com.disfluency.R
-import com.disfluency.components.inputs.*
+import com.disfluency.components.inputs.DummyDaysOfWeekCheckbox
+import com.disfluency.components.inputs.ImagePicker
+import com.disfluency.components.inputs.inputAsString
+import com.disfluency.components.inputs.inputDate
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
-import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.navigation.Route
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -78,7 +84,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                         val patient = Patient(
                             name = patientName.value,
                             lastName = patientLastname.value,
-                            id = patientDNI.value.toInt(),
+                            id = patientDNI.value,
                             dateOfBirth = patientBirthDate.value!!,
                             /* Este value es nullable porque la fecha hasta que se elija va a ser null.
                              * Al agregar !! "casteo" de nullable a no nullable (si fuera null, romperia).

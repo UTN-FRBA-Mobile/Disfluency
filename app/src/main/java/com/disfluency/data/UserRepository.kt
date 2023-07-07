@@ -1,6 +1,5 @@
 package com.disfluency.data
 
-import com.disfluency.model.Phono
 import com.disfluency.model.User
 
 class UserNotFoundException: Exception()

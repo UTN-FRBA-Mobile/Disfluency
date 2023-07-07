@@ -1,17 +1,24 @@
 package com.disfluency.components.inputs
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TriStateCheckbox
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
-import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.model.utils.daysOfWeek
+import java.time.DayOfWeek
 import java.util.*
+
 /*
 @Preview
 @Composable
@@ -49,7 +56,7 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
     }
 
     val daysOfWeekAsEnum = daysOfWeek()
-    val daysOfWeek = daysOfWeekAsEnum.map { stringResource(it.stringId) }
+    val daysOfWeek = daysOfWeekAsEnum.map { it.name }
 
     val notifyChange = {
         val checksAsStringList = LinkedList<DayOfWeek>()

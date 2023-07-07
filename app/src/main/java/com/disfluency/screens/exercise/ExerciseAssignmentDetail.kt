@@ -16,13 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.ExercisePractice
 import com.disfluency.navigation.Route
 import com.disfluency.utils.millisecondsAsMinutesAndSeconds
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
-import com.disfluency.R
 
 @Composable
 fun ExerciseAssignmentDetail(id: String, navController: NavController){

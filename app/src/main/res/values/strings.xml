@@ -7,7 +7,7 @@
     <!-- Generales -->
         <!-- Formato Fechas -->
             <string name="date_format">dd/MM/yyyy</string>
-            <string name="time_format">hh:mm</string>
+            <string name="time_format">HH:mm</string>
 
         <!-- Días de Semana -->
             <string name="day1">Lunes</string>

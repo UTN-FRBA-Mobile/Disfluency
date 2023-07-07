@@ -11,12 +11,11 @@ import androidx.navigation.navArgument
 import com.disfluency.R
 import com.disfluency.model.Phono
 import com.disfluency.model.User
-import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.Route
-import com.disfluency.screens.exercise.*
-import com.disfluency.screens.phono.PatientQuestionnairesScreen
-import com.disfluency.screens.phono.PatientSessionsScreen
-import com.disfluency.screens.phono.SinglePatientScreen
+import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
+import com.disfluency.screens.exercise.ExercisesScreen
+import com.disfluency.screens.exercise.SingleExerciseScreen
+import com.disfluency.screens.exercise.TranscriptionScreen
 import com.disfluency.screens.phono.*
 
 @Composable
@@ -44,25 +43,25 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             route = Route.Paciente.route,
             arguments = listOf(navArgument("id") {  })
         ) { backStackEntry -> //TODO: ver si hay forma de no tener que hacer el pasamanos de navController
-            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(id = it.toInt(), navController = navController) }
+            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(id = it, navController = navController) }
         }
         composable(
             route = Route.PatientExercises.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PhonoExercisesScreen(id = it.toInt(), navController = navController) }
+            backStackEntry.arguments?.getString("id")?.let { PhonoExercisesScreen(id = it, navController = navController) }
         }
         composable(
             route = Route.PatientQuestionnaires.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PatientQuestionnairesScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { PatientQuestionnairesScreen(id = it) }
         }
         composable(
             route = Route.PatientSessions.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it) }
         }
         composable(Route.NuevoPaciente.route) {
             FormNewPatient(navController, user.role as Phono)

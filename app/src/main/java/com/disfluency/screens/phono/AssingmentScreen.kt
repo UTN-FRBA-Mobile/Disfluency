@@ -23,7 +23,7 @@ import com.disfluency.navigation.Route
 
 @Composable
 fun AssignmentScreen(navController: NavHostController, phono: Phono) {
-    val checkedPatients = remember { mutableStateListOf<Int>() }
+    val checkedPatients = remember { mutableStateListOf<String>() }
     val checkedExercises = remember { mutableStateListOf<Int>() }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -66,7 +66,7 @@ fun AssignmentScreen(navController: NavHostController, phono: Phono) {
 }
 
 @Composable
-fun PatientsColumn(patients: List<Patient>, checkedPatients: MutableList<Int>, navController: NavHostController) {
+fun PatientsColumn(patients: List<Patient>, checkedPatients: MutableList<String>, navController: NavHostController) {
     Column(modifier = Modifier.fillMaxHeight()) {
         Row(modifier = Modifier.fillMaxWidth()) {
             LazyColumn(
@@ -94,7 +94,7 @@ fun ExercisesColumn(exercises: List<Exercise>, checkedExercises: MutableList<Int
 }
 
 @Composable
-fun PatientAssignmentCard(patient: Patient, checkedPatients: MutableList<Int>, navController: NavHostController) {
+fun PatientAssignmentCard(patient: Patient, checkedPatients: MutableList<String>, navController: NavHostController) {
     Row(modifier = Modifier.padding(2.dp)) {
         val isChecked = remember { mutableStateOf(patient.id in checkedPatients) }
         Checkbox(
@@ -142,7 +142,7 @@ fun ExerciseAssignmentCard(exercise: Exercise, checkedExercises: MutableList<Int
 }
 
 @Composable
-fun AssignButton(checkedExercises: MutableList<Int>, checkedPatients: MutableList<Int>, navController: NavHostController) {
+fun AssignButton(checkedExercises: MutableList<Int>, checkedPatients: MutableList<String>, navController: NavHostController) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
