@@ -85,7 +85,8 @@ fun FormNewPatient(navController: NavController, phono: Phono){
             )
 
             phono.addPatient(patient)
-            PatientRepository.addPatient(patient)
+//            PatientRepository.addPatient(patient)
+            navController.popBackStack()
             navController.navigate(Route.Paciente.routeTo(patient.id))
         }
     )
