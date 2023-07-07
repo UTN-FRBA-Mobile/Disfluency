@@ -86,6 +86,8 @@
                 <string name="exercise_detail_title">Detalle del ejercicio</string>
             <!-- Pantalla Asignación de Ejercicio -->
                 <string name="ph_exercise_asign_title">Asignar</string>
+            <!-- Pantalla Analisis de Disfluencia -->
+                <string name="ph_exercise_analysis">Analisis de Disfluencias</string>
 
     <!-- sin uso -->
         <string name="questionnaires_title">Cuestionarios</string>
