@@ -38,6 +38,9 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
         composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
             PhonoQuestionnaireScreen()
         }
+        composable(BottomNavigationItem.Asignaciones.screenRoute.route) {
+            AssignmentScreen(navController, user.role as Phono)
+        }
         composable(
             route = Route.Paciente.route,
             arguments = listOf(navArgument("id") {  })

@@ -1,5 +1,6 @@
 package com.disfluency.navigation
 
+import androidx.compose.ui.res.stringResource
 import com.disfluency.R
 
 sealed class Route(val route: String, val title: Int){
@@ -17,6 +18,7 @@ sealed class Route(val route: String, val title: Int){
 
     object NuevoEjercicio: Route("nuevo-ejercicio", R.string.ph_new_exercise_title)
 
+    object Assignment: Route("asignacion", R.string.ph_exercise_asign_title)
 
     object Ejercicio: Route("ejercicio/{id}", R.string.exercise_detail_title){
         fun routeTo(ejercicioId: Int): String{
@@ -62,7 +64,12 @@ sealed class Route(val route: String, val title: Int){
 
     object HomePatient : Route("patient/home", R.string.pa_home_title)
 
+    object PracticeSuccess: Route("ejercicio-resuelto-completado", R.string.record_success_title)
+
 }
+
+//Routes that are supposed to be displayed without top or nav bar
+val noSupportBarsRoutes = listOf(Route.PracticeSuccess).map { it.route }
 
 val items = Route::class.nestedClasses.map { it.objectInstance as Route }
 fun getItemByRoute(route: String): Route{

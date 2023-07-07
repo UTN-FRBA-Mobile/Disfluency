@@ -1,8 +1,8 @@
 package com.disfluency.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -13,10 +13,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.R
 import com.disfluency.model.Patient
@@ -79,15 +81,24 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Image(
+            painter = painterResource(id = R.drawable.disfluency_logo),
+            contentDescription = "Disfluency",
+            modifier = Modifier.size(170.dp, 170.dp)
+        )
+
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
             placeholder = { Text(stringResource(R.string.login_label_username)) },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            modifier = Modifier.padding(8.dp)
         )
 
         OutlinedTextField(
+            modifier = Modifier.padding(8.dp),
             value = password,
             onValueChange = { password = it },
             placeholder = { Text(stringResource(R.string.login_label_password)) },

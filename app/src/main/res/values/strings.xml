@@ -9,7 +9,7 @@
             <string name="date_format">dd/MM/yyyy</string>
             <string name="time_format">hh:mm</string>
 
-    <!-- Días de Semana -->
+        <!-- Días de Semana -->
             <string name="day1">Lunes</string>
             <string name="day2">Martes</string>
             <string name="day3">Miércoles</string>
@@ -46,6 +46,8 @@
             <!-- Pantalla Responder ejercicio -->
                 <string name="pa_exercise_answer_new_title">Practica de Ejercicio</string>
                 <string name="exercise_answer_prefix">"Resolucion del "</string>
+            <!-- Pantalla Resolucion Enviada con Exito -->
+                <string name="pa_record_success_message">Se guardo la resolucion exitosamente</string>
 
         <!-- Fonoaudiologo -->
             <!-- Home -->
@@ -82,10 +84,14 @@
                 <string name="exercises_search_placeholder">Buscar</string>
             <!-- Pantalla Ejercicio -->
                 <string name="exercise_detail_title">Detalle del ejercicio</string>
+            <!-- Pantalla Asignación de Ejercicio -->
+                <string name="ph_exercise_asign_title">Asignar</string>
 
     <!-- sin uso -->
         <string name="questionnaires_title">Cuestionarios</string>
         <string name="ph_new_exercise_title">Nuevo Ejercicio</string>
         <string name="ph_single_patient_questionnaires_title">Cuestionarios del Paciente</string>
         <string name="ph_single_patients_sessions_title">Sesiones del Paciente</string>
+
+    <string name="record_success_title">Grabacion Exitosa</string>
 </resources>

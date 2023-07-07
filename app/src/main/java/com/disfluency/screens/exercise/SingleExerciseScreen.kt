@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
@@ -58,22 +59,24 @@ fun SingleExerciseScreen(id: Int) {
             }
         }
         
-        ExampleRecording(exercise)
+        ExampleRecording(sampleAudioUrl = exercise.sampleAudioURL, subtitle = stringResource(R.string.exercise_example))
     }
 }
 
 @Composable
-fun ExampleRecording(exercise: Exercise){
+fun ExampleRecording(sampleAudioUrl: String, subtitle: String? = null){
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            text = stringResource(R.string.exercise_example),
-            style = MaterialTheme.typography.labelMedium
-        )
+        subtitle?.let {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                text = it,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
 
-        AudioPlayer(url = exercise.sampleAudioURL)
+        AudioPlayer(audio = sampleAudioUrl, type = AudioMediaType.URL)
     }
 
 }

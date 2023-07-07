@@ -30,14 +30,18 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(getItemByRoute(currentRoute).title)) },
-                navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
-                actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
-            )
+            if (!noSupportBarsRoutes.contains(currentRoute)){
+                CenterAlignedTopAppBar(
+                    title = { Text(text = stringResource(getItemByRoute(currentRoute).title)) },
+                    navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
+                    actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
+                )
+            }
         },
         bottomBar = {
-            BottomNavigation(navController, bottomNavigationItems)
+            if (!noSupportBarsRoutes.contains(currentRoute)){
+                BottomNavigation(navController, bottomNavigationItems)
+            }
         },
         content = { paddingValues ->
             Box(modifier = Modifier

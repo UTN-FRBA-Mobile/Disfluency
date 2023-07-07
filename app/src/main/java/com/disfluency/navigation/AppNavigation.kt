@@ -60,7 +60,8 @@ fun AppNavigation(){
             AppScaffold(listOf(
                 BottomNavigationItem.HomePhono,
                 BottomNavigationItem.Pacientes,
-                BottomNavigationItem.Ejercicios
+                BottomNavigationItem.Ejercicios,
+                BottomNavigationItem.Asignaciones
 //                BottomNavigationItem.Cuestionarios
             )){
                 PhonoNavigationGraph(navController = it, loginService.getUser(), onLogout)
