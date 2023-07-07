@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -97,13 +98,17 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
             modifier = Modifier.padding(8.dp)
         )
 
+        val focusManager = LocalFocusManager.current
         OutlinedTextField(
             modifier = Modifier.padding(8.dp),
             value = password,
             onValueChange = { password = it },
             placeholder = { Text(stringResource(R.string.login_label_password)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onSend = {submit()}),
+            keyboardActions = KeyboardActions(onSend = {
+                submit()
+                focusManager.clearFocus()
+            }),
             singleLine = true,
             visualTransformation = if(visiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
