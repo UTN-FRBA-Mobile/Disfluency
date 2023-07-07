@@ -1,4 +1,4 @@
-package com.disfluency.audio
+package com.disfluency.audio.playback
 
 import android.content.Context
 import android.media.AudioAttributes
@@ -6,15 +6,13 @@ import android.media.MediaPlayer
 import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.io.File
 import java.io.IOException
 
-class DisfluencyAudioPlayer(private val context: Context) {
+abstract class DisfluencyAudioPlayer(private val context: Context) {
 
     private var player: MediaPlayer? = null
 
@@ -25,15 +23,9 @@ class DisfluencyAudioPlayer(private val context: Context) {
 
     private var progressTrackerJob: Job? = null
 
-    fun play(file: File){
-        MediaPlayer.create(context, file.toUri()).apply {
-            player = this
-            start()
-            evaluateProgress()
-        }
-    }
+    protected abstract fun loadUri(media: String): Uri
 
-    fun loadUrl(audioUrl: String){
+    fun load(media: String){
         MediaPlayer().apply {
             player = this
 
@@ -44,7 +36,7 @@ class DisfluencyAudioPlayer(private val context: Context) {
             )
 
             try {
-                setDataSource(context, Uri.parse(audioUrl))
+                setDataSource(context, loadUri(media))
                 prepareAsync()
                 setOnPreparedListener {
                     asyncReady.value = true
@@ -71,16 +63,11 @@ class DisfluencyAudioPlayer(private val context: Context) {
     fun stop(){
         progressTrackerJob?.cancel()
         isPlaying.value = false
-        asyncReady.value = false
 
         seekTo(0)
 
         player?.apply {
-            stop()
-            prepareAsync()
-            setOnPreparedListener {
-                asyncReady.value = true
-            }
+            pause()
         }
     }
 
@@ -99,7 +86,8 @@ class DisfluencyAudioPlayer(private val context: Context) {
     }
 
     fun release(){
-        pause()
+        isPlaying.value = false
+        progressTrackerJob?.cancel()
         player?.release()
         player = null
     }

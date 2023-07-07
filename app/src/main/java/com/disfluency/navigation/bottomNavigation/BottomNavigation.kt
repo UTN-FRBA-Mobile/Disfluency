@@ -3,6 +3,7 @@ package com.disfluency.navigation.bottomNavigation
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
@@ -17,8 +18,8 @@ fun BottomNavigation(navController: NavController, items: List<BottomNavigationI
 
             NavigationBarItem(
                 selected = currentRoute == item.screenRoute.route,
-                icon = { Icon(item.icon, contentDescription = item.screenRoute.title) },
-                label = { Text(text = item.screenRoute.title) },
+                icon = { Icon(item.icon, contentDescription = stringResource(item.screenRoute.title)) },
+                label = { Text(text = stringResource(item.screenRoute.title)) },
                 onClick = {
                     navController.navigate(item.screenRoute.route) {
 
