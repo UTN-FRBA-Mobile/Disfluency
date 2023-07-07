@@ -1,127 +1,35 @@
 package com.disfluency.screens.phono;
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.disfluency.AppScaffold
 import com.disfluency.R
 import com.disfluency.components.inputs.*
 import com.disfluency.components.stepper.PageStepper
 import com.disfluency.components.stepper.StepScreen
 import com.disfluency.components.user.IconLabeled
-import com.disfluency.components.user.PatientInfoCard
 import com.disfluency.components.user.weeklyTurnFormat
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.navigation.Route
-import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
-import com.disfluency.ui.theme.MyApplicationTheme
-import com.maryamrzdh.stepper.Stepper
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Period
 import java.time.format.DateTimeFormatter
-
-@Composable
-fun _Old_FormNewPatient(navController: NavController, phono: Phono) {
-    val avatarIndex = remember { mutableStateOf(0) }
-    val name = remember { mutableStateOf("") }
-    val lastName = remember { mutableStateOf("") }
-    val dni = remember { mutableStateOf("") }
-    val email = remember { mutableStateOf("") }
-    val dateOfBirth: MutableState<LocalDate?> = remember { mutableStateOf(null) }
-    val weeklyTurn = remember{ mutableStateListOf<DayOfWeek>() }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-            .verticalScroll(rememberScrollState())
-            .padding(all = 16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        AvatarPicker(selectedAvatarIndex = avatarIndex)
-        MandatoryTextInput(state = name, label = stringResource(R.string.new_patient_label_name))
-        MandatoryTextInput(state = lastName, label = stringResource(R.string.new_patient_label_lastname))
-        MandatoryDigitsInput(state = dni, label = stringResource(R.string.new_patient_label_dni))
-        MandatoryEmailInput(state = email, label = stringResource(R.string.new_patient_label_email))
-        DateInput(state = dateOfBirth, label = stringResource(R.string.new_patient_label_dayOfBirth))
-        WeeklyTurnPicker(selectedDays = weeklyTurn)
-
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ){
-            Button(
-                onClick = {
-                    //TODO: que al no ser posible te indique con algun mensaje.
-                    if (validateInputs(name.value, lastName.value, dni.value, email.value, dateOfBirth.value, weeklyTurn)) {
-
-                        val patient = Patient(
-                            name = name.value,
-                            lastName = lastName.value,
-                            id = dni.value.toInt(),
-                            dateOfBirth = dateOfBirth.value!!,
-                            /* Este value es nullable porque la fecha hasta que se elija va a ser null.
-                             * Al agregar !! "casteo" de nullable a no nullable (si fuera null, romperia).
-                             * En el validate se valida que no sea null.
-                             */
-                            email = email.value,
-                            joinedSince = LocalDate.now(),
-                            weeklyHour = LocalTime.of(18,0), //TODO
-                            weeklyTurn = weeklyTurn,
-                            profilePic = USER_AVATARS[avatarIndex.value]
-                        )
-
-                        phono.addPatient(patient)
-                        PatientRepository.addPatient(patient)
-                        navController.navigate(Route.Paciente.routeTo(patient.id))
-                    }
-                }
-            ) {
-                Text(stringResource(R.string.new_patient_button_submit))
-            }
-            Button(
-                colors =  ButtonDefaults.buttonColors(
-                    contentColorFor(MaterialTheme.colorScheme.inversePrimary)
-                ),
-                onClick = {navController.navigate(Route.Pacientes.route)}
-            ) {
-                Text(text = stringResource(R.string.new_patient_button_cancel))
-            }
-        }
-
-    }
-}
-
-fun validateInputs(name: String, lastName: String, dni: String, email: String, dateOfBirth: LocalDate?, weeklyTurn: List<DayOfWeek>): Boolean {
-    return listOf(name, lastName, dni, email).all { MandatoryValidation().validate(it) }
-            && DigitsOnlyValidation().validate(dni)
-            && EmailValidation().validate(email)
-            && dateOfBirth != null
-            && weeklyTurn.isNotEmpty()
-}
 
 @Composable
 fun FormNewPatient(navController: NavController, phono: Phono){
