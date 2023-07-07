@@ -30,7 +30,7 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
 
     Scaffold(
         topBar = {
-            if (!noSupportBarsRoutes.contains(currentRoute)){
+            if (!noTopBarRoutes.contains(currentRoute)){
                 CenterAlignedTopAppBar(
                     title = { Text(text = stringResource(getItemByRoute(currentRoute).title)) },
                     navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
@@ -39,7 +39,7 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
             }
         },
         bottomBar = {
-            if (!noSupportBarsRoutes.contains(currentRoute)){
+            if (!noBottomBarRoutes.contains(currentRoute)){
                 BottomNavigation(navController, bottomNavigationItems)
             }
         },

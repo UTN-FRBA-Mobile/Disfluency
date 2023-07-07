@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.disfluency.R
 import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.model.utils.workingDays
 

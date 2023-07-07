@@ -99,7 +99,8 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
         Icon(
             imageVector = icon,
             contentDescription = content,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.primary
         )
         Text(
             text = label,

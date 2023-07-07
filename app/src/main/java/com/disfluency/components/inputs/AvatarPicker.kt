@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
 
-val PICKABLE_AVATARS = listOf(
+val USER_AVATARS = listOf(
     R.drawable.avatar_1,
     R.drawable.avatar_2,
     R.drawable.avatar_3,
@@ -51,14 +51,14 @@ fun AvatarPicker(selectedAvatarIndex: MutableState<Int>){
         Image(
             modifier = Modifier
                 .size(90.dp),
-            painter = painterResource(id = PICKABLE_AVATARS[selectedAvatarIndex.value]),
+            painter = painterResource(id = USER_AVATARS[selectedAvatarIndex.value]),
             contentDescription = "Avatar"
         )
 
         IconButton(
             modifier = Modifier.size(60.dp),
             onClick = { selectedAvatarIndex.value++ },
-            enabled = selectedAvatarIndex.value < PICKABLE_AVATARS.size - 1,
+            enabled = selectedAvatarIndex.value < USER_AVATARS.size - 1,
             colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.primary, disabledContentColor = Color.Gray)
         ) {
             Icon(imageVector = Icons.Filled.NavigateNext, contentDescription = "Next")
