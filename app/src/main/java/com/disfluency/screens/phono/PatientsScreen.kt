@@ -21,11 +21,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import com.disfluency.R
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
@@ -50,7 +52,7 @@ fun PatientsScreen(navController: NavHostController, user: Phono) {
                 onSearch = { },
                 active = false,
                 onActiveChange = { },
-                placeholder = { Text("Buscar") },
+                placeholder = { Text(stringResource(R.string.search_placeholder)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             ) {}
         }
@@ -102,7 +104,7 @@ fun PatientCard(paciente: Patient, navController: NavHostController) {
 
             Surface(shape = MaterialTheme.shapes.medium) {
                 Text(
-                    text = "${paciente.age()} años",
+                    text = "${paciente.age()} ${stringResource(R.string.years_old_unit)}",
                     modifier = Modifier.padding(all = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )

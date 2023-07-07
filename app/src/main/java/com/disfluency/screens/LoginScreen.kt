@@ -12,6 +12,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -80,6 +82,7 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+
         Image(
             painter = painterResource(id = R.drawable.disfluency_logo),
             contentDescription = "Disfluency",
@@ -89,19 +92,23 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            placeholder = { Text("Nombre de Usuario") },
+            placeholder = { Text(stringResource(R.string.login_label_username)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.padding(8.dp)
         )
 
+        val focusManager = LocalFocusManager.current
         OutlinedTextField(
             modifier = Modifier.padding(8.dp),
             value = password,
             onValueChange = { password = it },
-            placeholder = { Text("Contraseña") },
+            placeholder = { Text(stringResource(R.string.login_label_password)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onSend = {submit()}),
+            keyboardActions = KeyboardActions(onSend = {
+                submit()
+                focusManager.clearFocus()
+            }),
             singleLine = true,
             visualTransformation = if(visiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -115,10 +122,10 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         )
         
         Button(onClick = submit, enabled = enabledButton) {
-            Text("Iniciar Sesión")
+            Text(stringResource(R.string.login_button_submit))
         }
         if(retry){
-            Text(text = "El usuario y/o la contraseña son incorrectos.", color=MaterialTheme.colorScheme.error)
+            Text(stringResource(R.string.login_error_message), color=MaterialTheme.colorScheme.error)
         }
     }
 }

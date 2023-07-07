@@ -6,13 +6,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
-
+import com.disfluency.model.Exercise
+import com.disfluency.R
 
 @Composable
 fun SingleExerciseScreen(id: Int) {
@@ -43,7 +45,7 @@ fun SingleExerciseScreen(id: Int) {
 
            exercise.phrase?.let{
                 Text(
-                    text = "Repita la siguiente frase:",
+                    text = stringResource(R.string.exercise_asignment),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 24.dp)
                 )
@@ -57,7 +59,7 @@ fun SingleExerciseScreen(id: Int) {
             }
         }
         
-        ExampleRecording(sampleAudioUrl = exercise.sampleAudioURL, subtitle = "Ejemplo generado por el profesional")
+        ExampleRecording(sampleAudioUrl = exercise.sampleAudioURL, subtitle = stringResource(R.string.exercise_example))
     }
 }
 

@@ -13,9 +13,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.navigation.Route
 import kotlinx.coroutines.delay
@@ -95,7 +97,7 @@ fun RecordSuccessScreen(navController: NavController){
                         .padding(16.dp)
                 )
                 Text(
-                    text = "Se guardo la resolucion exitosamente",
+                    text = stringResource(R.string.pa_record_success_message),
                     color = Color.White,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold

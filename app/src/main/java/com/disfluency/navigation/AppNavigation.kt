@@ -44,8 +44,8 @@ fun AppNavigation(){
 
     val onLogout: ()->Unit = {
         CoroutineScope(Dispatchers.IO).launch {
-            loginService.logout()
             didLogout = true
+            loginService.logout()
         }
     }
 
