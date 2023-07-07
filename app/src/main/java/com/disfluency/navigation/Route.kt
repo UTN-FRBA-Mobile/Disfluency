@@ -66,6 +66,11 @@ sealed class Route(val route: String, val title: Int){
 
     object PracticeSuccess: Route("ejercicio-resuelto-completado", R.string.record_success_title)
 
+    object TranscriptionAnalysis: Route("ejercicio-resuelto/{id}/analisis", R.string.ph_exercise_analysis){
+        fun routeTo(practiceId: String): String{
+            return route.replace("{id}", practiceId)
+        }
+    }
 }
 
 //Routes that are supposed to be displayed without top or nav bar
