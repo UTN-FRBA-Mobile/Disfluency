@@ -94,4 +94,7 @@
         <string name="ph_single_patients_sessions_title">Sesiones del Paciente</string>
 
     <string name="record_success_title">Grabacion Exitosa</string>
+
+    <!-- notifications -->
+    <string name="default_notification_channel_id">Global</string>
 </resources>
