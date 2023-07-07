@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.disfluency.audio.DisfluencyAudioPlayer
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
@@ -72,7 +73,9 @@ fun ExampleRecording(exercise: Exercise){
             style = MaterialTheme.typography.labelMedium
         )
 
-        AudioPlayer(url = exercise.sampleAudioURL)
+        AudioPlayer(
+            url = exercise.sampleAudioURL
+        )
     }
 
 }

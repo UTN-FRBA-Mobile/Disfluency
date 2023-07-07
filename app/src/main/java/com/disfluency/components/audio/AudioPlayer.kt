@@ -22,9 +22,7 @@ import com.disfluency.audio.DisfluencyAudioPlayer
 import com.disfluency.utils.millisecondsAsMinutesAndSeconds
 
 @Composable
-fun AudioPlayer(url: String){
-    val ctx = LocalContext.current
-    val audioPlayer = DisfluencyAudioPlayer(ctx)
+fun AudioPlayer(url: String, audioPlayer: DisfluencyAudioPlayer = DisfluencyAudioPlayer(LocalContext.current)){
     audioPlayer.loadUrl(url)
 
     DisposableEffect(Lifecycle.Event.ON_STOP) {
