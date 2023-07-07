@@ -1,121 +1,54 @@
 package com.disfluency.components.inputs
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.disfluency.R
+import androidx.compose.ui.unit.sp
 import com.disfluency.model.utils.DayOfWeek
-import com.disfluency.model.utils.daysOfWeek
-import java.util.*
-/*
-@Preview
-@Composable
-fun Preview(){
-    val state = remember { mutableStateOf("") }
-    DummyDaysOfWeekCheckbox("Elegir", state = state)
-    Button(onClick = { print("\n\n\"$state\"\n\n\n") }) {}
-}*/
+import com.disfluency.model.utils.workingDays
 
 @Composable
-fun DummyDaysOfWeekCheckbox(label: String, state: MutableState<List<DayOfWeek>>){
-    Text(text = label, color = MaterialTheme.colorScheme.primary)
-    DaysOfWeekCheckbox{
-        state.value = it
-    }
-}
-
-@Composable
-fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
-    //Uso '=' en lugar de 'by' para poder settear el value sin conocer la variable.
-    val mondaysChecked = remember {mutableStateOf(false)}
-    val tuesdaysChecked = remember {mutableStateOf(false)}
-    val wednesdaysChecked = remember {mutableStateOf(false)}
-    val thursdaysChecked = remember {mutableStateOf(false)}
-    val fridaysChecked = remember {mutableStateOf(false)}
-    val sathurdaysChecked = remember {mutableStateOf(false)}
-    val sundaysChecked = remember {mutableStateOf(false)}
-
-    val weekChecks = arrayOf(mondaysChecked, tuesdaysChecked, wednesdaysChecked, thursdaysChecked, fridaysChecked, sathurdaysChecked, sundaysChecked)
-
-    val allDaysChecked = remember(*weekChecks.map {it.value}.toTypedArray()) {
-        if      (weekChecks.all { it.value })ToggleableState.On
-        else if (weekChecks.all {!it.value}) ToggleableState.Off
-        else ToggleableState.Indeterminate
-    }
-
-    val daysOfWeekAsEnum = daysOfWeek()
-    val daysOfWeek = daysOfWeekAsEnum.map { stringResource(it.stringId) }
-
-    val notifyChange = {
-        val checksAsStringList = LinkedList<DayOfWeek>()
-        weekChecks.forEachIndexed{
-            index, isChecked -> if(isChecked.value) checksAsStringList.add(daysOfWeekAsEnum[index])
-        }
-
-        onChange(checksAsStringList)
-    }
-
-    Column(horizontalAlignment = Alignment.Start, modifier = Modifier.width(275.dp)) {
-        CheckboxAllOptions(allDaysChecked, stringResource(R.string.all_days), weekChecks, notifyChange)
-
-        val checkboxForDay = @Composable{
-            index: Int, checkbox: MutableState<Boolean> ->
-                CheckBoxItem(
-                    checked = checkbox,
-                    dayName = daysOfWeek[index],
-                    onCheckedChange = {
-                        checkbox.value = it
-                        notifyChange()
-                    }
-                )
-        }
-
-        Column(Modifier.fillMaxWidth()){
-            for(i in (weekChecks.indices)){
-                checkboxForDay(i, weekChecks[i])
-            }
-        }
-    }
-}
-
-@Composable
-private fun CheckboxAllOptions(state: ToggleableState, label: String, subCheckboxes: Array<MutableState<Boolean>>, onChange: () -> Unit){
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        TriStateCheckbox(
-            state = state,
-            onClick = {
-                val isChecked = state != ToggleableState.On
-
-                for (weekCheck in subCheckboxes) {
-                    weekCheck.value = isChecked
+fun WeeklyTurnPicker(selectedDays: SnapshotStateList<DayOfWeek>){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        workingDays().forEach { day ->
+            TextButton(
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(4.dp),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (selectedDays.contains(day)) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    contentColor = if (selectedDays.contains(day)) Color.White else Color.DarkGray
+                ),
+                onClick = {
+                    if (selectedDays.contains(day)) selectedDays.remove(day)
+                    else selectedDays.add(day)
                 }
-
-                onChange()
+            ) {
+                Text(
+                    text = stringResource(id = day.stringId)[0].toString().uppercase(),
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center
+                )
             }
-        )
-        Text(
-            modifier = Modifier.padding(start = 2.dp),
-            text = label
-        )
+        }
     }
-}
 
-@Composable
-private fun CheckBoxItem(
-    checked: MutableState<Boolean>,
-    dayName: String,
-    onCheckedChange: (Boolean) -> Unit,
-) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(checked.value, onCheckedChange)
-        Text(
-            modifier = Modifier.padding(start = 2.dp),
-            text = dayName
-        )
-    }
 }

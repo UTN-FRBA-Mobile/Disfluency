@@ -1,89 +1,67 @@
 package com.disfluency.components.inputs
 
-import androidx.compose.ui.tooling.preview.Preview
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NavigateBefore
+import androidx.compose.material.icons.filled.NavigateNext
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
 
-//TODO: Investigar context, ver si vale la pena usar corrutinas
+val PICKABLE_AVATARS = listOf(
+    R.drawable.avatar_1,
+    R.drawable.avatar_2,
+    R.drawable.avatar_3,
+    R.drawable.avatar_4,
+    R.drawable.avatar_5,
+    R.drawable.avatar_6,
+    R.drawable.avatar_7
+)
 
 @Composable
-fun ImagePicker(state: MutableState<Int>){
-    Image(painterResource(id = state.value), "Pick photo",
-        Modifier.size(150.dp))
+fun AvatarPicker(selectedAvatarIndex: MutableState<Int>){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
-    val pickableImage: @Composable (Int, Int)->Unit = { photo, index ->
-        Image(painterResource(id = photo),
-            "photo_$index",
-            Modifier.size(50.dp).clickable {
-                state.value = photo
-            }
+        IconButton(
+            modifier = Modifier.size(60.dp),
+            onClick = { selectedAvatarIndex.value-- },
+            enabled = selectedAvatarIndex.value > 0,
+            colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.primary, disabledContentColor = Color.Gray)
+        ) {
+            Icon(imageVector = Icons.Filled.NavigateBefore, contentDescription = "Previous")
+        }
+
+        Image(
+            modifier = Modifier
+                .size(90.dp),
+            painter = painterResource(id = PICKABLE_AVATARS[selectedAvatarIndex.value]),
+            contentDescription = "Avatar"
         )
-    }
 
-    Row(horizontalArrangement = Arrangement.Center){
-        listOf(
-            R.drawable.avatar_12,
-            R.drawable.avatar_17,
-            R.drawable.avatar_26,
-            R.drawable.avatar_30
-        ).forEachIndexed { index, photo -> pickableImage(photo, index) }
+        IconButton(
+            modifier = Modifier.size(60.dp),
+            onClick = { selectedAvatarIndex.value++ },
+            enabled = selectedAvatarIndex.value < PICKABLE_AVATARS.size - 1,
+            colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.primary, disabledContentColor = Color.Gray)
+        ) {
+            Icon(imageVector = Icons.Filled.NavigateNext, contentDescription = "Next")
+        }
     }
 }
-
-/*
-@Preview
-@Composable
-fun inputImage(): Input<Bitmap?> {
-    var image by remember { mutableStateOf<Bitmap?>(null) }
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) {
-        if(it != null) {
-            val source = ImageDecoder.createSource(context.contentResolver, it)
-            image = ImageDecoder.decodeBitmap(source)
-        }
-    }
-
-    val onClick = { launcher.launch("image/*") }
-    val buttonModifier = Modifier.size(150.dp)
-
-    if(image == null){
-        //Icon(Icons.Outlined.AccountCircle, "Add photo", tint = MaterialTheme.colorScheme.inverseSurface, modifier = Modifier.fillMaxSize())
-        Image(
-            painter = painterResource(id = R.drawable.add_image),
-            contentDescription = "Add photo",
-            modifier = buttonModifier.clickable(onClick = onClick)
-        )
-    } else{
-        IconButton(onClick = onClick
-            , modifier = buttonModifier.background(
-                color = MaterialTheme.colorScheme.primary
-                , shape = CircleShape
-            )
-        ){
-            Image(
-                bitmap = image!!.asImageBitmap(),
-                contentDescription = "Change Image",
-                contentScale = ContentScale.FillBounds
-            )
-        }
-    }
-
-    return Input(image, {false}, {})
-}*/

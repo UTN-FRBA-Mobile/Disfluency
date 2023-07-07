@@ -28,24 +28,26 @@ import java.time.LocalTime
 
 @Composable
 fun FormNewPatient(navController: NavController, phono: Phono) {
+    val NEXT_INPUT_ON_ENTER = KeyboardOptions(imeAction = ImeAction.Next)
+    val NEXT_AND_CAPITALIZE_WORDS = NEXT_INPUT_ON_ENTER.copy(capitalization = KeyboardCapitalization.Words)
+
+    val avatarIndex = remember { mutableStateOf(0) }
+    val todaysDate = LocalDate.now()
+    val weeklyTurn = remember{ mutableStateListOf<DayOfWeek>() }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
             .verticalScroll(rememberScrollState())
-            .padding(bottom = 10.dp)
-        ,
+            .padding(all = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val NEXT_INPUT_ON_ENTER = KeyboardOptions(imeAction = ImeAction.Next)
-        val NEXT_AND_CAPITALIZE_WORDS =
-            NEXT_INPUT_ON_ENTER.copy(capitalization = KeyboardCapitalization.Words)
 
-        val profilePic = remember { mutableStateOf(R.drawable.avatar_null) }
-        ImagePicker(profilePic)
-//        var selectedImage by remember { mutableStateOf() }
+        AvatarPicker(selectedAvatarIndex = avatarIndex)
 
+        //TODO: hacer bien estos
         val patientName = inputAsString(label = stringResource(R.string.new_patient_label_name), keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
         val patientLastname = inputAsString(stringResource(R.string.new_patient_label_lastname), keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
         val patientDNI = inputAsString(
@@ -58,13 +60,12 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
             keyboardType = KeyboardType.Email, imeAction = ImeAction.Done
         ), validations = listOf { Patterns.EMAIL_ADDRESS.asPredicate().test(it) })
 
-        val todaysDate = LocalDate.now()
         val patientBirthDate = inputDate(stringResource(R.string.new_patient_label_dayOfBirth), maxDate = todaysDate)
 
         //TODO: Agregar validacion de que elija al menos 1.
-        val weeklyTurn: MutableState<List<DayOfWeek>> = remember{ mutableStateOf(emptyList()) }
-        DummyDaysOfWeekCheckbox(stringResource(R.string.new_patient_label_weeklyTurn), state = weeklyTurn)
-        
+        Text(text = stringResource(R.string.new_patient_label_weeklyTurn), color = MaterialTheme.colorScheme.primary)
+        WeeklyTurnPicker(selectedDays = weeklyTurn)
+
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -87,8 +88,8 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                             email = email.value,
                             joinedSince = todaysDate,
                             weeklyHour = LocalTime.of(18,0), //TODO
-                            weeklyTurn = weeklyTurn.value,
-                            profilePic = profilePic.value
+                            weeklyTurn = weeklyTurn,
+                            profilePic = PICKABLE_AVATARS[avatarIndex.value]
                         )
 
                         phono.addPatient(patient)
