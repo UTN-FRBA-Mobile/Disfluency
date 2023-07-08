@@ -1,5 +1,8 @@
 package com.disfluency.screens.analysis
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,8 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,54 +27,32 @@ import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.user.IconLabeledDetails
 import com.disfluency.components.user.PatientInfoCard
 import com.disfluency.data.MockedData
+import com.disfluency.data.TranscriptionRepository
 import com.disfluency.model.analysis.*
 import com.disfluency.ui.theme.MyApplicationTheme
 
 @Composable
 fun TranscriptionScreen() {
+    //TODO: sacar mockeo
     val patient = MockedData.therapists.first().patients.first()
-    val disfluencyType = DisfluencyType.V
-    val disfluencyType2 = DisfluencyType.M
-    val disfluency = SingleDisfluency(disfluencyType)
-    val compositeDisfluency = CompositeDisfluency(listOf(disfluencyType, disfluencyType2))
-    val analysis = Analysis(
-        listOf(
-            AnalysedWord("Me", disfluency, 0, 2000),
-            AnalysedWord("parece", disfluency, 2000, 3000),
-            AnalysedWord("que",startTime = 3000, endTime = 5000),
-            AnalysedWord("esto", compositeDisfluency, 5000, 7000),
-            AnalysedWord("no", startTime = 7000, endTime = 10000),
-            AnalysedWord("funciona", disfluency, 10000, 12000),
-            AnalysedWord("muy", compositeDisfluency, 12000, 13000),
-            AnalysedWord("bien", startTime = 13000, endTime = 15000),
-            AnalysedWord("ah", disfluency, 15000, 18000),
-            AnalysedWord("para!", disfluency, 18000, 19000),
-            AnalysedWord("re", startTime = 19000, endTime = 20000),
-            AnalysedWord("funciona", compositeDisfluency, 20000, 25000),
-            AnalysedWord("ahora", startTime = 25000, endTime = 27000),
-            AnalysedWord("nice", disfluency, 27000, 30000),
-            AnalysedWord("murcielago", compositeDisfluency, 30000, 35000),
-            AnalysedWord("chau", startTime = 35000, endTime = 40000)
-        )
-    )
+    val analysis = TranscriptionRepository.mockedTranscriptions[0]
+
     val disfluencyAudioPlayer = DisfluencyAudioPlayer(LocalContext.current)
-    Column(modifier = Modifier.fillMaxWidth()) {
-        PatientInfoCard(
-            patient = patient,
-            firstLabel = IconLabeledDetails(
-                Icons.Outlined.Person,
-                patient.age().toString(),
-                "Analysis"
-            ),
-            secondLabel = IconLabeledDetails(Icons.Outlined.CalendarMonth, "22/06/23", "Date")
-        )
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+//        PatientInfoCard(
+//            patient = patient,
+//            firstLabel = IconLabeledDetails(
+//                Icons.Outlined.Person,
+//                patient.age().toString(),
+//                "Analysis"
+//            ),
+//            secondLabel = IconLabeledDetails(Icons.Outlined.CalendarMonth, "22/06/23", "Date")
+//        )
         TitleText(title = "Transcripción")
         Transcription(analysis, disfluencyAudioPlayer)
         Spacer(modifier = Modifier.height(32.dp))
         TitleText("Audio")
-        Box(Modifier.padding(horizontal = 16.dp)) {
-            AudioPlayer(url = MockedData.testUrl, audioPlayer = disfluencyAudioPlayer)
-        }
+        AudioPlayer(url = MockedData.testUrl, audioPlayer = disfluencyAudioPlayer)
     }
 }
 
@@ -93,23 +76,30 @@ private fun Transcription(analysis: Analysis, disfluencyAudioPlayer: DisfluencyA
                     shape = MaterialTheme.shapes.large,
                     color = if (word.getDisfluency().isEmpty()) Color.Transparent else
                         MaterialTheme.colorScheme.secondaryContainer
-                )
-                {
+                ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         text = word.getDisfluency(),
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
                     )
                 }
+
+                val bgColor: Color by animateColorAsState(
+                    targetValue = if (word.isTimeInBetween(disfluencyAudioPlayer.position())) MaterialTheme.colorScheme.primary else Color.Black,
+                    animationSpec = tween(50, 0, LinearEasing)
+                )
+
                 Text(
                     text = word.word + " ",
-                    fontSize = 20.sp, modifier = Modifier.clickable { disfluencyAudioPlayer.seekTo(word.startTime) },
-                    color = if (word.isTimeInBetween(disfluencyAudioPlayer.position())) MaterialTheme.colorScheme.primary else
-                        Color.Black
+                    fontSize = 18.sp,
+                    modifier = Modifier.clickable { disfluencyAudioPlayer.seekTo(word.startTime) },
+//                    color = lerp(Color.Black, MaterialTheme.colorScheme.primary, if(disfluencyAudioPlayer.duration() == 0) 0f else (word.startTime / disfluencyAudioPlayer.duration()).toFloat())
+                    color = bgColor
                 )
 
                 // Se arregla en androidx.compose.foundation:foundation-layout:1.5.0 que agrega al FlowRow un VerticalArrangement
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(2.dp))
             }
         }
     }

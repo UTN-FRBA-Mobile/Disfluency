@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 object MockedData {
 
-    const val testUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+    const val testUrl = "https://pf5302.s3.us-east-2.amazonaws.com/audios/iniciosuave.mp3"
 
     val exercises: MutableList<Exercise> = arrayListOf(
         Exercise(id = 1, therapistId = 1, title = "Presentarse", instruction = "Di tu nombre y apellido", sampleAudioURL = testUrl, number = 1),
