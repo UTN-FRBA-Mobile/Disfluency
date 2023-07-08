@@ -10,16 +10,24 @@ import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.disfluency.model.Patient
+import com.disfluency.model.Phono
+import com.disfluency.model.User
 import com.disfluency.navigation.*
 import com.disfluency.navigation.bottomNavigation.BottomNavigation
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 
 @Composable
-fun AppScaffold(onLogout: () -> Unit, bottomNavigationItems: List<BottomNavigationItem>, content: @Composable (NavHostController)->Unit) {
+fun AppScaffold(user: User, onLogout: () -> Unit, bottomNavigationItems: List<BottomNavigationItem>, content: @Composable (NavHostController)->Unit) {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -31,7 +39,7 @@ fun AppScaffold(onLogout: () -> Unit, bottomNavigationItems: List<BottomNavigati
                 CenterAlignedTopAppBar(
                     title = { Text(text = stringResource(getItemByRoute(currentRoute).title)) },
                     navigationIcon = { /*Icon(Icons.Filled.Menu , contentDescription = "")*/ },
-                    actions = { AccountSettingsButton(onLogout) }
+                    actions = { AccountSettingsButton(user, onLogout) }
                 )
             }
         },
@@ -51,12 +59,15 @@ fun AppScaffold(onLogout: () -> Unit, bottomNavigationItems: List<BottomNavigati
 }
 
 @Composable
-fun AccountSettingsButton(onLogout: ()->Unit) {
+fun AccountSettingsButton(user: User, onLogout: ()->Unit) {
     var dropdownVisible by remember { mutableStateOf(false) }
     IconButton(onClick = {
         dropdownVisible = !dropdownVisible
     }) {
-        Icon(Icons.Filled.AccountCircle, contentDescription = "")
+        Image(
+            painter= painterResource(user.role.profilePicUrl),
+            contentDescription="profile pic",
+            modifier = Modifier.fillMaxSize().clip(shape = CircleShape))
     }
 
     DropdownMenu(expanded = dropdownVisible, onDismissRequest = { dropdownVisible = false }) {

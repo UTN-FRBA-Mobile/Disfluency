@@ -12,11 +12,11 @@ data class Patient(
     val id: Int,
     val email: String,
     val joinedSince: LocalDate,
-    val profilePic: Int,
+    val profilePictureUrl: Int,
     val weeklyTurn: List<DayOfWeek>, //TODO: ver cual seria el tipo de dato para esto
     val weeklyHour: LocalTime, //TODO: ver cual seria el tipo de dato para esto
     val exercises: MutableList<ExerciseAssignment> = ArrayList()
-    ): Role {
+    ): Role(profilePictureUrl) {
 
     fun initials(): String {
         return (name.first().toString() + lastName.first().toString()).uppercase()

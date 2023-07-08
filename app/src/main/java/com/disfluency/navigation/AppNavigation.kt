@@ -57,23 +57,25 @@ fun AppNavigation(){
             LoginScreen(navController, loginService)
         }
         composable(Route.HomePhono.route){
-            AppScaffold(onLogout, listOf(
+            val user = loginService.getUser()
+            AppScaffold(user, onLogout, listOf(
                 BottomNavigationItem.HomePhono,
                 BottomNavigationItem.Pacientes,
                 BottomNavigationItem.Ejercicios,
                 BottomNavigationItem.Asignaciones
 //                BottomNavigationItem.Cuestionarios
             )){
-                PhonoNavigationGraph(navController = it, loginService.getUser())
+                PhonoNavigationGraph(navController = it, user)
             }
         }
         composable(Route.HomePatient.route){
-            AppScaffold(onLogout, listOf(
+            val user = loginService.getUser()
+            AppScaffold(user, onLogout, listOf(
                 BottomNavigationItem.HomePatient,
                 BottomNavigationItem.Ejercicios
 //                BottomNavigationItem.Cuestionarios
             )){
-                PatientNavigationGraph(navController = it, loginService.getUser())
+                PatientNavigationGraph(navController = it, user)
             }
         }
     }
