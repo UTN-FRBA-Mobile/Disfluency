@@ -1,5 +1,6 @@
 package com.disfluency.screens.exercise
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
@@ -30,6 +32,7 @@ import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
 import com.disfluency.navigation.Route
+import kotlin.random.Random
 
 @Composable
 fun ExercisesScreen(navController: NavHostController) {
@@ -56,24 +59,6 @@ fun ExercisesScreen(navController: NavHostController) {
         }
         ExerciseList(ExerciseRepository.longListForTest, navController, text)
     }
-  //  ExerciseCreation(navController) //TODO
-}
-
-@Composable
-fun ExerciseCreation(navController: NavHostController) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        FloatingActionButton(
-            onClick = {
-                navController.navigate(Route.NuevoEjercicio.route)
-            },
-            modifier = Modifier.padding(16.dp),
-        ) {
-            Icon(Icons.Filled.Add, "Creacion")
-        }
-    }
 }
 
 @Composable
@@ -82,82 +67,61 @@ fun ExerciseList(exercises: List<Exercise>, navController: NavHostController, fi
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(exercises.filter {
                 ex -> ex.fullName().contains(filter, true) }) {ex ->
-            ExerciseCard(ex, navController)
+            ExerciseListItem(ex, navController)
         }
     }
 }
 
 
 @Composable
-fun ExerciseNumber(exercise: Exercise) {
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .clip(CircleShape)
-            .size(40.dp)
-            .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape),
-    ) {
-        Box(contentAlignment = Alignment.Center){
-            Text(
-                text = exercise.number(),
-                style = TextStyle(color = Color.White, fontSize = 18.sp)
-            )
-        }
-    }
-}
-
-@Composable
-fun Play(exercise: Exercise) {
-    Button(
-        onClick = { exercise.getAudioSample() },
-        modifier = Modifier.size(40.dp),
-        contentPadding = PaddingValues(1.dp)
-    ) {
-        Box {
-            Icon(
-                imageVector = Icons.Outlined.PlayArrow,
-                contentDescription = exercise.title
-            )
-        }
-    }
-}
-
-@Composable
-fun ExerciseCard(exercise: Exercise, navController: NavHostController) {
-    // Refactor a ListItem?
+fun ExerciseListItem(exercise: Exercise, navController: NavHostController) {
     val onClick = {
         navController.navigate(Route.Ejercicio.routeTo(exercise.id))
     }
 
-    Row(
-        modifier = Modifier
-            .padding(all = 8.dp)
-            .fillMaxWidth()
-            .clickable { onClick() },
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row (modifier = Modifier.weight(8f)) {
-            ExerciseNumber(exercise = exercise)
-            Spacer(modifier = Modifier.width(8.dp))
-            Column {
+    Card(
+        modifier = Modifier.clickable { onClick() },
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+    ){
+        ListItem(
+            modifier = Modifier.height(56.dp),
+            headlineContent = {
                 Text(
                     text = exercise.title,
                     style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+            },
+            supportingContent = {
+                Text(
+                    text = exercise.getFullInstructions(),
+                    maxLines = 1,
+                    style = MaterialTheme.typography.labelMedium,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
+            leadingContent = {
+                //TODO: ver si se puede generar un color a partir del string del titulo
+                val color = MaterialTheme.colorScheme.secondary
                 Surface(
-                    shape = MaterialTheme.shapes.medium
+                    color = color,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(40.dp)
+                        .border(
+                            1.5.dp,
+                            color
+                                .copy(0.5f)
+                                .compositeOver(Color.Black),
+                            CircleShape
+                        ),
                 ) {
-                    Text(
-                        text = exercise.getFullInstructions(),
-                        modifier = Modifier.padding(all = 4.dp),
-                        maxLines = 1,
-                        style = MaterialTheme.typography.labelMedium,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Box(contentAlignment = Alignment.Center){
+                        Text(
+                            text = exercise.title.first().uppercaseChar().toString(),
+                            style = TextStyle(color = Color.White, fontSize = 18.sp)
+                        )
+                    }
                 }
-            }
-        }
-//        Play(exercise)
+            })
     }
 }
