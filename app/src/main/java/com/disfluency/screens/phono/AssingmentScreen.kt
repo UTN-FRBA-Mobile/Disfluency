@@ -1,5 +1,6 @@
 package com.disfluency.screens.phono
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,24 +8,42 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.disfluency.data.ExerciseRepository
+import com.disfluency.data.PatientRepository
 import com.disfluency.model.Exercise
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
+import com.disfluency.model.dto.AssignmentDTO
 import com.disfluency.navigation.Route
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AssignmentScreen(navController: NavHostController, phono: Phono) {
     val checkedPatients = remember { mutableStateListOf<String>() }
-    val checkedExercises = remember { mutableStateListOf<Int>() }
+    val checkedExercises = remember { mutableStateListOf<String>() }
+
+    val patients = remember { mutableStateListOf<Patient>() }
+    val exercises = remember { mutableStateListOf<Exercise>() }
+
+    LaunchedEffect(Unit) {
+        val patientsResponse = withContext(Dispatchers.IO) { PatientRepository.getPatientsByTherapistId(phono.id) }
+        Log.i("HTTP", patientsResponse.toString())
+        patients.addAll(patientsResponse)
+    }
+
+    LaunchedEffect(Unit) {
+        val exercisesResponse = withContext(Dispatchers.IO) { ExerciseRepository.getExercisesByTherapistId(phono.id) }
+        Log.i("HTTP", exercisesResponse.toString())
+        exercises.addAll(exercisesResponse)
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -41,7 +60,7 @@ fun AssignmentScreen(navController: NavHostController, phono: Phono) {
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                PatientsColumn(phono.patients, checkedPatients, navController)
+                PatientsColumn(patients, checkedPatients, navController)
             }
         }
         Text(
@@ -58,11 +77,16 @@ fun AssignmentScreen(navController: NavHostController, phono: Phono) {
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                ExercisesColumn(ExerciseRepository.exercises, checkedExercises, navController)
+                ExercisesColumn(exercises, checkedExercises, navController)
             }
         }
     }
-    AssignButton(checkedPatients = checkedPatients, checkedExercises = checkedExercises, navController = navController)
+    AssignButton(
+        checkedExercises = checkedExercises,
+        checkedPatients = checkedPatients,
+        therapistId = phono.id,
+        navController = navController
+    )
 }
 
 @Composable
@@ -80,7 +104,7 @@ fun PatientsColumn(patients: List<Patient>, checkedPatients: MutableList<String>
 }
 
 @Composable
-fun ExercisesColumn(exercises: List<Exercise>, checkedExercises: MutableList<Int>, navController: NavHostController) {
+fun ExercisesColumn(exercises: List<Exercise>, checkedExercises: MutableList<String>, navController: NavHostController) {
     Column(modifier = Modifier.fillMaxHeight()) {
         Row(modifier = Modifier.fillMaxWidth()) {
             LazyColumn(
@@ -118,7 +142,7 @@ fun PatientAssignmentCard(patient: Patient, checkedPatients: MutableList<String>
 }
 
 @Composable
-fun ExerciseAssignmentCard(exercise: Exercise, checkedExercises: MutableList<Int>, navController: NavHostController) {
+fun ExerciseAssignmentCard(exercise: Exercise, checkedExercises: MutableList<String>, navController: NavHostController) {
     Row(modifier = Modifier.padding(2.dp)) {
         val isChecked = remember { mutableStateOf(exercise.id in checkedExercises) }
         Checkbox(
@@ -142,21 +166,34 @@ fun ExerciseAssignmentCard(exercise: Exercise, checkedExercises: MutableList<Int
 }
 
 @Composable
-fun AssignButton(checkedExercises: MutableList<Int>, checkedPatients: MutableList<String>, navController: NavHostController) {
+fun AssignButton(
+    checkedExercises: MutableList<String>,
+    checkedPatients: MutableList<String>,
+    therapistId: String,
+    navController: NavHostController
+) {
+    var onSubmit by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
     ) {
         FloatingActionButton(
             onClick = {
-                val strpatients = checkedPatients.map{it.toString()}
-                val strex = checkedExercises.map{it.toString()}
-                println("PATIENTS: $strpatients")
-                println("EXERCISES: $strex")
+                CoroutineScope(Dispatchers.IO).launch {
+                    PatientRepository.assignExercisesToPatients(AssignmentDTO(checkedPatients, checkedExercises), therapistId)
+                    onSubmit = true
+                }
             },
             modifier = Modifier.padding(16.dp),
         ) {
             Icon(Icons.Filled.Send, "Asignar")
+        }
+    }
+
+    if(onSubmit) {
+        LaunchedEffect(Unit) {
+            navController.navigate(Route.HomePhono.route)
         }
     }
 }

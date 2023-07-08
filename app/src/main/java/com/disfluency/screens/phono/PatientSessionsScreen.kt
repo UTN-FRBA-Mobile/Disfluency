@@ -15,7 +15,6 @@ import com.disfluency.data.PatientRepository
 
 @Composable
 fun PatientSessionsScreen(id: String) {
-    val patient = PatientRepository.getPatientById2(id)
 
     Column(
         modifier = Modifier
@@ -23,7 +22,7 @@ fun PatientSessionsScreen(id: String) {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Sesiones del Paciente: ${patient.name}",
+            text = "Sesiones del Paciente",
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
             modifier = Modifier.align(Alignment.CenterHorizontally),

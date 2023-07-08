@@ -1,5 +1,6 @@
 package com.disfluency.data
 
+import com.disfluency.clients.DisfluencyAPIServiceGenerator
 import com.disfluency.model.Exercise
 import com.disfluency.model.ExerciseAssignment
 import com.disfluency.model.ExercisePractice
@@ -8,14 +9,22 @@ import java.io.File
 import java.time.LocalDate
 
 object ExerciseRepository {
+    private val apiService = DisfluencyAPIServiceGenerator.buildService()
     val exercises = MockedData.exercises
-    val longListForTest = exercises
 
-    fun getExerciseById(id: Int): Exercise{
+    fun getExerciseById(id: String): Exercise {
         return exercises.first { it.id == id }
     }
 
-    fun saveExercisePractice(assignmentId: String, audio: File){
+    suspend fun getExerciseById2(id: String): Exercise {
+        return apiService.getExerciseById(id)
+    }
+
+    suspend fun getExercisesByTherapistId(therapistId: String): List<Exercise> {
+        return apiService.getExercisesFrom(therapistId)
+    }
+
+    fun saveExercisePractice(assignmentId: String, audio: File) {
         MockedPracticeSaver().save(assignmentId, audio)
         println("Saved audio recording: $audio")
     }
@@ -28,7 +37,11 @@ object ExerciseRepository {
         return 2; //TODO: implement
     }
 
-    fun getAssignmentById(id: String): ExerciseAssignment{
+    suspend fun getAssignmentById2(id: String): ExerciseAssignment {
+        return apiService.getExercisesAssignmentById(id)
+    }
+
+    fun getAssignmentById(id: String): ExerciseAssignment {
         return MockedData.assignments.first { it.id == id }
     }
     

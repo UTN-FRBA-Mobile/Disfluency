@@ -45,7 +45,7 @@ fun PatientNavigationGraph(navController: NavHostController, user: User, onLogou
         }
         composable(Route.Ejercicio.route, listOf(navArgument("id"){})){
             it.arguments?.getString("id")?.let { id ->
-                SingleExerciseScreen(id = id.toInt())
+                SingleExerciseScreen(id = id)
             }
         }
         composable(Route.PracticeSuccess.route){

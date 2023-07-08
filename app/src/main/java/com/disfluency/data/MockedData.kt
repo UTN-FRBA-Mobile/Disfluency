@@ -11,45 +11,54 @@ object MockedData {
     const val testUrl = "https://pf5302.s3.us-east-2.amazonaws.com/audios/iniciosuave.mp3"
 
     val exercises: MutableList<Exercise> = arrayListOf(
-        Exercise(id = 1, therapistId = 1, title = "Presentarse", instruction = "Di tu nombre y apellido", sampleAudioURL = testUrl, number = 1),
-        Exercise(id = 2, therapistId = 1, title = "Repetir", instruction = "Repite la siguiente frase", phrase = "Tres tigres comen trigo Tres tigres comen trigoTres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo v Tres tigres comen trigo Tres tigres comen trigo", sampleAudioURL = testUrl, number = 2),
-        Exercise(id = 3, therapistId = 1, title = "Repetir 2", instruction = "Repita la siguiente frase", phrase = "Pablito clavó un clavito", sampleAudioURL = testUrl, number = 3),
+        Exercise(
+            id = "1",
+            title = "Presentarse",
+            instruction = "Di tu nombre y apellido",
+            sampleRecordingUrl = testUrl
+        ),
+        Exercise(
+            id = "2",
+            title = "Repetir",
+            instruction = "Repite la siguiente frase",
+            phrase = "Tres tigres comen trigo Tres tigres comen trigoTres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo Tres tigres comen trigo v Tres tigres comen trigo Tres tigres comen trigo",
+            sampleRecordingUrl = testUrl
+        ),
+        Exercise(
+            id = "3",
+            title = "Repetir 2",
+            instruction = "Repita la siguiente frase",
+            phrase = "Pablito clavó un clavito",
+            sampleRecordingUrl = testUrl
+        ),
 
         Exercise(
-            id = 4,
-            therapistId = 1,
+            id = "4",
             title = "Fonacion Continuada",
             instruction = "Mantener la fonacion a lo largo de la palabra y entre palabra y palabra. Mantener la vibracion de las cuerdas vocales a lo largo de la palabra y entre palabras sin frenar, y sostener durante toda una frase",
             phrase = "La portabilidad es la capacidad del producto o componente de ser transferido de forma efectiva y eficiente de un entorno hardware, software, operacional o de utilización a otro.",
-            sampleAudioURL = testUrl,
-            number = 4
+            sampleRecordingUrl = testUrl
         ),
         Exercise(
-            id = 5,
-            therapistId = 1,
+            id = "5",
             title = "Inicio Suave",
             instruction = "Es un suave comienzo en la vibración de las cuerdas vocales en el inicio de cualquier palabra que comience con vocal. Dejo salir un poco de aire a través de las cuerdas vocales antes de comenzar la fonación; quizás un poco aireado al principio pero mejorará con la práctica.",
             phrase = "La fiabilidad es la capacidad de un sistema o componente para desempeñar las funciones especificadas, cuando se usa bajo unas condiciones y periodo de tiempo determinados.",
-            sampleAudioURL = testUrl,
-            number = 5
+            sampleRecordingUrl = testUrl
         ),
         Exercise(
-            id = 6,
-            therapistId = 1,
+            id = "6",
             title = "Toques ligeros",
             instruction = "Producir las consonantes con movimientos y toques suaves entre las zonas de contacto. Empiezo todas las palabras que comienzan con consonante con una suave producción; toco y me voy; evito la presión en el resto de las consonantes de la palabra.",
             phrase = "La mantenibilidad es la característica que representa la capacidad del producto software para ser modificado efectiva y eficientemente, debido a necesidades evolutivas, correctivas o perfectivas.",
-            sampleAudioURL = testUrl,
-            number = 6
+            sampleRecordingUrl = testUrl
         ),
         Exercise(
-            id = 7,
-            therapistId = 1,
+            id = "7",
             title = "Velocidad cómoda y continua",
             instruction = "Controlar la velocidad de manera que me sea cómodo, tratar de mantenerla ajustándola a mi comodidad. Hablá a una velocidad cómoda y constante a lo largo de las palabras; y de las frases; bajá un poco la velocidad cuando notás un poco de tensión en tu máquina de hablar.",
             phrase = "La usabilidad es la capacidad del producto software para ser entendido, aprendido, usado y resultar atractivo para el usuario, cuando se usa bajo determinadas condiciones.",
-            sampleAudioURL = testUrl,
-            number = 7
+            sampleRecordingUrl = testUrl
         )
     )
 

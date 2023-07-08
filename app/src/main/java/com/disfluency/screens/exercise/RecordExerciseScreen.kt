@@ -29,7 +29,7 @@ const val LOCAL_RECORD_FILE = "disfluency_exercise_recording.mp3"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController){
+fun RecordExercise(id: String, onSend: (File) -> Unit, navController: NavController){
     val exercise = ExerciseRepository.getExerciseById(id)
     val audioRecorder = DisfluencyAudioRecorder(LocalContext.current)
 

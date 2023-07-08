@@ -2,6 +2,7 @@ package com.disfluency.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +32,7 @@ import com.disfluency.navigation.Route
 import com.disfluency.screens.utils.LoginService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class NotSupportedUserRoleException(role: Role): Exception(role::class.toString())
@@ -38,6 +41,7 @@ class NotSupportedUserRoleException(role: Role): Exception(role::class.toString(
 fun LoginScreen(navController: NavController, loginService: LoginService) {
     var retry by remember { mutableStateOf(false) }
     var onAuthenticate by remember { mutableStateOf(false) }
+    var onSubmit by remember { mutableStateOf(false) }
 
     if (onAuthenticate) {
         LaunchedEffect(Unit) {
@@ -49,6 +53,7 @@ fun LoginScreen(navController: NavController, loginService: LoginService) {
                     else -> throw NotSupportedUserRoleException(userRole)
                 }
             )
+            onSubmit = false
             onAuthenticate = false
         }
     }
@@ -56,12 +61,21 @@ fun LoginScreen(navController: NavController, loginService: LoginService) {
     LoginForm(retry) { username, password ->
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                onSubmit = true
+                delay(2000)
                 Log.i("LOGIN", "Username: $username")
                 loginService.login(username, password)
                 onAuthenticate = true
             } catch (_: UserNotFoundException) {
                 retry = true
+                onSubmit = false
             }
+        }
+    }
+
+    if (onSubmit) {
+        Box(Modifier.fillMaxSize().background(Color.Gray.copy(0.2f)), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
         }
     }
 }

@@ -2,10 +2,12 @@ package com.disfluency.data
 
 import com.disfluency.clients.DisfluencyAPIServiceGenerator
 import com.disfluency.model.Patient
+import com.disfluency.model.dto.AssignmentDTO
 
 object PatientRepository {
 
     private val apiService = DisfluencyAPIServiceGenerator.buildService()
+
     fun getPatientById2(id: String): Patient{
         return patients.first { it.id == id }
     }
@@ -20,6 +22,10 @@ object PatientRepository {
 
     suspend fun getPatientsByTherapistId(id: String): List<Patient>{
         return apiService.getPatientsByTherapistId(id)
+    }
+
+    suspend fun assignExercisesToPatients(assignmentDTO: AssignmentDTO, id: String) {
+        apiService.assignExercisesToPatients(assignmentDTO, id)
     }
 
     val patients = MockedData.patients

@@ -31,7 +31,7 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             PatientsScreen(navController, user.role as Phono)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            ExercisesScreen(navController)
+            ExercisesScreen(navController, user.role as Phono)
         }
         composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
             PhonoQuestionnaireScreen()
@@ -71,7 +71,7 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             route = Route.Ejercicio.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { SingleExerciseScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { SingleExerciseScreen(id = it) }
         }
 
         composable(Route.NuevoEjercicio.route) {
