@@ -1,5 +1,6 @@
 package com.disfluency.screens.phono
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,13 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -28,13 +25,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.disfluency.R
+import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun PatientsScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
+
+    val patients = remember { mutableStateListOf<Patient>() }
+
+    LaunchedEffect(Unit) {
+        val patientsResponse = withContext(Dispatchers.IO) { PatientRepository.getPatientsByTherapistId("64a89fe4c11df54d8a9477e4") }
+        Log.i("HTTP", patientsResponse.toString())
+        patients.addAll(patientsResponse)
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -55,27 +63,27 @@ fun PatientsScreen(navController: NavHostController, user: Phono) {
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             ) {}
         }
-        PatientsList(user.patients, navController, text)
+        PatientsList(patients.toList(), navController, text)
     }
     PatientCreation(navController)
 }
 
 @Composable
-fun PatientsList(pacientes: List<Patient>, navController: NavHostController, filter: String) {
+fun PatientsList(patients: List<Patient>, navController: NavHostController, filter: String) {
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(pacientes.filter {
-                paciente -> paciente.fullName().contains(filter, true) }) {paciente ->
-            PatientCard(paciente, navController)
+        items(patients.filter {
+                patient -> patient.fullName().contains(filter, true) }) {patient ->
+            PatientCard(patient, navController)
         }
     }
 }
 
 @Composable
-fun PatientCard(paciente: Patient, navController: NavHostController) {
+fun PatientCard(patient: Patient, navController: NavHostController) {
     // Refactor a ListItem?
     val onClick = {
-        navController.navigate(Route.Paciente.routeTo(paciente.id))
+        navController.navigate(Route.Paciente.routeTo(patient.id))
     }
 
     Row(
@@ -85,7 +93,7 @@ fun PatientCard(paciente: Patient, navController: NavHostController) {
             .clickable { onClick() }
     ) {
         Image(
-            painter = painterResource(paciente.profilePic),
+            painter = painterResource(patient.profilePic),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
@@ -95,7 +103,7 @@ fun PatientCard(paciente: Patient, navController: NavHostController) {
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = paciente.fullNameFormal(),
+                text = patient.fullNameFormal(),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -103,7 +111,7 @@ fun PatientCard(paciente: Patient, navController: NavHostController) {
 
             Surface(shape = MaterialTheme.shapes.medium) {
                 Text(
-                    text = "${paciente.age()} ${stringResource(R.string.years_old_unit)}",
+                    text = "${patient.age()} ${stringResource(R.string.years_old_unit)}",
                     modifier = Modifier.padding(all = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )

@@ -1,15 +1,13 @@
 package com.disfluency.screens.phono;
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,12 +26,17 @@ import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 
 @Composable
 fun FormNewPatient(navController: NavController, phono: Phono) {
+    val newPatient = remember { mutableStateOf<Patient?>(null) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,8 +101,10 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                         )
 
                         phono.addPatient(patient)
-                        PatientRepository.addPatient(patient)
-                        navController.navigate(Route.Paciente.routeTo(patient.id))
+                        CoroutineScope(Dispatchers.IO).launch {
+                            newPatient.value = PatientRepository.addPatientToTherapist(patient, "64a89fe4c11df54d8a9477e4")
+                            Log.i("HTTP", "Creating patient: $patient")
+                        }
                     }
                 }
             ) {
@@ -116,6 +121,8 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
         }
 
     }
+    if (newPatient.value != null) {
+        Log.i("------", "--------------")
+        navController.navigate(Route.Paciente.routeTo(newPatient.value!!.id))
+    }
 }
-
-

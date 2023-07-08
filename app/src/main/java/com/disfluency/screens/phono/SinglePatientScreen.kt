@@ -50,7 +50,7 @@ fun SinglePatientScreen(id: String, navController: NavController){
     val patient = remember { mutableStateOf<Patient?>(null) }
 
     LaunchedEffect(Unit) {
-        val aPatient = withContext(Dispatchers.IO) { PatientRepository.getPatientById("64a89fe4c11df54d8a9477e3") }
+        val aPatient = withContext(Dispatchers.IO) { PatientRepository.getPatientById(id) }
         Log.i("HTTP", aPatient.toString())
         patient.value = aPatient
     }

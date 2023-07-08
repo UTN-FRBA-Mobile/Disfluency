@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
-import com.disfluency.model.utils.daysOfWeek
 import java.time.DayOfWeek
 import java.util.*
 
@@ -44,10 +43,8 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
     val wednesdaysChecked = remember {mutableStateOf(false)}
     val thursdaysChecked = remember {mutableStateOf(false)}
     val fridaysChecked = remember {mutableStateOf(false)}
-    val sathurdaysChecked = remember {mutableStateOf(false)}
-    val sundaysChecked = remember {mutableStateOf(false)}
 
-    val weekChecks = arrayOf(mondaysChecked, tuesdaysChecked, wednesdaysChecked, thursdaysChecked, fridaysChecked, sathurdaysChecked, sundaysChecked)
+    val weekChecks = arrayOf(mondaysChecked, tuesdaysChecked, wednesdaysChecked, thursdaysChecked, fridaysChecked)
 
     val allDaysChecked = remember(*weekChecks.map {it.value}.toTypedArray()) {
         if      (weekChecks.all { it.value })ToggleableState.On
@@ -55,7 +52,7 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
         else ToggleableState.Indeterminate
     }
 
-    val daysOfWeekAsEnum = daysOfWeek()
+    val daysOfWeekAsEnum = DayOfWeek.values()
     val daysOfWeek = daysOfWeekAsEnum.map { it.name }
 
     val notifyChange = {
