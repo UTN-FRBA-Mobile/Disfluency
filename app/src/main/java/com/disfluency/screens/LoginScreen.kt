@@ -1,5 +1,6 @@
 package com.disfluency.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -38,24 +39,24 @@ fun LoginScreen(navController: NavController, loginService: LoginService) {
     var retry by remember { mutableStateOf(false) }
     var onAuthenticate by remember { mutableStateOf(false) }
 
-    //LaunchedEffect(onAuthenticate){
-        if(onAuthenticate){
+    if (onAuthenticate) {
+        LaunchedEffect(Unit) {
             val userRole = loginService.getUser().role
             navController.navigate(
-                when(userRole){
+                when (userRole) {
                     is Phono -> Route.HomePhono.route
                     is Patient -> Route.HomePatient.route
                     else -> throw NotSupportedUserRoleException(userRole)
                 }
             )
-
             onAuthenticate = false
         }
-    //}
+    }
 
     LoginForm(retry) { username, password ->
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                Log.i("LOGIN", "Username: $username")
                 loginService.login(username, password)
                 onAuthenticate = true
             } catch (_: UserNotFoundException) {

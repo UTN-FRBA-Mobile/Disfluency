@@ -102,7 +102,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
 
                         phono.addPatient(patient)
                         CoroutineScope(Dispatchers.IO).launch {
-                            newPatient.value = PatientRepository.addPatientToTherapist(patient, "64a89fe4c11df54d8a9477e4")
+                            newPatient.value = PatientRepository.addPatientToTherapist(patient, phono.id)
                             Log.i("HTTP", "Creating patient: $patient")
                         }
                     }
@@ -119,10 +119,10 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                 Text(text = stringResource(R.string.new_patient_button_cancel))
             }
         }
-
     }
-    if (newPatient.value != null) {
-        Log.i("------", "--------------")
-        navController.navigate(Route.Paciente.routeTo(newPatient.value!!.id))
+    newPatient.value?.let {
+        LaunchedEffect(Unit) {
+            navController.navigate(Route.Paciente.routeTo(it.id))
+        }
     }
 }

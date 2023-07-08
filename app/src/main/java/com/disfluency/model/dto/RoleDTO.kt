@@ -1,9 +1,8 @@
-package com.disfluency.model
+package com.disfluency.model.dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.*
+import com.disfluency.model.*
+import com.disfluency.model.Patient
+import com.fasterxml.jackson.annotation.*
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
@@ -13,9 +12,19 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.Period
 
-data class Patient(
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.WRAPPER_OBJECT,
+    property = "type")
+@JsonSubTypes(
+    JsonSubTypes.Type(value = PatientDTO::class, name = "patient"),
+    JsonSubTypes.Type(value = PhonoDTO::class, name = "therapist"))
+interface RoleDTO {
+    fun toRole(): Role
+}
+
+data class PatientDTO(
     @JsonProperty("name")
     val name: String,
 
@@ -50,46 +59,26 @@ data class Patient(
     @JsonDeserialize(using = LocalTimeDeserializer::class)
     @JsonSerialize(using = LocalTimeSerializer::class)
     val weeklyHour: LocalTime, //TODO: ver cual seria el tipo de dato para esto
-
-    @JsonProperty("exercises")
-    val exercises: MutableList<ExerciseAssignment> = ArrayList()
-) : Role {
-
-    fun initials(): String {
-        return (name.first().toString() + lastName.first().toString()).uppercase()
-    }
-
-    fun fullName(): String {
-        return "$name $lastName"
-    }
-
-    fun fullNameFormal(): String {
-        return "$lastName, $name"
-    }
-
-    fun age(): Int {
-        return Period.between(
-            dateOfBirth,
-            LocalDate.now()
-        ).years
+) : RoleDTO {
+    override fun toRole(): Role {
+        return Patient(name, lastName, dateOfBirth, id, email, joinedSince, profilePic, weeklyTurn, weeklyHour)
     }
 }
 
-object DayDeserializer : JsonDeserializer<List<DayOfWeek>>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): List<DayOfWeek> {
-        val node = p.readValueAsTree<JsonNode>()
-        return node.map { d -> DayOfWeek.valueOf(d.textValue()) }
-    }
-}
+data class PhonoDTO(
+    @JsonProperty("id")
+    val id: String,
 
-object DaySerializer : JsonSerializer<List<DayOfWeek>>() {
-    override fun serialize(
-        value: List<DayOfWeek>,
-        gen: JsonGenerator,
-        serializers: SerializerProvider
-    ) {
-        with(gen) {
-            writeArray(value.map { d -> d.toString() }.toTypedArray(), 0, value.size)
-        }
+    @JsonProperty("name")
+    val name: String,
+
+    @JsonProperty("lastName")
+    val lastName: String,
+
+    @JsonProperty("profilePictureUrl")
+    val profilePictureUrl: Int,
+): RoleDTO {
+    override fun toRole(): Role {
+        return Phono(id, name, lastName, profilePictureUrl)
     }
 }

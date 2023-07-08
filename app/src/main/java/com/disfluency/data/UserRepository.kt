@@ -1,13 +1,23 @@
 package com.disfluency.data
 
-import com.disfluency.model.User
+import com.disfluency.clients.DisfluencyAPIServiceGenerator
+import com.disfluency.model.Role
+import retrofit2.HttpException
 
 class UserNotFoundException: Exception()
 
 object UserRepository {
-    private val users = MockedData.users
 
-    suspend fun findUser(username: String, password: String): User {
-        return users.find { it.username == username && it.password == password } ?: throw UserNotFoundException()
+    private val apiService = DisfluencyAPIServiceGenerator.buildService()
+
+    suspend fun login(username: String, password: String): Role {
+        try {
+            val roleDTO = apiService.login(UserDTO(username, password))
+            return roleDTO.toRole()
+        } catch (e: HttpException) {
+            throw UserNotFoundException()
+        }
     }
 }
+
+data class UserDTO(val account: String, val password: String)

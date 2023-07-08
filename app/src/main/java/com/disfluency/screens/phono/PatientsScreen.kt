@@ -39,7 +39,7 @@ fun PatientsScreen(navController: NavHostController, user: Phono) {
     val patients = remember { mutableStateListOf<Patient>() }
 
     LaunchedEffect(Unit) {
-        val patientsResponse = withContext(Dispatchers.IO) { PatientRepository.getPatientsByTherapistId("64a89fe4c11df54d8a9477e4") }
+        val patientsResponse = withContext(Dispatchers.IO) { PatientRepository.getPatientsByTherapistId(user.id) }
         Log.i("HTTP", patientsResponse.toString())
         patients.addAll(patientsResponse)
     }
