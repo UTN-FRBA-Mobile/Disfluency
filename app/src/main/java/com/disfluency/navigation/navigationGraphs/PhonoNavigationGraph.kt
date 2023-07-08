@@ -20,13 +20,10 @@ import com.disfluency.screens.phono.SinglePatientScreen
 import com.disfluency.screens.phono.*
 
 @Composable
-fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout: () -> Unit) {
+fun PhonoNavigationGraph(navController: NavHostController, user: User) {
     NavHost(navController, startDestination = Route.HomePhono.route) {
         composable(BottomNavigationItem.HomePhono.screenRoute.route) {
             PhonoHomeScreen()
-            Button(onClick = onLogout) {
-                Text(stringResource(id = R.string.logout))
-            }
         }
         composable(BottomNavigationItem.Pacientes.screenRoute.route) {
             PatientsScreen(navController, user.role as Phono)

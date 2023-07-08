@@ -6,12 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -22,7 +19,7 @@ import com.disfluency.navigation.bottomNavigation.BottomNavigation
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 
 @Composable
-fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Composable (NavHostController)->Unit) {
+fun AppScaffold(onLogout: () -> Unit, bottomNavigationItems: List<BottomNavigationItem>, content: @Composable (NavHostController)->Unit) {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -33,8 +30,8 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
             if (!noSupportBarsRoutes.contains(currentRoute)){
                 CenterAlignedTopAppBar(
                     title = { Text(text = stringResource(getItemByRoute(currentRoute).title)) },
-                    navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
-                    actions = { Icon(Icons.Filled.AccountCircle, contentDescription = "") }
+                    navigationIcon = { /*Icon(Icons.Filled.Menu , contentDescription = "")*/ },
+                    actions = { AccountSettingsButton(onLogout) }
                 )
             }
         },
@@ -51,4 +48,22 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
             }
         }
     )
+}
+
+@Composable
+fun AccountSettingsButton(onLogout: ()->Unit) {
+    var dropdownVisible by remember { mutableStateOf(false) }
+    IconButton(onClick = {
+        dropdownVisible = !dropdownVisible
+    }) {
+        Icon(Icons.Filled.AccountCircle, contentDescription = "")
+    }
+
+    DropdownMenu(expanded = dropdownVisible, onDismissRequest = { dropdownVisible = false }) {
+        DropdownMenuItem(
+            leadingIcon = { Icon(Icons.Outlined.Logout, contentDescription = "logout" )},
+            text = { Text(stringResource(R.string.logout)) },
+            onClick = onLogout
+        )
+    }
 }

@@ -57,23 +57,23 @@ fun AppNavigation(){
             LoginScreen(navController, loginService)
         }
         composable(Route.HomePhono.route){
-            AppScaffold(listOf(
+            AppScaffold(onLogout, listOf(
                 BottomNavigationItem.HomePhono,
                 BottomNavigationItem.Pacientes,
                 BottomNavigationItem.Ejercicios,
                 BottomNavigationItem.Asignaciones
 //                BottomNavigationItem.Cuestionarios
             )){
-                PhonoNavigationGraph(navController = it, loginService.getUser(), onLogout)
+                PhonoNavigationGraph(navController = it, loginService.getUser())
             }
         }
         composable(Route.HomePatient.route){
-            AppScaffold(listOf(
+            AppScaffold(onLogout, listOf(
                 BottomNavigationItem.HomePatient,
                 BottomNavigationItem.Ejercicios
 //                BottomNavigationItem.Cuestionarios
             )){
-                PatientNavigationGraph(navController = it, loginService.getUser(), onLogout)
+                PatientNavigationGraph(navController = it, loginService.getUser())
             }
         }
     }
