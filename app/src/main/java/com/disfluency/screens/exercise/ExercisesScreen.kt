@@ -8,12 +8,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,12 +28,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
 import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
 import com.disfluency.navigation.Route
-import kotlin.random.Random
 
 @Composable
 fun ExercisesScreen(navController: NavHostController) {
@@ -100,8 +101,7 @@ fun ExerciseListItem(exercise: Exercise, navController: NavHostController) {
                 )
             },
             leadingContent = {
-                //TODO: ver si se puede generar un color a partir del string del titulo
-                val color = MaterialTheme.colorScheme.secondary
+                val color = stringToRGB(exercise.title)
                 Surface(
                     color = color,
                     modifier = Modifier
@@ -124,4 +124,16 @@ fun ExerciseListItem(exercise: Exercise, navController: NavHostController) {
                 }
             })
     }
+}
+
+
+//TODO: mover a otro lado esto!
+fun stringToRGB(string: String): Color {
+    val i = string.hashCode()
+
+    val a = (i shr 24 and 0xFF)
+    val r = (i shr 16 and 0xFF)
+    val g = (i shr 8 and 0xFF)
+    val b = (i and 0xFF)
+    return Color(r, g, b, 255);
 }
