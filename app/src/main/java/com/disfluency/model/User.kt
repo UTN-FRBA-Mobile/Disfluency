@@ -4,7 +4,7 @@ interface Role
 
 fun getProfilePicFromRole(role: Role): Int{
     return when (role) {
-        is Patient -> role.profilePictureUrl
+        is Patient -> role.profilePic
         is Phono -> role.profilePictureUrl
         else -> { throw NoPictureDefinedForRole(role)}
     }

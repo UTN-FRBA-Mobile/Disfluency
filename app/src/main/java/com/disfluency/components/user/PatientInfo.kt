@@ -41,7 +41,7 @@ fun PatientInfoCard(patient: Patient){
                 .padding(16.dp)
         ) {
             Image(
-                painter = painterResource(id = patient.profilePictureUrl),
+                painter = painterResource(id = patient.profilePic),
                 contentDescription = "User Thumbnail",
                 modifier = Modifier.size(90.dp)
             )

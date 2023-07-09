@@ -12,7 +12,7 @@ data class Patient(
     val id: Int,
     val email: String,
     val joinedSince: LocalDate,
-    val profilePictureUrl: Int,
+    val profilePic: Int,
     val weeklyTurn: List<DayOfWeek>, //TODO: ver cual seria el tipo de dato para esto
     val weeklyHour: LocalTime, //TODO: ver cual seria el tipo de dato para esto
     val exercises: MutableList<ExerciseAssignment> = ArrayList()

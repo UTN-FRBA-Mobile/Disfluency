@@ -86,7 +86,7 @@ fun PatientCard(paciente: Patient, navController: NavHostController) {
             .clickable { onClick() }
     ) {
         Image(
-            painter = painterResource(paciente.profilePictureUrl),
+            painter = painterResource(paciente.profilePic),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)

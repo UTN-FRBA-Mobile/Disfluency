@@ -88,7 +88,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                             joinedSince = todaysDate,
                             weeklyHour = LocalTime.of(18,0), //TODO
                             weeklyTurn = weeklyTurn.value,
-                            profilePictureUrl = profilePic.value
+                            profilePic = profilePic.value
                         )
 
                         phono.addPatient(patient)
