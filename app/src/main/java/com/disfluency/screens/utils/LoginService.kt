@@ -7,8 +7,8 @@ import com.disfluency.model.User
 class LoginService {
     private var user: User? = null
 
-    suspend fun login(username: String, password: String){
-        val user = UserRepository.login(username, password)
+    suspend fun login(username: String, password: String, fcmToken: String){
+        val user = UserRepository.login(username, password, fcmToken)
         this.user = User("", "", user)
     }
 

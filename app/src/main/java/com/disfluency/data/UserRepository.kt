@@ -10,9 +10,9 @@ object UserRepository {
 
     private val apiService = DisfluencyAPIServiceGenerator.buildService()
 
-    suspend fun login(username: String, password: String): Role {
+    suspend fun login(username: String, password: String, fcmToken: String): Role {
         try {
-            val roleDTO = apiService.login(UserDTO(username, password))
+            val roleDTO = apiService.login(UserDTO(username, password, fcmToken))
             return roleDTO.toRole()
         } catch (e: HttpException) {
             throw UserNotFoundException()
@@ -20,4 +20,4 @@ object UserRepository {
     }
 }
 
-data class UserDTO(val account: String, val password: String)
+data class UserDTO(val account: String, val password: String, val fcmToken: String)
