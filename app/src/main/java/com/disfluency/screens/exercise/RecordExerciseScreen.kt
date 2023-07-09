@@ -19,6 +19,7 @@ import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.audio.LiveWaveform
 import com.disfluency.components.button.RecordAudioButton
+import com.disfluency.components.dialog.ExerciseInfoDialog
 import com.disfluency.components.dialog.ExitDialog
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
@@ -37,10 +38,8 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
     val changeRecordingState = { recordingDone = !recordingDone }
 
     var openDialog by remember { mutableStateOf(false) }
-    var exitActionBack by remember { mutableStateOf(true) }
 
     BackHandler(enabled = recordingDone) {
-        exitActionBack = true
         openDialog = true
     }
 
@@ -52,9 +51,15 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
             exit = {
                 openDialog = false
                 recordingDone = false
-                if (exitActionBack) navController.popBackStack()
-                else navController.navigate(Route.Ejercicio.routeTo(exercise.id))
+                navController.popBackStack()
             }
+        )
+    }
+
+    var openInfoDialog by remember { mutableStateOf(false) }
+    if (openInfoDialog){
+        ExerciseInfoDialog(
+            exercise = exercise, cancel = { openInfoDialog = false }
         )
     }
 
@@ -66,13 +71,7 @@ fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         ExercisePhraseDetail(exercise = exercise, onInfoButtonClick = {
-            if (recordingDone){
-                exitActionBack = false
-                openDialog = true
-            } else {
-                //TODO: ver como queda con un dialog en vez de salir
-                navController.navigate(Route.Ejercicio.routeTo(exercise.id))
-            }
+            openInfoDialog = true
         })
 
         RecordingVisualizer(audioRecorder = audioRecorder, hasRecorded = recordingDone)
