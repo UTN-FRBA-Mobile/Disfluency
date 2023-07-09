@@ -25,6 +25,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import com.disfluency.model.getProfilePicFromRole
 
 @Composable
 fun AppScaffold(user: User, onLogout: () -> Unit, bottomNavigationItems: List<BottomNavigationItem>, content: @Composable (NavHostController)->Unit) {
@@ -65,7 +66,7 @@ fun AccountSettingsButton(user: User, onLogout: ()->Unit) {
         dropdownVisible = !dropdownVisible
     }) {
         Image(
-            painter= painterResource(user.role.profilePicUrl),
+            painter= painterResource(user.profilePic()),
             contentDescription="profile pic",
             modifier = Modifier.fillMaxSize().clip(shape = CircleShape))
     }

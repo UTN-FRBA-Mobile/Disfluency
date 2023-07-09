@@ -8,7 +8,7 @@ data class Phono(
     val profilePictureUrl: Int,
     val patients: MutableList<Patient> = ArrayList(),
     val exercises: MutableList<Exercise> = ArrayList()
-): Role(profilePictureUrl) {
+): Role {
     fun addPatient(newPatient: Patient){
         this.patients.add(newPatient)
     }

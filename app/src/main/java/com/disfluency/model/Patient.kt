@@ -16,7 +16,7 @@ data class Patient(
     val weeklyTurn: List<DayOfWeek>, //TODO: ver cual seria el tipo de dato para esto
     val weeklyHour: LocalTime, //TODO: ver cual seria el tipo de dato para esto
     val exercises: MutableList<ExerciseAssignment> = ArrayList()
-    ): Role(profilePictureUrl) {
+    ): Role {
 
     fun initials(): String {
         return (name.first().toString() + lastName.first().toString()).uppercase()
