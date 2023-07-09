@@ -36,7 +36,7 @@ import com.disfluency.data.*
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
-import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -65,13 +65,8 @@ fun PatientHome(user: Patient, navController: NavController){
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun WelcomeCard(patient: Patient) {
-    val todaysDate = LocalDateTime.now()
-    val daysTillNextTurn = Duration.between(todaysDate, patient.nextTurnFromDateTime(todaysDate)).toDays()
-    val suffix = if(daysTillNextTurn == 0L) "hoy" else "dentro de $daysTillNextTurn día${if(daysTillNextTurn>1)"s" else ""}"
-
     OutlinedCard(
         Modifier
             .fillMaxWidth()
@@ -100,28 +95,46 @@ private fun WelcomeCard(patient: Patient) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = "Tu próximo turno será $suffix"/*"Tenés turno el $day $dateAsString a las $hourAsString  hs"*/,
-                    style = MaterialTheme.typography.labelMedium
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                FlowRow(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(end=16.dp)) {
-                    IconLabeled(
-                        icon = Icons.Outlined.CalendarMonth,
-                        label = weeklyTurnFormat(patient.weeklyTurn),
-                        content = "Turn"
-                    )
-
-                    IconLabeled(
-                        icon = Icons.Outlined.AccessTime,
-                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(R.string.time_format))),
-                        content = "Time"
-                    )
+                if(patient.weeklyTurn.isNotEmpty()) {
+                    PatientTurnsInfo(patient)
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun PatientTurnsInfo(patient: Patient) {
+    val daysTillNextTurn = patient.daysTillNextTurnFromDate(LocalDateTime.now())
+    val suffix =
+        if (daysTillNextTurn == 0L) "hoy" else "dentro de $daysTillNextTurn día${if (daysTillNextTurn > 1) "s" else ""}"
+    Text(
+        text = "Tu próximo turno será $suffix"/*"Tenés turno el $day $dateAsString a las $hourAsString  hs"*/,
+        style = MaterialTheme.typography.labelMedium
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    FlowRow(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth().padding(end = 16.dp)
+    ) {
+        IconLabeled(
+            icon = Icons.Outlined.CalendarMonth,
+            label = weeklyTurnFormat(patient.weeklyTurn),
+            content = "Turn"
+        )
+
+        IconLabeled(
+            icon = Icons.Outlined.AccessTime,
+            label = patient.weeklyHour.format(
+                DateTimeFormatter.ofPattern(
+                    stringResource(R.string.time_format)
+                )
+            ),
+            content = "Time"
+        )
     }
 }
 

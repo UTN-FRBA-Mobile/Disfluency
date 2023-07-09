@@ -1,10 +1,6 @@
 package com.disfluency.model
 
-import com.disfluency.model.utils.Day
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.Period
+import java.time.*
 
 data class Patient(
     val name: String,
@@ -14,7 +10,7 @@ data class Patient(
     val email: String,
     val joinedSince: LocalDate,
     val profilePic: Int,
-    val weeklyTurn: List<Day>, //TODO: ver cual seria el tipo de dato para esto
+    val weeklyTurn: List<DayOfWeek>, //TODO: ver cual seria el tipo de dato para esto
     val weeklyHour: LocalTime, //TODO: ver cual seria el tipo de dato para esto
     val exercises: MutableList<ExerciseAssignment> = ArrayList()
     ): Role {
@@ -39,15 +35,25 @@ data class Patient(
     }
 
     fun nextTurnFromDateTime(dateTime: LocalDateTime): LocalDateTime {
-        var f: LocalDate? = null
+        if(weeklyTurn.isEmpty()){
+            throw NoTurnsAsignedException(this)
+        }
+        var nextTurnDate: LocalDate? = null
         var nextDate = dateTime.toLocalDate()
-        while(f==null){
-            nextDate = nextDate.plusDays(1)
-            if(weeklyTurn.any { it.dayOfWeek == nextDate.dayOfWeek }){
-                f = nextDate
+
+        while(nextTurnDate==null){
+            if(weeklyTurn.contains(nextDate.dayOfWeek) && !(dateTime.toLocalDate().isEqual(nextDate) && weeklyHour.isBefore(dateTime.toLocalTime()))) {
+                nextTurnDate = nextDate
             }
+            nextDate = nextDate.plusDays(1)
         }
 
-        return LocalDateTime.of(f, weeklyHour)
+        return LocalDateTime.of(nextTurnDate, weeklyHour)
+    }
+
+    fun daysTillNextTurnFromDate(dateTime: LocalDateTime): Long{
+        return Duration.between(dateTime.toLocalDate().atStartOfDay(), nextTurnFromDateTime(dateTime).toLocalDate().atStartOfDay()).toDays()
     }
 }
+
+class NoTurnsAsignedException(patient: Patient): Exception("Patient ${patient.fullName()} hasn't weekly turns asigned")
