@@ -44,8 +44,8 @@ fun AppNavigation(){
 
     val onLogout: ()->Unit = {
         CoroutineScope(Dispatchers.IO).launch {
-            loginService.logout()
             didLogout = true
+            loginService.logout()
         }
     }
 
@@ -57,23 +57,25 @@ fun AppNavigation(){
             LoginScreen(navController, loginService)
         }
         composable(Route.HomePhono.route){
-            AppScaffold(listOf(
+            val user = loginService.getUser()
+            AppScaffold(user, onLogout, listOf(
                 BottomNavigationItem.HomePhono,
                 BottomNavigationItem.Pacientes,
                 BottomNavigationItem.Ejercicios,
                 BottomNavigationItem.Asignaciones
 //                BottomNavigationItem.Cuestionarios
             )){
-                PhonoNavigationGraph(navController = it, loginService.getUser(), onLogout)
+                PhonoNavigationGraph(navController = it, user)
             }
         }
         composable(Route.HomePatient.route){
-            AppScaffold(listOf(
+            val user = loginService.getUser()
+            AppScaffold(user, onLogout, listOf(
                 BottomNavigationItem.HomePatient,
                 BottomNavigationItem.Ejercicios
 //                BottomNavigationItem.Cuestionarios
             )){
-                PatientNavigationGraph(navController = it, loginService.getUser(), onLogout)
+                PatientNavigationGraph(navController = it, user)
             }
         }
     }

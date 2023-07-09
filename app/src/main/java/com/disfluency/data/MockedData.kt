@@ -2,11 +2,13 @@ package com.disfluency.data
 
 import com.disfluency.R
 import com.disfluency.model.*
+import com.disfluency.model.utils.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalTime
 
 object MockedData {
 
-    private const val testUrl = "https://pf5302.s3.us-east-2.amazonaws.com/audios/iniciosuave.mp3"
+    const val testUrl = "https://pf5302.s3.us-east-2.amazonaws.com/audios/iniciosuave.mp3"
 
     val exercises: MutableList<Exercise> = arrayListOf(
         Exercise(id = 1, therapistId = 1, title = "Presentarse", instruction = "Di tu nombre y apellido", sampleAudioURL = testUrl, number = 1),
@@ -53,24 +55,27 @@ object MockedData {
 
     val practices = arrayListOf(
         ExercisePractice("1", LocalDate.of(2023, 7, 3), testUrl),
-        ExercisePractice("2", LocalDate.of(2023, 4, 26), testUrl)
+        ExercisePractice("2", LocalDate.of(2023, 4, 26), testUrl),
+        ExercisePractice("3", LocalDate.of(2023, 4, 28), testUrl)
     )
 
     val assignments = arrayListOf(
-        ExerciseAssignment("1", exercises[4], LocalDate.of(2021, 8, 5), practices),
-        ExerciseAssignment("2", exercises[3], LocalDate.of(2023, 1, 9), arrayListOf(practices[0])),
-        ExerciseAssignment("3", exercises[5], LocalDate.of(2018, 12, 9), emptyList())
+        ExerciseAssignment("1", exercises[4], LocalDate.of(2021, 8, 5), arrayListOf(practices[0], practices[1])),
+        ExerciseAssignment("2", exercises[3], LocalDate.of(2023, 1, 9), arrayListOf(practices[2])),
+        ExerciseAssignment("3", exercises[5], LocalDate.of(2018, 12, 9), arrayListOf())
     )
 
     val patients: MutableList<Patient> = arrayListOf(
-        Patient("Agustin", "Cragno", LocalDate.of(1998, 7, 30), 40123864, "acragno@frba.utn.edu.ar", LocalDate.of(2023, 1, 9), R.drawable.avatar_26, "Lunes y Miercoles", "18:00", assignments),
-        Patient("Jose", "Bruzzoni", LocalDate.of(1991, 2, 3), 43181238, "jbruzzoni@frba.utn.edu.ar", LocalDate.of(2018, 12, 9), R.drawable.avatar_12, "Martes y Jueves", "19:00", assignments),
-        Patient("Alexander", "Martinez", LocalDate.of(1995, 5, 4), 37186477, "amartinez@gmail.com", LocalDate.of(2023, 5, 15), R.drawable.avatar_17, "Miercoles", "19:00", assignments)
+        Patient("Agustin", "Cragno", LocalDate.of(1998, 7, 30), 40123864, "acragno@frba.utn.edu.ar", LocalDate.of(2023, 1, 9), R.drawable.avatar_2, listOf(DayOfWeek.MONDAY, DayOfWeek.THURSDAY), LocalTime.of(18, 0), assignments),
+        Patient("Jose", "Bruzzoni", LocalDate.of(1991, 2, 3), 43181238, "jbruzzoni@frba.utn.edu.ar", LocalDate.of(2018, 12, 9), R.drawable.avatar_1, listOf(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY), LocalTime.of(19, 0), assignments),
+        Patient("Alexander", "Martinez", LocalDate.of(1995, 5, 4), 37186477, "amartinez@gmail.com", LocalDate.of(2023, 5, 15), R.drawable.avatar_4, listOf(DayOfWeek.WEDNESDAY), LocalTime.of(19, 0), assignments)
     )
 
     val therapists: MutableList<Phono> = arrayListOf(
-        Phono("1", "Lionel", "Scaloni", R.drawable.avatar_12, patients, exercises),
-        Phono("2", "Jorge", "Sampaoli", R.drawable.avatar_26, patients, exercises)
+        Phono("1", "Matias", "Anzorandía", R.drawable.avatar_1, patients, exercises),
+        Phono("2", "Jorge", "Sampaoli", R.drawable.avatar_2, patients, exercises),
+        Phono("3", "Lionel", "Scaloni", R.drawable.avatar_7, patients, exercises),
+        Phono("4", "beto", "Asaber", R.drawable.avatar_3, patients, exercises),
     )
 
     val users: List<User> = patients.map { User(it.name, "123", it) } + therapists.map { User(it.name, "123", it) }

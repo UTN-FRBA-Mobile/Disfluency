@@ -23,6 +23,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,10 +33,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.user.IconLabeled
 import com.disfluency.data.MockedData
+import com.disfluency.R
+import com.disfluency.components.user.weeklyTurnFormat
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
 import com.disfluency.ui.theme.MyApplicationTheme
+import java.time.format.DateTimeFormatter
 
 @Preview(showBackground = true)
 @Composable
@@ -111,7 +115,7 @@ fun PatientCard(paciente: Patient, navController: NavHostController) {
             },
             supportingContent = {
                 Text(
-                    text = paciente.weeklyTurn,
+                    text = weeklyTurnFormat(paciente.weeklyTurn),
                     style = MaterialTheme.typography.labelMedium
                 )
             },
@@ -128,7 +132,9 @@ fun PatientCard(paciente: Patient, navController: NavHostController) {
             trailingContent = {
                 IconLabeled(
                     icon = Icons.Outlined.AccessTime,
-                    label = paciente.weeklyHour,
+                    label = paciente.weeklyHour.format(
+                        DateTimeFormatter.ofPattern(stringResource(
+                        R.string.time_format))),
                     content = "Time"
                 )
             }

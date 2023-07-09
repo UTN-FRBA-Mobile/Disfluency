@@ -2,4 +2,18 @@ package com.disfluency.model
 
 interface Role
 
-data class User(val username: String, val password: String, val role: Role)
+fun getProfilePicFromRole(role: Role): Int{
+    return when (role) {
+        is Patient -> role.profilePic
+        is Phono -> role.profilePictureUrl
+        else -> { throw NoPictureDefinedForRole(role)}
+    }
+}
+
+class NoPictureDefinedForRole(role: Role) : Exception("${role.javaClass}")
+
+data class User(val username: String, val password: String, val role: Role){
+    fun profilePic(): Int{
+        return getProfilePicFromRole(role)
+    }
+}
