@@ -186,7 +186,7 @@ fun ActivitiesOverview(patient: Patient, navController: NavController) {
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .padding(16.dp)
-            .height(200.dp),
+            .height(190.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -205,7 +205,7 @@ fun ActivityOverviewCard(title: String, number: Int){
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         modifier = Modifier
-            .height(200.dp)
+            .height(190.dp)
             .fillMaxWidth(),
     ) {
         Column(
