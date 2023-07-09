@@ -2,6 +2,8 @@ package com.disfluency.model.dto
 
 import com.disfluency.model.*
 import com.disfluency.model.Patient
+import com.disfluency.model.serialization.DayDeserializer
+import com.disfluency.model.serialization.DaySerializer
 import com.fasterxml.jackson.annotation.*
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize

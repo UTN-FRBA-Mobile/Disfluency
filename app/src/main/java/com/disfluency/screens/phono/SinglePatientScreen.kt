@@ -122,10 +122,10 @@ fun ActivitiesOverview(patient: Patient){
     data class ActivityOverviewItem(val title: String, val number: Int)
 
     val activities = listOf(
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_exercises), ExerciseRepository.getCompletedExercisesCountByPatient(patient)),
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_exercises), ExerciseRepository.getPendingExercisesCountByPatient(patient)),
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_questionnaires), QuestionnaireRepository.getCompletedQuestionnairesCountByPatient(patient)),
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_questionnaires), QuestionnaireRepository.getPendingQuestionnairesCountByPatient(patient)),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_exercises), patient.getCompletedExercisesCount()),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_exercises), patient.getPendingExercisesCount()),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_questionnaires), patient.getCompletedQuestionnairesCount()),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_questionnaires), patient.getPendingQuestionnairesCount()),
         ActivityOverviewItem(stringResource(R.string.single_patient_button_registered_sessions), TherapySessionRepository.getSessionCountByPatient(patient))
     )
 

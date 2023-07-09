@@ -1,8 +1,8 @@
 package com.disfluency.model
 
+import com.disfluency.model.serialization.DayDeserializer
+import com.disfluency.model.serialization.DaySerializer
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -55,10 +55,6 @@ data class Patient(
     val exercises: MutableList<ExerciseAssignment> = ArrayList()
 ) : Role {
 
-    fun initials(): String {
-        return (name.first().toString() + lastName.first().toString()).uppercase()
-    }
-
     fun fullName(): String {
         return "$name $lastName"
     }
@@ -73,23 +69,25 @@ data class Patient(
             LocalDate.now()
         ).years
     }
-}
 
-object DayDeserializer : JsonDeserializer<List<DayOfWeek>>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): List<DayOfWeek> {
-        val node = p.readValueAsTree<JsonNode>()
-        return node.map { d -> DayOfWeek.valueOf(d.textValue()) }
+    fun getCompletedExercisesCount(): Int {
+        return exercises
+            .map { e -> e.practiceAttempts }
+            .count { e -> e.isNotEmpty() }
     }
-}
 
-object DaySerializer : JsonSerializer<List<DayOfWeek>>() {
-    override fun serialize(
-        value: List<DayOfWeek>,
-        gen: JsonGenerator,
-        serializers: SerializerProvider
-    ) {
-        with(gen) {
-            writeArray(value.map { d -> d.toString() }.toTypedArray(), 0, value.size)
-        }
+    fun getPendingExercisesCount(): Int {
+        return exercises
+            .map { e -> e.practiceAttempts }
+            .count { e -> e.isEmpty() }
+    }
+
+    // TODO
+    fun getCompletedQuestionnairesCount(): Int {
+        return 3
+    }
+
+    fun getPendingQuestionnairesCount(): Int {
+        return 0
     }
 }
