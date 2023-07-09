@@ -13,8 +13,7 @@ import com.disfluency.model.Phono
 import com.disfluency.model.User
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.Route
-import com.disfluency.screens.exercise.ExercisesScreen
-import com.disfluency.screens.exercise.SingleExerciseScreen
+import com.disfluency.screens.exercise.*
 import com.disfluency.screens.phono.PatientQuestionnairesScreen
 import com.disfluency.screens.phono.PatientSessionsScreen
 import com.disfluency.screens.phono.SinglePatientScreen
@@ -51,7 +50,7 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             route = Route.PatientExercises.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PhonoExercisesScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { PhonoExercisesScreen(id = it.toInt(), navController = navController) }
         }
         composable(
             route = Route.PatientQuestionnaires.route,
@@ -78,6 +77,24 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
 
         composable(Route.NuevoEjercicio.route) {
             FormNewExercise()
+        }
+
+        composable(Route.PatientExerciseAssignmentDetail.route, listOf(navArgument("id"){})){
+            it.arguments?.getString("id")?.let {id->
+                TherapistExerciseAssignmentDetail(id, navController)
+            }
+        }
+
+        composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){})){
+            it.arguments?.getString("id")?.let {id->
+                TherapistExercisePracticeDetail(id = id, navController = navController)
+            }
+        }
+
+        composable(Route.TranscriptionAnalysis.route, listOf(navArgument("id"){})){
+            it.arguments?.getString("id")?.let {id->
+                TranscriptionScreen(practiceId = id)
+            }
         }
     }
 }

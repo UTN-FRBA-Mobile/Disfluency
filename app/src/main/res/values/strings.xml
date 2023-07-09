@@ -87,6 +87,8 @@
                 <string name="exercise_detail_title">Detalle del ejercicio</string>
             <!-- Pantalla Asignación de Ejercicio -->
                 <string name="ph_exercise_asign_title">Asignar</string>
+            <!-- Pantalla Analisis de Disfluencia -->
+                <string name="ph_exercise_analysis">Analisis de Disfluencias</string>
 
     <!-- sin uso -->
         <string name="questionnaires_title">Cuestionarios</string>
@@ -95,4 +97,7 @@
         <string name="ph_single_patients_sessions_title">Sesiones del Paciente</string>
 
     <string name="record_success_title">Grabacion Exitosa</string>
+
+    <!-- notifications -->
+    <string name="default_notification_channel_id">Global</string>
 </resources>
