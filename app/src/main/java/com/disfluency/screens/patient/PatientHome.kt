@@ -31,7 +31,6 @@ import androidx.navigation.compose.rememberNavController
 import com.disfluency.R
 import com.disfluency.components.grid.TwoColumnGridItemSpan
 import com.disfluency.components.user.IconLabeled
-import com.disfluency.components.user.PatientInfoCard
 import com.disfluency.components.user.weeklyTurnFormat
 import com.disfluency.data.*
 import com.disfluency.model.Patient
@@ -127,7 +126,7 @@ private fun WelcomeCard(patient: Patient) {
 }
 
 @Composable
-fun PhonoCard(phono: Phono){
+private fun PhonoCard(phono: Phono){
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         modifier = Modifier
@@ -165,7 +164,7 @@ fun PhonoCard(phono: Phono){
 }
 
 @Composable
-fun ActivitiesOverview(patient: Patient, navController: NavController) {
+private fun ActivitiesOverview(patient: Patient, navController: NavController) {
 
     data class ActivityOverviewItem(val title: String, val number: Int, val onClick: ()->Unit)
     val context = LocalContext.current
@@ -193,7 +192,7 @@ fun ActivitiesOverview(patient: Patient, navController: NavController) {
         activities.forEachIndexed { index, activity ->
             item(span = { TwoColumnGridItemSpan(index, activities.size) }) {
                 Box(Modifier.clickable {activity.onClick()}) {
-                    ActivityOverviewCard(title = activity.title, number = activity.number)
+                    ActivityOverviewCard(title = activity.title, quantity = activity.number)
                 }
             }
         }
@@ -201,7 +200,7 @@ fun ActivitiesOverview(patient: Patient, navController: NavController) {
 }
 
 @Composable
-fun ActivityOverviewCard(title: String, number: Int){
+private fun ActivityOverviewCard(title: String, quantity: Int){
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         modifier = Modifier
@@ -234,8 +233,9 @@ fun ActivityOverviewCard(title: String, number: Int){
             ) {
                 Box(contentAlignment = Alignment.Center){
                     Text(
-                        text = number.toString(),
-                        style = TextStyle(color = Color.White, fontSize = 18.sp)
+                        text = quantity.toString(),
+                        style = TextStyle(color = Color.White, fontSize = 18.sp),
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
