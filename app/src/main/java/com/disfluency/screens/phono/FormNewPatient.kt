@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.R
@@ -94,7 +95,15 @@ fun FormNewPatient(navController: NavController, phono: Phono){
 
 @Composable
 fun AvatarSelectionScreen(avatarIndex: MutableState<Int>){
-    AvatarPicker(selectedAvatarIndex = avatarIndex)
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        AvatarPicker(selectedAvatarIndex = avatarIndex)
+        Text(
+            modifier = Modifier.padding(top = 8.dp),
+            text = "Seleccione un avatar de usuario",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold
+        )
+    }
 }
 
 @Composable
@@ -176,7 +185,9 @@ fun NewPatientConfirmationScreen(avatar: Int, name: String, lastName: String, id
                 .padding(8.dp)
         ){
             FlowRow(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 val age = Period.between(dateOfBirth, LocalDate.now()).years
@@ -204,7 +215,9 @@ fun NewPatientConfirmationScreen(avatar: Int, name: String, lastName: String, id
                 .padding(8.dp)
         ){
             Box(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 IconLabeled(
@@ -222,7 +235,9 @@ fun NewPatientConfirmationScreen(avatar: Int, name: String, lastName: String, id
                 .padding(8.dp)
         ){
             FlowRow(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 IconLabeled(
