@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Assignment
@@ -31,18 +30,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.grid.TwoColumnGridItemSpan
+import com.disfluency.components.inputs.formatDayOfWeek
 import com.disfluency.model.Phono
+import com.disfluency.navigation.Route
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.*
 
 @Preview
 @Composable
 fun Preview(){
     val phono = Phono("2341", "Luis", "Luque", R.drawable.avatar_null)
-    PhonoHomeScreen(phono = phono)
+    PhonoHomeScreen(phono = phono, rememberNavController())
 }
 
 @Composable
-fun PhonoHomeScreen(phono: Phono) {
+fun PhonoHomeScreen(phono: Phono, navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -51,12 +58,16 @@ fun PhonoHomeScreen(phono: Phono) {
     ) {
         WelcomeCard(phono)
         Spacer(modifier = Modifier.height(4.dp))
-        PhonoButtons(patient = phono)
+        PhonoButtons(navController)
     }
 }
 
 @Composable
-private fun WelcomeCard(patient: Phono) {
+private fun WelcomeCard(phono: Phono) {
+    val datetime = LocalDateTime.now()
+    val turnCount = phono.patients.count { it.daysTillNextTurnFromDate(datetime) == 0L }
+    val turnCountMesssage = if(turnCount == 0) "Hoy no tenés turnos" else "Hoy tenés $turnCount turnos"
+
     OutlinedCard(
         Modifier
             .fillMaxWidth()
@@ -81,66 +92,58 @@ private fun WelcomeCard(patient: Phono) {
             Spacer(Modifier.width(width = 8.dp))
             Column(Modifier.wrapContentWidth(unbounded = false)) {
                 Text(
-                    text = "¡Hola ${patient.name}!",
+                    text = "¡Hola ${phono.name}!",
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Miércoles 26 de Mayo", style = MaterialTheme.typography.labelMedium
+                    text = datetime.format(
+                        DateTimeFormatter.ofLocalizedDate ( FormatStyle.FULL )
+                            .withLocale(Locale("es_ES")
+                            )
+                    ).replaceFirstChar { it.uppercase() },
+                    style = MaterialTheme.typography.labelMedium
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = turnCountMesssage, style = MaterialTheme.typography.labelMedium
                 )
             }
         }
     }
 }
+
 @Composable
-fun HomeButton(text: String, icon: ImageVector) {
+private fun PhonoButtons(navController: NavController) {
     val toast = Toast.makeText(LocalContext.current, stringResource(R.string.coming_soon), Toast.LENGTH_SHORT)
-    Button(
-        onClick = { toast.show() }, Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20)
-    ) {
-        Column(
-            Modifier.padding(vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(icon, contentDescription = text)
-            Text(text)
-        }
-    }
-}
-
-@Composable
-private fun PhonoButtons(patient: Phono) {
-
     data class ActivityOverviewItem(val title: String, val icon: ImageVector, val onClick: ()->Unit)
-    val context = LocalContext.current
-    val comingSoonMessage = stringResource(R.string.coming_soon)
 
     val activities = listOf(
         ActivityOverviewItem(
             "Crear Ejercicio",
             Icons.Outlined.RecordVoiceOver
-        ) {  },
+        ) { toast.show() },
         ActivityOverviewItem(
             "Crear Cuestionario",
             Icons.Outlined.Assignment
-        ) { Toast.makeText(context, comingSoonMessage, Toast.LENGTH_SHORT).show() },
+        ) { toast.show() },
         ActivityOverviewItem(
             "Grabar Sesión",
             Icons.Outlined.Mic
-        ) { Toast.makeText(context, comingSoonMessage, Toast.LENGTH_SHORT).show() },
+        ) { toast.show() },
         ActivityOverviewItem(
             "Registrar Paciente",
             Icons.Outlined.AccountCircle
-        ) { Toast.makeText(context, comingSoonMessage, Toast.LENGTH_SHORT).show() },
+        ) { navController.navigate(Route.NuevoPaciente.route) },
     )
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .padding(16.dp)
-            .height(((190+16)*2).dp),
+            .height(((190 + 16) * 2).dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -174,20 +177,21 @@ private fun ActivityShortcutCard(title: String, icon: ImageVector){
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
+                minLines = 2,
                 maxLines = 2,
-                lineHeight = 20.sp,
-                fontSize = 20.sp, //TODO: se podra hacer que se ajuste al espacio disponible?
+                lineHeight = 18.sp,
+                fontSize = 18.sp, //TODO: se podra hacer que se ajuste al espacio disponible?
                 color = Color.Black,
                 textAlign = TextAlign.Center
             )
             Surface(
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(75.dp)
                     .clip(CircleShape),
                 color = MaterialTheme.colorScheme.primary
             ) {
-                Box(contentAlignment = Alignment.Center){
-                    Icon(icon, title)
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(20.dp)){
+                    Icon(icon, title, modifier = Modifier.fillMaxSize())
                 }
             }
         }

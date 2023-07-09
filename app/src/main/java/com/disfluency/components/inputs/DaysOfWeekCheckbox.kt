@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
 import java.time.DayOfWeek
@@ -84,7 +85,7 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
 }
 
 fun formatDayOfWeek(dayOfWeek: DayOfWeek): String{
-    return dayOfWeek.getDisplayName(TextStyle.FULL, Locale("es_ES"))
+    return dayOfWeek.getDisplayName(TextStyle.FULL, Locale("es_ES")).replaceFirstChar { it.uppercase() }
 }
 
 @Composable
