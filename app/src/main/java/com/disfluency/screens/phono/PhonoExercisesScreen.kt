@@ -43,7 +43,7 @@ fun PhonoExercisesScreen(id: String, navController: NavHostController) {
         patient.value = aPatient
     }
 
-    patient.value?.let { PatientExerciseAssignmentsScreen(navController = navController, patient = it) }
+    patient.value?.let { PatientExerciseAssignmentsScreen(navController = navController, patientId = it.id) }
 }
 
 @Composable
@@ -51,7 +51,7 @@ fun TherapistExerciseAssignmentDetail(id: String, navController: NavController){
     val assignment = remember { mutableStateOf<ExerciseAssignment?>(null) }
 
     LaunchedEffect(Unit) {
-        val anAssignment = withContext(Dispatchers.IO) { ExerciseRepository.getAssignmentById2(id) }
+        val anAssignment = withContext(Dispatchers.IO) { ExerciseRepository.getAssignmentById(id) }
         Log.i("HTTP", anAssignment.toString())
         assignment.value = anAssignment
     }
@@ -60,15 +60,15 @@ fun TherapistExerciseAssignmentDetail(id: String, navController: NavController){
         assignment.value?.let {
             SingleExerciseScreen(id = it.exercise.id)
 
-            ExercisePracticeList(list = it.practiceAttempts, navController = navController)
+            ExercisePracticeList(assignment = it, navController = navController)
         }
     }
 }
 
 @Composable
-fun TherapistExercisePracticeDetail(id: String, navController: NavController){
+fun TherapistExercisePracticeDetail(id: String, assignmentId: String, navController: NavController){
     Box(modifier = Modifier.fillMaxSize()){
-        ExercisePracticeDetailScreen(practiceId = id)
+        ExercisePracticeDetailScreen(practiceId = id, assignmentId = assignmentId)
 
         Box(
             modifier = Modifier.fillMaxSize(),

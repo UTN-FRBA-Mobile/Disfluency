@@ -1,5 +1,6 @@
 package com.disfluency.screens.exercise
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -23,14 +24,22 @@ import com.disfluency.components.dialog.ExitDialog
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
 import com.disfluency.navigation.Route
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 const val LOCAL_RECORD_FILE = "disfluency_exercise_recording.mp3"
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RecordExercise(id: String, onSend: (File) -> Unit, navController: NavController){
-    val exercise = ExerciseRepository.getExerciseById(id)
+    val exercise = remember { mutableStateOf<Exercise?>(null) }
+
+    LaunchedEffect(Unit) {
+        val anExercise = withContext(Dispatchers.IO) { ExerciseRepository.getExerciseById(id) }
+        Log.i("HTTP", anExercise.toString())
+        exercise.value = anExercise
+    }
+
     val audioRecorder = DisfluencyAudioRecorder(LocalContext.current)
 
     var recordingDone by remember { mutableStateOf(false) }
@@ -44,40 +53,42 @@ fun RecordExercise(id: String, onSend: (File) -> Unit, navController: NavControl
         openDialog = true
     }
 
-    if (openDialog){
-        ExitDialog(
-            title = "¿Esta seguro que desea salir?",
-            content = "Se perdera la grabacion realizada. Antes de salir deberia confirmar la resolucion del ejercicio o descartarla.",
-            cancel = { openDialog = false },
-            exit = {
-                openDialog = false
-                recordingDone = false
-                if (exitActionBack) navController.popBackStack()
-                else navController.navigate(Route.Ejercicio.routeTo(exercise.id))
-            }
-        )
-    }
+    exercise.value?.let {
+        if (openDialog){
+            ExitDialog(
+                title = "¿Esta seguro que desea salir?",
+                content = "Se perdera la grabacion realizada. Antes de salir deberia confirmar la resolucion del ejercicio o descartarla.",
+                cancel = { openDialog = false },
+                exit = {
+                    openDialog = false
+                    recordingDone = false
+                    if (exitActionBack) navController.popBackStack()
+                    else navController.navigate(Route.Ejercicio.routeTo(it.id))
+                }
+            )
+        }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        ExercisePhraseDetail(exercise = exercise, onInfoButtonClick = {
-            if (recordingDone){
-                exitActionBack = false
-                openDialog = true
-            } else {
-                //TODO: ver como queda con un dialog en vez de salir
-                navController.navigate(Route.Ejercicio.routeTo(exercise.id))
-            }
-        })
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            ExercisePhraseDetail(exercise = it, onInfoButtonClick = {
+                if (recordingDone){
+                    exitActionBack = false
+                    openDialog = true
+                } else {
+                    //TODO: ver como queda con un dialog en vez de salir
+                    navController.navigate(Route.Ejercicio.routeTo(it.id))
+                }
+            })
 
-        RecordingVisualizer(audioRecorder = audioRecorder, hasRecorded = recordingDone)
+            RecordingVisualizer(audioRecorder = audioRecorder, hasRecorded = recordingDone)
 
-        RecordButton(audioRecorder = audioRecorder, changeRecordingState = changeRecordingState, onSend = onSend)
+            RecordButton(audioRecorder = audioRecorder, changeRecordingState = changeRecordingState, onSend = onSend)
+        }
     }
 }
 

@@ -19,7 +19,6 @@ import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
-import com.disfluency.model.ExerciseAssignment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -28,7 +27,7 @@ fun SingleExerciseScreen(id: String) {
     val exercise = remember { mutableStateOf<Exercise?>(null) }
 
     LaunchedEffect(Unit) {
-        val anExercise = withContext(Dispatchers.IO) { ExerciseRepository.getExerciseById2(id) }
+        val anExercise = withContext(Dispatchers.IO) { ExerciseRepository.getExerciseById(id) }
         Log.i("HTTP", anExercise.toString())
         exercise.value = anExercise
     }

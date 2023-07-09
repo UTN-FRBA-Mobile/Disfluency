@@ -84,9 +84,9 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User, onLogout:
             }
         }
 
-        composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){})){
-            it.arguments?.getString("id")?.let {id->
-                TherapistExercisePracticeDetail(id = id, navController = navController)
+        composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){}, navArgument("practiceId"){})){
+            it.arguments?.let {args ->
+                TherapistExercisePracticeDetail(id = args.getString("practiceId")!!, assignmentId = args.getString("id")!!, navController = navController)
             }
         }
 

@@ -3,8 +3,10 @@ package com.disfluency.clients
 import com.disfluency.data.UserDTO
 import com.disfluency.model.Exercise
 import com.disfluency.model.ExerciseAssignment
+import com.disfluency.model.ExercisePractice
 import com.disfluency.model.Patient
 import com.disfluency.model.dto.AssignmentDTO
+import com.disfluency.model.dto.PracticeDTO
 import com.disfluency.model.dto.RoleDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -36,4 +38,13 @@ interface DisfluencyAPIService {
 
     @GET("exercises/{exerciseId}")
     suspend fun getExerciseById(@Path("exerciseId") exerciseId: String): Exercise
+
+    @GET("patient/{patientId}/exerciseAssignments")
+    suspend fun getAssignmentsByPatientId(@Path("patientId") patientId: String): List<ExerciseAssignment>
+
+    @POST("exercisesAssignments/{exerciseId}/practices")
+    suspend fun createPracticeInAssignment(@Path("exerciseId") exerciseId: String, @Body recordingUrl: PracticeDTO)
+
+    @GET("exercisesAssignments/{exerciseId}/practices/{practiceId}")
+    suspend fun getPracticeByExerciseIdAndPracticeId(): ExercisePractice
 }
