@@ -2,12 +2,6 @@ package com.disfluency.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.JsonNode
 
 interface Role
 
@@ -19,4 +13,19 @@ data class User(
 
     @JsonProperty("userRole")
     val role: Role
-    )
+    ){
+    fun profilePic(): Int{
+        return getProfilePicFromRole(role)
+    }
+}
+
+fun getProfilePicFromRole(role: Role): Int{
+    return when (role) {
+        is Patient -> role.profilePic
+        is Phono -> role.profilePictureUrl
+        else -> { throw NoPictureDefinedForRole(role)}
+    }
+}
+
+class NoPictureDefinedForRole(role: Role) : Exception("${role.javaClass}")
+

@@ -1,7 +1,5 @@
 package com.disfluency.navigation.navigationGraphs
 
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,14 +14,11 @@ import com.disfluency.screens.patient.PatientExerciseAssignmentsScreen
 import com.disfluency.screens.utils.EmptyScreen
 
 @Composable
-fun PatientNavigationGraph(navController: NavHostController, user: User, onLogout: () -> Unit) {
+fun PatientNavigationGraph(navController: NavHostController, user: User) {
     val patient = user.role as Patient
     NavHost(navController, startDestination = Route.HomePatient.route) {
         composable(BottomNavigationItem.HomePatient.screenRoute.route) {
             EmptyScreen("Home Paciente")
-            Button(onClick = onLogout) {
-                Text("Cerrar Sesión")
-            }
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
             PatientExerciseAssignmentsScreen(navController, patient.id) //TODO: Revisar

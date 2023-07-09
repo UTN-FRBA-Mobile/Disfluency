@@ -2,6 +2,8 @@ package com.disfluency.screens.utils
 
 import com.disfluency.data.UserNotFoundException
 import com.disfluency.data.UserRepository
+import com.disfluency.model.Patient
+import com.disfluency.model.Phono
 import com.disfluency.model.User
 
 class LoginService {
