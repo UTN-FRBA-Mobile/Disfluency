@@ -101,28 +101,33 @@ fun ExerciseListItem(exercise: Exercise, navController: NavHostController) {
                 )
             },
             leadingContent = {
-                val color = stringToRGB(exercise.title)
-                Surface(
-                    color = color,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(40.dp)
-                        .border(
-                            1.5.dp,
-                            color
-                                .copy(0.5f)
-                                .compositeOver(Color.Black),
-                            CircleShape
-                        ),
-                ) {
-                    Box(contentAlignment = Alignment.Center){
-                        Text(
-                            text = exercise.title.first().uppercaseChar().toString(),
-                            style = TextStyle(color = Color.White, fontSize = 18.sp)
-                        )
-                    }
-                }
+                ExerciseThumbnail(exercise = exercise)
             })
+    }
+}
+
+@Composable
+fun ExerciseThumbnail(exercise: Exercise){
+    val color = stringToRGB(exercise.title)
+    Surface(
+        color = color,
+        modifier = Modifier
+            .clip(CircleShape)
+            .size(40.dp)
+            .border(
+                1.5.dp,
+                color
+                    .copy(0.5f)
+                    .compositeOver(Color.Black),
+                CircleShape
+            ),
+    ) {
+        Box(contentAlignment = Alignment.Center){
+            Text(
+                text = exercise.title.first().uppercaseChar().toString(),
+                style = TextStyle(color = Color.White, fontSize = 18.sp)
+            )
+        }
     }
 }
 
