@@ -19,7 +19,7 @@ private val LightColorScheme = lightColorScheme(
     primary = Orange50,
     onPrimary = Color.White,
     primaryContainer = Orange20,
-    onPrimaryContainer = Orange70,
+    onPrimaryContainer = Orange90,
 
     secondary = Blue50,
     onSecondary = Color.White,
