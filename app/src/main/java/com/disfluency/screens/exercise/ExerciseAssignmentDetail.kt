@@ -13,13 +13,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.ExercisePractice
 import com.disfluency.navigation.Route
 import com.disfluency.utils.millisecondsAsMinutesAndSeconds
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
+import com.disfluency.R
 
 @Composable
 fun ExerciseAssignmentDetail(id: String, navController: NavController){
@@ -57,7 +60,7 @@ fun ExercisePracticeList(list: List<ExercisePractice>, navController: NavControl
         list.forEach { practice ->
             //TODO: Mejorar diseño
             ListItem(
-                headlineContent = { Text(text = "Resolucion del ${practice.date}") },
+                headlineContent = { Text(text = "${stringResource(R.string.exercise_answer_prefix)}${practice.date.format(DateTimeFormatter.ofPattern(stringResource(R.string.date_format)))}") },
                 //TODO: temporal
                 trailingContent = { Text(text = millisecondsAsMinutesAndSeconds(Random.nextLong(32000))) },
                 modifier = Modifier

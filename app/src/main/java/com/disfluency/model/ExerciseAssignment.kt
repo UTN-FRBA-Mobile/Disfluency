@@ -6,7 +6,7 @@ data class ExerciseAssignment(
     val id: String,
     val exercise: Exercise,
     val dateOfAssignment: LocalDate,
-    val practiceAttempts: List<ExercisePractice>
+    val practiceAttempts: MutableList<ExercisePractice>
 ) {
     fun attemptsCount(): Int {
         return practiceAttempts.size

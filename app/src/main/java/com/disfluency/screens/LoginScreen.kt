@@ -1,8 +1,8 @@
 package com.disfluency.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -12,11 +12,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.disfluency.R
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 import com.disfluency.screens.utils.LoginService
@@ -73,21 +78,37 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
 
     val submit = {onSubmit(username, password)}
 
-    Column(Modifier.fillMaxSize().wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            placeholder = { Text("Nombre de Usuario") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+    Column(
+        Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Image(
+            painter = painterResource(id = R.drawable.disfluency_logo),
+            contentDescription = "Disfluency",
+            modifier = Modifier.size(170.dp, 170.dp)
         )
 
         OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            placeholder = { Text(stringResource(R.string.login_label_username)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            modifier = Modifier.padding(8.dp)
+        )
+
+        val focusManager = LocalFocusManager.current
+        OutlinedTextField(
+            modifier = Modifier.padding(8.dp),
             value = password,
             onValueChange = { password = it },
-            placeholder = { Text("Contraseña") },
+            placeholder = { Text(stringResource(R.string.login_label_password)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onSend = {submit()}),
+            keyboardActions = KeyboardActions(onSend = {
+                submit()
+                focusManager.clearFocus()
+            }),
             singleLine = true,
             visualTransformation = if(visiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -101,10 +122,10 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         )
         
         Button(onClick = submit, enabled = enabledButton) {
-            Text("Iniciar Sesión")
+            Text(stringResource(R.string.login_button_submit))
         }
         if(retry){
-            Text(text = "El usuario y/o la contraseña son incorrectos.", color=MaterialTheme.colorScheme.error)
+            Text(stringResource(R.string.login_error_message), color=MaterialTheme.colorScheme.error)
         }
     }
 }

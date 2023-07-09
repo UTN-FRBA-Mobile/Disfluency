@@ -1,4 +1,4 @@
-package com.disfluency.screens.patient
+package com.disfluency.screens.phono
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.disfluency.R
 import com.disfluency.components.grid.TwoColumnGridItemSpan
-import com.disfluency.components.user.IconLabeledDetails
 import com.disfluency.components.user.PatientInfoCard
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.data.PatientRepository
@@ -46,10 +47,7 @@ fun SinglePatientScreen(id: Int, navController: NavController){
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        PatientInfoCard(patient = patient,
-            firstLabel = IconLabeledDetails(Icons.Outlined.CalendarMonth, patient.weeklyTurn, "Turn"),
-            secondLabel = IconLabeledDetails(Icons.Outlined.AccessTime, patient.weeklyHour, "Time")
-        )
+        PatientInfoCard(patient = patient)
         ButtonPanel(patient = patient, navController = navController)
         ActivitiesOverview(patient = patient)
     }
@@ -64,9 +62,9 @@ fun ButtonPanel(patient: Patient, navController: NavController){
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        ActivityButton(title = "Ejercicios", icon = Icons.Outlined.RecordVoiceOver, onClick = { navController.navigate(Route.PatientExercises.routeTo(patient.id)) })
-        ActivityButton(title = "Cuestionarios", icon = Icons.Outlined.Assignment, onClick = { navController.navigate(Route.PatientQuestionnaires.routeTo(patient.id)) })
-        ActivityButton(title = "Sesiones", icon = Icons.Outlined.Mic, onClick = { navController.navigate(Route.PatientSessions.routeTo(patient.id)) })
+        ActivityButton(title = stringResource(R.string.single_patient_button_exercises), icon = Icons.Outlined.RecordVoiceOver, onClick = { navController.navigate(Route.PatientExercises.routeTo(patient.id)) })
+        ActivityButton(title = stringResource(R.string.single_patient_button_questionnaires), icon = Icons.Outlined.Assignment, onClick = { navController.navigate(Route.PatientQuestionnaires.routeTo(patient.id)) })
+        ActivityButton(title = stringResource(R.string.single_patient_button_sessions), icon = Icons.Outlined.Mic, onClick = { navController.navigate(Route.PatientSessions.routeTo(patient.id)) })
     }
 }
 
@@ -108,11 +106,11 @@ fun ActivitiesOverview(patient: Patient){
     data class ActivityOverviewItem(val title: String, val number: Int)
 
     val activities = listOf(
-        ActivityOverviewItem("Ejercicios Resueltos", ExerciseRepository.getCompletedExercisesCountByPatient(patient)),
-        ActivityOverviewItem("Ejercicios Pendientes", ExerciseRepository.getPendingExercisesCountByPatient(patient)),
-        ActivityOverviewItem("Cuestionarios Resueltos", QuestionnaireRepository.getCompletedQuestionnairesCountByPatient(patient)),
-        ActivityOverviewItem("Cuestionarios Pendientes", QuestionnaireRepository.getPendingQuestionnairesCountByPatient(patient)),
-        ActivityOverviewItem("Sesiones Grabadas", TherapySessionRepository.getSessionCountByPatient(patient))
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_exercises), ExerciseRepository.getCompletedExercisesCountByPatient(patient)),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_exercises), ExerciseRepository.getPendingExercisesCountByPatient(patient)),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_questionnaires), QuestionnaireRepository.getCompletedQuestionnairesCountByPatient(patient)),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_questionnaires), QuestionnaireRepository.getPendingQuestionnairesCountByPatient(patient)),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_registered_sessions), TherapySessionRepository.getSessionCountByPatient(patient))
     )
 
     LazyVerticalGrid(

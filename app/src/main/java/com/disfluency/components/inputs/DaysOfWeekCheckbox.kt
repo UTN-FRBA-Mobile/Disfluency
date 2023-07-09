@@ -1,36 +1,36 @@
 package com.disfluency.components.inputs
 
-import android.content.res.Resources.Theme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.disfluency.R
+import com.disfluency.model.utils.DayOfWeek
+import com.disfluency.model.utils.daysOfWeek
 import java.util.*
-
+/*
 @Preview
 @Composable
 fun Preview(){
     val state = remember { mutableStateOf("") }
     DummyDaysOfWeekCheckbox("Elegir", state = state)
     Button(onClick = { print("\n\n\"$state\"\n\n\n") }) {}
-}
+}*/
 
 @Composable
-fun DummyDaysOfWeekCheckbox(label: String, state: MutableState<String>){
+fun DummyDaysOfWeekCheckbox(label: String, state: MutableState<List<DayOfWeek>>){
     Text(text = label, color = MaterialTheme.colorScheme.primary)
     DaysOfWeekCheckbox{
-        state.value = if(it.size>1) {
-            "${it.dropLast(1).joinToString(", ")} y ${it.last()}"
-        } else it.joinToString()
+        state.value = it
     }
 }
 
 @Composable
-fun DaysOfWeekCheckbox(onChange: (List<String>)->Unit) {
+fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
     //Uso '=' en lugar de 'by' para poder settear el value sin conocer la variable.
     val mondaysChecked = remember {mutableStateOf(false)}
     val tuesdaysChecked = remember {mutableStateOf(false)}
@@ -48,21 +48,20 @@ fun DaysOfWeekCheckbox(onChange: (List<String>)->Unit) {
         else ToggleableState.Indeterminate
     }
 
-    val daysOfWeek = arrayOf(
-        "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"
-    )
+    val daysOfWeekAsEnum = daysOfWeek()
+    val daysOfWeek = daysOfWeekAsEnum.map { stringResource(it.stringId) }
 
     val notifyChange = {
-        val checksAsStringList = LinkedList<String>()
+        val checksAsStringList = LinkedList<DayOfWeek>()
         weekChecks.forEachIndexed{
-            index, isChecked -> if(isChecked.value) checksAsStringList.add(daysOfWeek[index])
+            index, isChecked -> if(isChecked.value) checksAsStringList.add(daysOfWeekAsEnum[index])
         }
 
         onChange(checksAsStringList)
     }
 
     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.width(275.dp)) {
-        CheckboxAllOptions(allDaysChecked, "Todos los días", weekChecks, notifyChange)
+        CheckboxAllOptions(allDaysChecked, stringResource(R.string.all_days), weekChecks, notifyChange)
 
         val checkboxForDay = @Composable{
             index: Int, checkbox: MutableState<Boolean> ->

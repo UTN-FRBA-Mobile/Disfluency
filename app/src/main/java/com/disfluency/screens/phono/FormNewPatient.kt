@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,8 +21,10 @@ import com.disfluency.components.inputs.*
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
+import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.navigation.Route
 import java.time.LocalDate
+import java.time.LocalTime
 
 @Composable
 fun FormNewPatient(navController: NavController, phono: Phono) {
@@ -43,24 +46,24 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
         ImagePicker(profilePic)
 //        var selectedImage by remember { mutableStateOf() }
 
-        val patientName = inputAsString("Nombre", keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
-        val patientLastname = inputAsString(label = "Apellido", keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
+        val patientName = inputAsString(label = stringResource(R.string.new_patient_label_name), keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
+        val patientLastname = inputAsString(stringResource(R.string.new_patient_label_lastname), keyboardOptions = NEXT_AND_CAPITALIZE_WORDS)
         val patientDNI = inputAsString(
-            "DNI",
+            stringResource(R.string.new_patient_label_dni),
             validations = listOf { it.isDigitsOnly() },
             keyboardOptions = NEXT_INPUT_ON_ENTER.copy(keyboardType = KeyboardType.NumberPassword)
         )
 
-        val email = inputAsString(label = "Correo Electrónico", keyboardOptions = KeyboardOptions(
+        val email = inputAsString(label = stringResource(R.string.new_patient_label_email), keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email, imeAction = ImeAction.Done
         ), validations = listOf { Patterns.EMAIL_ADDRESS.asPredicate().test(it) })
 
         val todaysDate = LocalDate.now()
-        val patientBirthDate = inputDate("Fecha de Nacimiento", maxDate = todaysDate)
+        val patientBirthDate = inputDate(stringResource(R.string.new_patient_label_dayOfBirth), maxDate = todaysDate)
 
-        //TODO: Validar
-        val weeklyTurn = remember{ mutableStateOf("") }
-        DummyDaysOfWeekCheckbox(label="Día/s Asignado/s", state = weeklyTurn)
+        //TODO: Agregar validacion de que elija al menos 1.
+        val weeklyTurn: MutableState<List<DayOfWeek>> = remember{ mutableStateOf(emptyList()) }
+        DummyDaysOfWeekCheckbox(stringResource(R.string.new_patient_label_weeklyTurn), state = weeklyTurn)
         
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -83,7 +86,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                              */
                             email = email.value,
                             joinedSince = todaysDate,
-                            weeklyHour = "18:00", //TODO
+                            weeklyHour = LocalTime.of(18,0), //TODO
                             weeklyTurn = weeklyTurn.value,
                             profilePic = profilePic.value
                         )
@@ -94,7 +97,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                     }
                 }
             ) {
-                Text("Crear")
+                Text(stringResource(R.string.new_patient_button_submit))
             }
             Button(
                 colors =  ButtonDefaults.buttonColors(
@@ -102,7 +105,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
                 ),
                 onClick = {navController.navigate(Route.Pacientes.route)}
             ) {
-                Text(text = "Cancelar")
+                Text(text = stringResource(R.string.new_patient_button_cancel))
             }
         }
 

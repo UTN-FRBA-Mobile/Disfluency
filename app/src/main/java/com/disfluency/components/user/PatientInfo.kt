@@ -15,17 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.disfluency.R
 import com.disfluency.data.MockedData
 import com.disfluency.model.Patient
+import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.ui.theme.MyApplicationTheme
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PatientInfoCard(patient: Patient, firstLabel: IconLabeledDetails,
-                    secondLabel: IconLabeledDetails){
+fun PatientInfoCard(patient: Patient){
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         modifier = Modifier
@@ -33,7 +36,9 @@ fun PatientInfoCard(patient: Patient, firstLabel: IconLabeledDetails,
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.height(122.dp).padding(16.dp)
+            modifier = Modifier
+                .height(122.dp)
+                .padding(16.dp)
         ) {
             Image(
                 painter = painterResource(id = patient.profilePic),
@@ -42,7 +47,9 @@ fun PatientInfoCard(patient: Patient, firstLabel: IconLabeledDetails,
             )
 
             Column(
-                modifier = Modifier.fillMaxSize().padding(start = 16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -57,22 +64,34 @@ fun PatientInfoCard(patient: Patient, firstLabel: IconLabeledDetails,
 
                 FlowRow {
                     IconLabeled(
-                        icon = firstLabel.icon,
-                        label = firstLabel.label,
-                        content = firstLabel.content
+                        icon = Icons.Outlined.CalendarMonth,
+                        label = weeklyTurnFormat(patient.weeklyTurn),
+                        content = "Turn"
                     )
                     
                     Spacer(modifier = Modifier.width(8.dp))
                     
                     IconLabeled(
-                        icon = secondLabel.icon,
-                        label = secondLabel.label,
-                        content = secondLabel.content
+                        icon = Icons.Outlined.AccessTime,
+                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(
+                            R.string.time_format))),
+                        content = "Time"
                     )
                 }
             }
         }
     }
+}
+
+@Composable
+fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
+    return if(weeklyTurn.size>1){
+        val lastDay = stringResource(weeklyTurn.last().stringId)
+        val daysBeforeLast = weeklyTurn.dropLast(1).map{ stringResource(it.stringId) }
+        "${daysBeforeLast.joinToString(", ")} ${stringResource(id = R.string.symbol_and)} $lastDay"
+    }
+
+    else weeklyTurn.map{ stringResource(it.stringId)}.joinToString()
 }
 
 @Composable
@@ -95,17 +114,11 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
     }
 }
 
-data class IconLabeledDetails(val icon: ImageVector,
-                              val label: String,
-                              val content: String)
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewInfoCard(){
     val patient = MockedData.patients.first()
     MyApplicationTheme() {
-        PatientInfoCard(patient = patient,
-            IconLabeledDetails(Icons.Outlined.CalendarMonth, patient.weeklyTurn, "Turn"),
-            IconLabeledDetails(Icons.Outlined.AccessTime, patient.weeklyHour, "Time"))
+        PatientInfoCard(patient = patient)
     }
 }
