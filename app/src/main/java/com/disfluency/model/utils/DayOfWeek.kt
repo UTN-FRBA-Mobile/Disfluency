@@ -1,5 +1,6 @@
 package com.disfluency.model.utils
 
+import androidx.compose.ui.res.stringResource
 import com.disfluency.R
 
 sealed class DayOfWeek(val stringId: Int) {
@@ -8,10 +9,10 @@ sealed class DayOfWeek(val stringId: Int) {
     object WEDNESDAY: DayOfWeek(R.string.day3)
     object THURSDAY: DayOfWeek(R.string.day4)
     object FRIDAY: DayOfWeek(R.string.day5)
-    object SATHURDAY: DayOfWeek(R.string.day6)
+    object SATURDAY: DayOfWeek(R.string.day6)
     object SUNDAY: DayOfWeek(R.string.day7)
 }
 
-fun daysOfWeek(): List<DayOfWeek> {
-    return DayOfWeek::class.nestedClasses.map { it.objectInstance as DayOfWeek }
+fun workingDays(): List<DayOfWeek> {
+    return listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY)
 }
