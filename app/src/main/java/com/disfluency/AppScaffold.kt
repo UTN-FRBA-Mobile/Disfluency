@@ -17,11 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.disfluency.navigation.Route
+import com.disfluency.navigation.*
 import com.disfluency.navigation.bottomNavigation.BottomNavigation
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
-import com.disfluency.navigation.getItemByRoute
-import com.disfluency.navigation.noSupportBarsRoutes
 
 @Composable
 fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Composable (NavHostController)->Unit) {
@@ -32,7 +30,7 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
 
     Scaffold(
         topBar = {
-            if (!noSupportBarsRoutes.contains(currentRoute)){
+            if (!noTopBarRoutes.contains(currentRoute)){
                 CenterAlignedTopAppBar(
                     title = { Text(text = stringResource(getItemByRoute(currentRoute).title)) },
                     navigationIcon = { Icon(Icons.Filled.Menu , contentDescription = "") },
@@ -41,7 +39,7 @@ fun AppScaffold(bottomNavigationItems: List<BottomNavigationItem>, content: @Com
             }
         },
         bottomBar = {
-            if (!noSupportBarsRoutes.contains(currentRoute)){
+            if (!noBottomBarRoutes.contains(currentRoute)){
                 BottomNavigation(navController, bottomNavigationItems)
             }
         },

@@ -60,6 +60,7 @@
                 <string name="new_patient_label_email">Correo Electrónico</string>
                 <string name="new_patient_label_dayOfBirth">Fecha de Nacimiento</string>
                 <string name="new_patient_label_weeklyTurn">Día/s Asignado/s</string>
+                <string name="new_patient_label_weeklyHour">Horario Semanal</string>
                 <string name="new_patient_dateOfBirth_button_accept">Confirmar</string>
                 <string name="new_patient_dateOfBirth_button_return">Volver</string>
                 <string name="new_patient_button_submit">Crear</string>

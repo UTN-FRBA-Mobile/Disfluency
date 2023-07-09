@@ -75,7 +75,8 @@ fun PatientInfoCard(patient: Patient){
                     
                     IconLabeled(
                         icon = Icons.Outlined.AccessTime,
-                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(R.string.time_format))),
+                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(
+                            R.string.time_format))),
                         content = "Time"
                     )
                 }
@@ -104,7 +105,8 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
         Icon(
             imageVector = icon,
             contentDescription = content,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.primary
         )
         Text(
             text = label,
@@ -121,7 +123,8 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
 @Preview(showBackground = true)
 @Composable
 fun PreviewInfoCard(){
+    val patient = MockedData.patients.first()
     MyApplicationTheme() {
-        PatientInfoCard(patient = MockedData.patients.first())
+        PatientInfoCard(patient = patient)
     }
 }

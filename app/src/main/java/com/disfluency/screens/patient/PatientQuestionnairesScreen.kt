@@ -28,7 +28,6 @@ fun PatientQuestionnairesScreen(id: String) {
     LaunchedEffect(Unit) {
         val aPatient = withContext(Dispatchers.IO) { PatientRepository.getPatientById2(id) }
         Log.i("LOG", aPatient.toString())
-        Log.i("LOG", R.drawable.avatar_26.toString())
         patient.value = aPatient
     }
 

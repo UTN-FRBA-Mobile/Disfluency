@@ -30,10 +30,13 @@ enum class AudioMediaType(val getPlayer: (Context) -> DisfluencyAudioPlayer){
 }
 
 @Composable
-fun AudioPlayer(audio: String, type: AudioMediaType){
-    val ctx = LocalContext.current
-    val audioPlayer = type.getPlayer(ctx)
-    audioPlayer.load(audio)
+fun AudioPlayer(url: String, type: AudioMediaType){
+    AudioPlayer(url = url, audioPlayer = type.getPlayer(LocalContext.current))
+}
+
+@Composable
+fun AudioPlayer(url: String, audioPlayer: DisfluencyAudioPlayer){
+    audioPlayer.load(url)
 
     DisposableEffect(Lifecycle.Event.ON_STOP) {
         onDispose {
