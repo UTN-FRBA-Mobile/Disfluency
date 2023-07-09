@@ -13,6 +13,7 @@ import com.disfluency.model.Phono
 import com.disfluency.model.User
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.Route
+import com.disfluency.screens.analysis.TranscriptionScreen
 import com.disfluency.screens.exercise.*
 import com.disfluency.screens.phono.PatientQuestionnairesScreen
 import com.disfluency.screens.phono.PatientSessionsScreen

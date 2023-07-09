@@ -144,7 +144,7 @@ fun RecordingVisualizer(audioRecorder: DisfluencyAudioRecorder, hasRecorded: Boo
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            AudioPlayer(audio = LOCAL_RECORD_FILE, type = AudioMediaType.FILE)
+            AudioPlayer(url = LOCAL_RECORD_FILE, type = AudioMediaType.FILE)
         }
 
         AnimatedVisibility(
