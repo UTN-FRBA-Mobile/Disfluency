@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.disfluency.R
 import com.disfluency.data.MockedData
 import com.disfluency.model.Patient
-import com.disfluency.model.utils.DayOfWeek
+import com.disfluency.model.utils.Day
 import com.disfluency.ui.theme.MyApplicationTheme
 import java.time.format.DateTimeFormatter
 
@@ -68,9 +68,9 @@ fun PatientInfoCard(patient: Patient){
                         label = weeklyTurnFormat(patient.weeklyTurn),
                         content = "Turn"
                     )
-                    
+
                     Spacer(modifier = Modifier.width(8.dp))
-                    
+
                     IconLabeled(
                         icon = Icons.Outlined.AccessTime,
                         label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(R.string.time_format))),
@@ -83,7 +83,7 @@ fun PatientInfoCard(patient: Patient){
 }
 
 @Composable
-fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
+fun weeklyTurnFormat(weeklyTurn: List<Day>): String{
     return if(weeklyTurn.size>1){
         val lastDay = stringResource(weeklyTurn.last().stringId)
         val daysBeforeLast = weeklyTurn.dropLast(1).map{ stringResource(it.stringId) }

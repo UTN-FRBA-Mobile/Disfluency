@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
-import com.disfluency.model.utils.DayOfWeek
+import com.disfluency.model.utils.Day
 import com.disfluency.model.utils.daysOfWeek
 import java.util.*
 /*
@@ -22,7 +22,7 @@ fun Preview(){
 }*/
 
 @Composable
-fun DummyDaysOfWeekCheckbox(label: String, state: MutableState<List<DayOfWeek>>){
+fun DummyDaysOfWeekCheckbox(label: String, state: MutableState<List<Day>>){
     Text(text = label, color = MaterialTheme.colorScheme.primary)
     DaysOfWeekCheckbox{
         state.value = it
@@ -30,7 +30,7 @@ fun DummyDaysOfWeekCheckbox(label: String, state: MutableState<List<DayOfWeek>>)
 }
 
 @Composable
-fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
+fun DaysOfWeekCheckbox(onChange: (List<Day>)->Unit) {
     //Uso '=' en lugar de 'by' para poder settear el value sin conocer la variable.
     val mondaysChecked = remember {mutableStateOf(false)}
     val tuesdaysChecked = remember {mutableStateOf(false)}
@@ -52,7 +52,7 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
     val daysOfWeek = daysOfWeekAsEnum.map { stringResource(it.stringId) }
 
     val notifyChange = {
-        val checksAsStringList = LinkedList<DayOfWeek>()
+        val checksAsStringList = LinkedList<Day>()
         weekChecks.forEachIndexed{
             index, isChecked -> if(isChecked.value) checksAsStringList.add(daysOfWeekAsEnum[index])
         }

@@ -21,7 +21,7 @@ import com.disfluency.components.inputs.*
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
-import com.disfluency.model.utils.DayOfWeek
+import com.disfluency.model.utils.Day
 import com.disfluency.navigation.Route
 import java.time.LocalDate
 import java.time.LocalTime
@@ -62,7 +62,7 @@ fun FormNewPatient(navController: NavController, phono: Phono) {
         val patientBirthDate = inputDate(stringResource(R.string.new_patient_label_dayOfBirth), maxDate = todaysDate)
 
         //TODO: Agregar validacion de que elija al menos 1.
-        val weeklyTurn: MutableState<List<DayOfWeek>> = remember{ mutableStateOf(emptyList()) }
+        val weeklyTurn: MutableState<List<Day>> = remember{ mutableStateOf(emptyList()) }
         DummyDaysOfWeekCheckbox(stringResource(R.string.new_patient_label_weeklyTurn), state = weeklyTurn)
         
         Row(

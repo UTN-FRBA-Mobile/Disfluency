@@ -5,6 +5,7 @@
     <string name="ejercicios">Ejercicios</string>
     <string name="cuestionarios">Cuestionarios</string>
     <!-- Generales -->
+        <string name="coming_soon">Proximamente</string>
         <!-- Formato Fechas -->
             <string name="date_format">dd/MM/yyyy</string>
             <string name="time_format">hh:mm</string>
@@ -47,9 +48,10 @@
                 <string name="pa_exercise_answer_new_title">Practica de Ejercicio</string>
                 <string name="exercise_answer_prefix">"Resolucion del "</string>
             <!-- Pantalla Resolucion Enviada con Exito -->
+                <string name="record_success_title">Grabacion Exitosa</string>
                 <string name="pa_record_success_message">Se guardo la resolucion exitosamente</string>
 
-        <!-- Fonoaudiologo -->
+    <!-- Fonoaudiologo -->
             <!-- Home -->
                 <string name="ph_home_title">Home</string>
             <!-- Pantalla crear paciente -->
@@ -94,8 +96,6 @@
         <string name="ph_new_exercise_title">Nuevo Ejercicio</string>
         <string name="ph_single_patient_questionnaires_title">Cuestionarios del Paciente</string>
         <string name="ph_single_patients_sessions_title">Sesiones del Paciente</string>
-
-    <string name="record_success_title">Grabacion Exitosa</string>
 
     <!-- notifications -->
     <string name="default_notification_channel_id">Global</string>

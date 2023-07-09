@@ -13,16 +13,19 @@ import com.disfluency.navigation.Route
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.screens.exercise.*
 import com.disfluency.screens.patient.PatientExerciseAssignmentsScreen
+import com.disfluency.screens.patient.PatientHome
+import com.disfluency.screens.phono.SinglePatientScreen
 import com.disfluency.screens.utils.EmptyScreen
 
 @Composable
 fun PatientNavigationGraph(navController: NavHostController, user: User, onLogout: () -> Unit) {
     NavHost(navController, startDestination = Route.HomePatient.route) {
         composable(BottomNavigationItem.HomePatient.screenRoute.route) {
-            EmptyScreen("Home Paciente")
-            Button(onClick = onLogout) {
+        //    SinglePatientScreen(id = (user.role as Patient).id, navController = navController)
+        PatientHome(user.role as Patient, navController)
+            /*Button(onClick = onLogout) {
                 Text("Cerrar Sesión")
-            }
+            }*/
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
             PatientExerciseAssignmentsScreen(navController, user.role as Patient) //TODO: Revisar
