@@ -13,25 +13,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.R
 import com.disfluency.components.grid.TwoColumnGridItemSpan
+import com.disfluency.components.user.IconLabeled
 import com.disfluency.components.user.PatientInfoCard
+import com.disfluency.components.user.weeklyTurnFormat
 import com.disfluency.data.*
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
-import com.disfluency.screens.phono.ActivityOverviewCard
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Preview
 @Composable
@@ -45,11 +53,9 @@ fun PatientHome(user: Patient, navController: NavController){
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 4.dp)
-            .verticalScroll(rememberScrollState())
     ) {
-        PatientInfoCard(user)
+     //   PatientInfoCard(user)
         WelcomeCard(user)
-        Spacer(modifier = Modifier.height(4.dp))
         Column(verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
@@ -60,6 +66,7 @@ fun PatientHome(user: Patient, navController: NavController){
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun WelcomeCard(patient: Patient) {
     val todaysDate = LocalDateTime.now()
@@ -72,33 +79,50 @@ private fun WelcomeCard(patient: Patient) {
             .padding(all = 16.dp)
     ) {
         Row(
-            modifier = Modifier.padding(all = 12.dp),
+            modifier = Modifier.padding(all = 12.dp).height(120.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Image(
                 modifier = Modifier
                     .clip(shape = CircleShape)
-                    .size(size = 80.dp),
+                    .size(size = 95.dp),
                 painter = painterResource(id = R.drawable.disfluency_logo),
                 contentDescription = "",
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+
             )
-            Spacer(Modifier.width(width = 16.dp))
+            Spacer(Modifier.width(width = 8.dp))
             Column(Modifier.wrapContentWidth(unbounded = false)) {
                 Text(
                     text = "¡Hola ${patient.name}!",
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleLarge
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
-                    text = "Tu próximo turno es $suffix"/*"Tenés turno el $day $dateAsString a las $hourAsString  hs"*/,
+                    text = "Tu próximo turno será $suffix"/*"Tenés turno el $day $dateAsString a las $hourAsString  hs"*/,
                     style = MaterialTheme.typography.labelMedium
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                FlowRow(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(end=16.dp)) {
+                    IconLabeled(
+                        icon = Icons.Outlined.CalendarMonth,
+                        label = weeklyTurnFormat(patient.weeklyTurn),
+                        content = "Turn"
+                    )
+
+                    IconLabeled(
+                        icon = Icons.Outlined.AccessTime,
+                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(R.string.time_format))),
+                        content = "Time"
+                    )
+                }
             }
         }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
     }
 }
 
@@ -162,7 +186,7 @@ fun ActivitiesOverview(patient: Patient, navController: NavController) {
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .padding(16.dp)
-            .height(80.dp),
+            .height(200.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -170,6 +194,49 @@ fun ActivitiesOverview(patient: Patient, navController: NavController) {
             item(span = { TwoColumnGridItemSpan(index, activities.size) }) {
                 Box(Modifier.clickable {activity.onClick()}) {
                     ActivityOverviewCard(title = activity.title, number = activity.number)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ActivityOverviewCard(title: String, number: Int){
+    Card(
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        modifier = Modifier
+            .height(200.dp)
+            .fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize()
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                lineHeight = 20.sp,
+                fontSize = 20.sp, //TODO: se podra hacer que se ajuste al espacio disponible?
+                color = Color.Black,
+                textAlign = TextAlign.Center
+            )
+            Surface(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape),
+                color = MaterialTheme.colorScheme.primary
+            ) {
+                Box(contentAlignment = Alignment.Center){
+                    Text(
+                        text = number.toString(),
+                        style = TextStyle(color = Color.White, fontSize = 18.sp)
+                    )
                 }
             }
         }
