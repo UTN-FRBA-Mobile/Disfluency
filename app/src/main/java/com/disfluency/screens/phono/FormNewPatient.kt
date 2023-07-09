@@ -25,8 +25,8 @@ import com.disfluency.components.user.weeklyTurnFormat
 import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
-import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.navigation.Route
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Period

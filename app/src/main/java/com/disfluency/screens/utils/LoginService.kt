@@ -9,7 +9,7 @@ class LoginService {
     private var user: User? = null
 
     suspend fun login(username: String, password: String){
-        delay(50)
+        delay(0)
         val user = UserRepository.findUser(username, password)
         this.user = user
     }
@@ -19,7 +19,7 @@ class LoginService {
     }
 
     suspend fun logout(){
-        delay(50)
+        delay(0)
         this.user = null
     }
 }

@@ -1,9 +1,6 @@
 package com.disfluency.model
 
-import com.disfluency.model.utils.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.Period
+import java.time.*
 
 data class Patient(
     val name: String,
@@ -36,4 +33,27 @@ data class Patient(
             LocalDate.now()
         ).years
     }
+
+    fun nextTurnFromDateTime(dateTime: LocalDateTime): LocalDateTime {
+        if(weeklyTurn.isEmpty()){
+            throw NoTurnsAsignedException(this)
+        }
+        var nextTurnDate: LocalDate? = null
+        var nextDate = dateTime.toLocalDate()
+
+        while(nextTurnDate==null){
+            if(weeklyTurn.contains(nextDate.dayOfWeek) && !(dateTime.toLocalDate().isEqual(nextDate) && weeklyHour.isBefore(dateTime.toLocalTime()))) {
+                nextTurnDate = nextDate
+            }
+            nextDate = nextDate.plusDays(1)
+        }
+
+        return LocalDateTime.of(nextTurnDate, weeklyHour)
+    }
+
+    fun daysTillNextTurnFromDate(dateTime: LocalDateTime): Long{
+        return Duration.between(dateTime.toLocalDate().atStartOfDay(), nextTurnFromDateTime(dateTime).toLocalDate().atStartOfDay()).toDays()
+    }
 }
+
+class NoTurnsAsignedException(patient: Patient): Exception("Patient ${patient.fullName()} hasn't weekly turns asigned")

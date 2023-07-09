@@ -11,13 +11,10 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.disfluency.R
-import com.disfluency.model.utils.DayOfWeek
-import com.disfluency.model.utils.workingDays
+import java.time.DayOfWeek
 
 @Composable
 fun WeeklyTurnPicker(selectedDays: SnapshotStateList<DayOfWeek>){
@@ -28,7 +25,7 @@ fun WeeklyTurnPicker(selectedDays: SnapshotStateList<DayOfWeek>){
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        workingDays().forEach { day ->
+        DayOfWeek.values().take(5).forEach { day ->
             TextButton(
                 modifier = Modifier
                     .size(50.dp)
@@ -44,7 +41,7 @@ fun WeeklyTurnPicker(selectedDays: SnapshotStateList<DayOfWeek>){
                 }
             ) {
                 Text(
-                    text = stringResource(id = day.stringId)[0].toString().uppercase(),
+                    text = day.name[0].toString().uppercase(),
                     fontSize = 15.sp,
                     textAlign = TextAlign.Center
                 )

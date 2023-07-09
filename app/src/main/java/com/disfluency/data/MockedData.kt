@@ -2,7 +2,7 @@ package com.disfluency.data
 
 import com.disfluency.R
 import com.disfluency.model.*
-import com.disfluency.model.utils.DayOfWeek
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 
