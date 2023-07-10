@@ -2,6 +2,7 @@ package com.disfluency.loading.skeleton.exercise
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,6 +54,17 @@ fun ExerciseListItemSkeleton(){
                 )
             }
         )
+    }
+}
+
+@Composable
+fun ExerciseListSkeleton() {
+    val defaultCount = 4
+    LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(defaultCount) {
+            ExerciseListItemSkeleton()
+        }
     }
 }
 

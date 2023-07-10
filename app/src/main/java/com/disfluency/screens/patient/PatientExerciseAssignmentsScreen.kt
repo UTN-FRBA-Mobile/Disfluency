@@ -1,7 +1,7 @@
 package com.disfluency.screens.patient
 
-import androidx.compose.foundation.BorderStroke
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,10 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.disfluency.R
-import com.disfluency.model.ExerciseAssignment
-import com.disfluency.model.Patient
 import com.disfluency.data.ExerciseRepository
-import com.disfluency.model.Exercise
+import com.disfluency.loading.SkeletonLoader
+import com.disfluency.loading.skeleton.exercise.ExerciseAssignmentListSkeleton
+import com.disfluency.model.ExerciseAssignment
 import com.disfluency.navigation.Route
 import com.disfluency.screens.exercise.ExerciseThumbnail
 import kotlinx.coroutines.Dispatchers
@@ -28,25 +28,40 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun PatientExerciseAssignmentsScreen(navController: NavHostController, patientId: String) {
-    val exerciseAssignments = remember { mutableStateListOf<ExerciseAssignment>() }
+    val exerciseAssignments: MutableState<List<ExerciseAssignment>?> = remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         val exerciseAssignmentsResponse = withContext(Dispatchers.IO) { ExerciseRepository.getAssignmentsByPatientId(patientId) }
         Log.i("HTTP", exerciseAssignmentsResponse.toString())
-        exerciseAssignments.addAll(exerciseAssignmentsResponse)
+        exerciseAssignments.value = exerciseAssignmentsResponse
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        LazyColumn(
-            contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(exerciseAssignments) {ex ->
-                ExerciseAssignmentListItem(exerciseAssignment = ex, navController = navController)
+        SkeletonLoader(
+            state = exerciseAssignments,
+            content = {
+                exerciseAssignments.value?.let {
+                    ExerciseAssignmentList(exerciseAssignments = it, navController = navController)
+                }
+            },
+            skeleton = {
+                ExerciseAssignmentListSkeleton()
             }
+        )
+    }
+}
+
+@Composable
+fun ExerciseAssignmentList(exerciseAssignments: List<ExerciseAssignment>, navController: NavHostController){
+    LazyColumn(
+        contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(exerciseAssignments) {ex ->
+            ExerciseAssignmentListItem(exerciseAssignment = ex, navController = navController)
         }
     }
 }

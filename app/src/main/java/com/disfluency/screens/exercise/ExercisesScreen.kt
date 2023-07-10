@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,10 +26,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
 import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
+import com.disfluency.loading.SkeletonLoader
+import com.disfluency.loading.skeleton.exercise.ExerciseListSkeleton
 import com.disfluency.model.Exercise
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
@@ -40,34 +40,50 @@ import kotlinx.coroutines.withContext
 @Composable
 fun ExercisesScreen(navController: NavHostController, phono: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
-    val exercises = remember { mutableStateListOf<Exercise>() }
+    val exercises: MutableState<List<Exercise>?> = remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         val exercisesResponse = withContext(Dispatchers.IO) { ExerciseRepository.getExercisesByTherapistId(phono.id) }
         Log.i("HTTP", exercisesResponse.toString())
-        exercises.addAll(exercisesResponse)
+        exercises.value = exercisesResponse
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Box(
-            Modifier
-                .semantics { isContainer = true }
-                .zIndex(1f)
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)) {
-            //TODO: ver si se puede esconder el teclado cuando doy enter
-            SearchBar(
-                modifier = Modifier.align(Alignment.TopCenter),
-                query = text,
-                onQueryChange = { text = it },
-                onSearch = { },
-                active = false,
-                onActiveChange = { },
-                placeholder = { Text(stringResource(R.string.exercises_search_placeholder)) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            ) {}
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.onPrimaryContainer
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(
+                Modifier
+                    .semantics { isContainer = true }
+                    .zIndex(1f)
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp)) {
+                //TODO: ver si se puede esconder el teclado cuando doy enter
+                SearchBar(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    query = text,
+                    onQueryChange = { text = it },
+                    onSearch = { },
+                    active = false,
+                    onActiveChange = { },
+                    placeholder = { Text(stringResource(R.string.exercises_search_placeholder)) },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                ) {}
+            }
+            SkeletonLoader(
+                state = exercises,
+                content = {
+                    exercises.value?.let {
+                        ExerciseList(it, navController, text)
+                    }
+                },
+                skeleton = {
+                    ExerciseListSkeleton()
+                }
+            )
+
         }
-        ExerciseList(exercises, navController, text)
     }
 }
 

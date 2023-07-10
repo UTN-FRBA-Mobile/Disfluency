@@ -30,6 +30,8 @@ import com.disfluency.R
 import com.disfluency.components.user.IconLabeled
 import com.disfluency.components.user.weeklyTurnFormat
 import com.disfluency.data.PatientRepository
+import com.disfluency.loading.SkeletonLoader
+import com.disfluency.loading.skeleton.patient.PatientListSkeleton
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
@@ -42,12 +44,12 @@ import java.time.format.DateTimeFormatter
 fun PatientsScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
 
-    val patients = remember { mutableStateListOf<Patient>() }
+    val patients: MutableState<List<Patient>?> = remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         val patientsResponse = withContext(Dispatchers.IO) { PatientRepository.getPatientsByTherapistId(user.id) }
         Log.i("HTTP", patientsResponse.toString())
-        patients.addAll(patientsResponse)
+        patients.value = patientsResponse
     }
 
     Surface(
@@ -73,7 +75,19 @@ fun PatientsScreen(navController: NavHostController, user: Phono) {
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 ) {}
             }
-            PatientsList(patients.toList(), navController, text)
+
+            SkeletonLoader(
+                state = patients,
+                content = {
+                    patients.value?.let {
+                        PatientsList(it, navController, text)
+                    }
+                },
+                skeleton = {
+                    PatientListSkeleton()
+                }
+            )
+
         }
         PatientCreation(navController)
     }
