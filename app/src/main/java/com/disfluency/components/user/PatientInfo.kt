@@ -22,9 +22,11 @@ import androidx.compose.ui.unit.dp
 import com.disfluency.R
 import com.disfluency.data.MockedData
 import com.disfluency.model.Patient
-import com.disfluency.model.utils.DayOfWeek
 import com.disfluency.ui.theme.MyApplicationTheme
+import com.disfluency.utils.formatDayOfWeek
+import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -68,12 +70,13 @@ fun PatientInfoCard(patient: Patient){
                         label = weeklyTurnFormat(patient.weeklyTurn),
                         content = "Turn"
                     )
-                    
+
                     Spacer(modifier = Modifier.width(8.dp))
-                    
+
                     IconLabeled(
                         icon = Icons.Outlined.AccessTime,
-                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(R.string.time_format))),
+                        label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(
+                            R.string.time_format))),
                         content = "Time"
                     )
                 }
@@ -84,13 +87,15 @@ fun PatientInfoCard(patient: Patient){
 
 @Composable
 fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
+    val days = weeklyTurn
+        .map { d -> formatDayOfWeek(dayOfWeek = d) }
+        .map { d -> d[0].uppercaseChar() + d.substring(1) }
     return if(weeklyTurn.size>1){
-        val lastDay = stringResource(weeklyTurn.last().stringId)
-        val daysBeforeLast = weeklyTurn.dropLast(1).map{ stringResource(it.stringId) }
+        val lastDay = days.last()
+        val daysBeforeLast = days.dropLast(1)
         "${daysBeforeLast.joinToString(", ")} ${stringResource(id = R.string.symbol_and)} $lastDay"
     }
-
-    else weeklyTurn.map{ stringResource(it.stringId)}.joinToString()
+    else days.joinToString { it }
 }
 
 @Composable
@@ -99,7 +104,8 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
         Icon(
             imageVector = icon,
             contentDescription = content,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.primary
         )
         Text(
             text = label,
@@ -116,7 +122,8 @@ fun IconLabeled(icon: ImageVector, label: String, content: String){
 @Preview(showBackground = true)
 @Composable
 fun PreviewInfoCard(){
+    val patient = MockedData.patients.first()
     MyApplicationTheme() {
-        PatientInfoCard(patient = MockedData.patients.first())
+        PatientInfoCard(patient = patient)
     }
 }

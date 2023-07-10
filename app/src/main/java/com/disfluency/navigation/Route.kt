@@ -1,6 +1,5 @@
 package com.disfluency.navigation
 
-import androidx.compose.ui.res.stringResource
 import com.disfluency.R
 
 sealed class Route(val route: String, val title: Int){
@@ -10,7 +9,7 @@ sealed class Route(val route: String, val title: Int){
     object Cuestionarios: Route("cuestionarios", R.string.questionnaires_title)
     object Ejercicios: Route("ejercicios", R.string.exercises_title)
     object Paciente: Route("paciente/{id}", R.string.ph_single_patient_title){
-        fun routeTo(idPaciente: Int): String{
+        fun routeTo(idPaciente: String): String{
             return "paciente/$idPaciente"
         }
     }
@@ -21,24 +20,24 @@ sealed class Route(val route: String, val title: Int){
     object Assignment: Route("asignacion", R.string.ph_exercise_asign_title)
 
     object Ejercicio: Route("ejercicio/{id}", R.string.exercise_detail_title){
-        fun routeTo(ejercicioId: Int): String{
-            return route.replace("{id}", ejercicioId.toString())
+        fun routeTo(ejercicioId: String): String{
+            return route.replace("{id}", ejercicioId)
         }
     }
     object PatientExercises: Route("paciente/{id}/ejercicios", R.string.ph_single_patient_exercises_title){
-        fun routeTo(patientId: Int): String{
+        fun routeTo(patientId: String): String{
             return route.replace("{id}", patientId.toString())
         }
     }
 
     object PatientQuestionnaires: Route("paciente/{id}/cuestionarios", R.string.ph_single_patient_questionnaires_title){
-        fun routeTo(patientId: Int): String{
+        fun routeTo(patientId: String): String{
             return route.replace("{id}", patientId.toString())
         }
     }
 
     object PatientSessions: Route("paciente/{id}/sesiones", R.string.ph_single_patients_sessions_title){
-        fun routeTo(patientId: Int): String{
+        fun routeTo(patientId: String): String{
             return route.replace("{id}", patientId.toString())
         }
     }
@@ -50,9 +49,11 @@ sealed class Route(val route: String, val title: Int){
     }
 
     //TODO: esta ok esta ruta?!
-    object PatientExercisePracticeDetail: Route("ejercicio-resuelto/{id}", R.string.pa_exercise_answer_title){
-        fun routeTo(practiceId: String): String{
-            return route.replace("{id}", practiceId)
+    object PatientExercisePracticeDetail: Route("ejercicio-asignado/{id}/ejercicio-resuelto/{practiceId}", R.string.pa_exercise_answer_title){
+        fun routeTo(assignmentId: String, practiceId: String): String{
+            return route
+                .replace("{id}", assignmentId)
+                .replace("{practiceId}", practiceId)
         }
     }
 
@@ -74,7 +75,8 @@ sealed class Route(val route: String, val title: Int){
 }
 
 //Routes that are supposed to be displayed without top or nav bar
-val noSupportBarsRoutes = listOf(Route.PracticeSuccess).map { it.route }
+val noBottomBarRoutes = listOf(Route.PracticeSuccess, Route.NuevoPaciente).map { it.route }
+val noTopBarRoutes = listOf(Route.PracticeSuccess).map { it.route }
 
 val items = Route::class.nestedClasses.map { it.objectInstance as Route }
 fun getItemByRoute(route: String): Route{

@@ -1,5 +1,6 @@
 package com.disfluency.screens.exercise
 
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -19,15 +20,22 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
+import com.disfluency.model.ExerciseAssignment
 import com.disfluency.navigation.Route
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 
 const val ON_SUCCESS_ANIMATION_TIME = 300
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ExerciseRecordingScreen(assignmentId: String, navController: NavController){
-    val assignment = ExerciseRepository.getAssignmentById(assignmentId)
+    val assignment = remember { mutableStateOf<ExerciseAssignment?>(null) }
+
+    LaunchedEffect(Unit) {
+        val anAssignment = withContext(Dispatchers.IO) { ExerciseRepository.getAssignmentById(assignmentId) }
+        Log.i("HTTP", anAssignment.toString())
+        assignment.value = anAssignment
+    }
     
     var animateVisibility by remember { mutableStateOf(true) }
 
@@ -35,14 +43,18 @@ fun ExerciseRecordingScreen(assignmentId: String, navController: NavController){
         visible = animateVisibility,
         exit = scaleOut(animationSpec = tween(ON_SUCCESS_ANIMATION_TIME)) + fadeOut(animationSpec = tween(ON_SUCCESS_ANIMATION_TIME))
     ) {
-        RecordExercise(
-            id = assignment.exercise.id,
-            onSend = { file ->
-                ExerciseRepository.saveExercisePractice(assignmentId = assignmentId, audio = file)
-                animateVisibility = false
-            },
-            navController = navController
-        )
+        assignment.value?.let {
+            RecordExercise(
+                id = it.exercise.id,
+                onSend = { file ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        ExerciseRepository.saveExercisePractice(assignmentId = assignmentId, audio = file)
+                    }
+                    animateVisibility = false
+                },
+                navController = navController
+            )
+        }
     }
 
     if (!animateVisibility){

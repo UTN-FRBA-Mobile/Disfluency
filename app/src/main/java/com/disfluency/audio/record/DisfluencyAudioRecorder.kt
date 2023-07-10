@@ -4,11 +4,9 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.random.Random
 
 private const val MIN_AMPLITUDE_VALUE = 0f
 private const val MAX_AMPLITUDE_VALUE = 7000f

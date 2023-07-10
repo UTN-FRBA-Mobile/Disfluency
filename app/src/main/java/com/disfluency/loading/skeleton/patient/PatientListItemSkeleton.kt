@@ -1,4 +1,4 @@
-package com.disfluency.loading.skeleton
+package com.disfluency.loading.skeleton.patient
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -75,7 +75,7 @@ private fun PatientListItemSkeletonComparison(){
 
     MyApplicationTheme() {
         Column(Modifier.padding(16.dp)) {
-            PatientCard(paciente = MockedData.patients[0], navController = rememberNavController())
+            PatientCard(patient = MockedData.patients[0], navController = rememberNavController())
 
             Spacer(modifier = Modifier.padding(8.dp))
 

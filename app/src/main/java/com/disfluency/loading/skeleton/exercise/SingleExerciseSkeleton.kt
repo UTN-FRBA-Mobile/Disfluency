@@ -131,10 +131,9 @@ fun AudioPlayerSkeleton(){
 private fun SingleExerciseSkeletonComparison(){
 
     MyApplicationTheme() {
-        AppScaffold(bottomNavigationItems = listOf()) {
             SingleExerciseSkeleton()
 //        SingleExerciseScreen(MockedData.exercises[3].id)
-        }
+
     }
 }
 

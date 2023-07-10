@@ -1,5 +1,6 @@
 package com.disfluency.screens.phono
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -8,11 +9,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Assignment
-import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.RecordVoiceOver
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -38,10 +40,18 @@ import com.disfluency.data.TherapySessionRepository
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 import com.disfluency.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
-fun SinglePatientScreen(id: Int, navController: NavController){
-    val patient = PatientRepository.getPatientById(id)
+fun SinglePatientScreen(id: String, navController: NavController){
+    val patient = remember { mutableStateOf<Patient?>(null) }
+
+    LaunchedEffect(Unit) {
+        val aPatient = withContext(Dispatchers.IO) { PatientRepository.getPatientById(id) }
+        Log.i("HTTP", aPatient.toString())
+        patient.value = aPatient
+    }
 
     Column(
         modifier = Modifier
@@ -49,9 +59,11 @@ fun SinglePatientScreen(id: Int, navController: NavController){
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        PatientInfoCard(patient = patient)
-        ButtonPanel(patient = patient, navController = navController)
-        ActivitiesOverview(patient = patient)
+        patient.value?.let {
+            PatientInfoCard(patient = it)
+            ButtonPanel(patient = it, navController = navController)
+            ActivitiesOverview(patient = it)
+        }
     }
 }
 
@@ -108,10 +120,10 @@ fun ActivitiesOverview(patient: Patient){
     data class ActivityOverviewItem(val title: String, val number: Int)
 
     val activities = listOf(
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_exercises), ExerciseRepository.getCompletedExercisesCountByPatient(patient)),
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_exercises), ExerciseRepository.getPendingExercisesCountByPatient(patient)),
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_questionnaires), QuestionnaireRepository.getCompletedQuestionnairesCountByPatient(patient)),
-        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_questionnaires), QuestionnaireRepository.getPendingQuestionnairesCountByPatient(patient)),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_exercises), patient.getCompletedExercisesCount()),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_exercises), patient.getPendingExercisesCount()),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_solved_questionnaires), patient.getCompletedQuestionnairesCount()),
+        ActivityOverviewItem(stringResource(R.string.single_patient_button_pending_questionnaires), patient.getPendingQuestionnairesCount()),
         ActivityOverviewItem(stringResource(R.string.single_patient_button_registered_sessions), TherapySessionRepository.getSessionCountByPatient(patient))
     )
 
@@ -181,7 +193,7 @@ fun ActivityOverviewCard(title: String, number: Int){
 @Composable
 fun SinglePatientScreenPreview(){
     MyApplicationTheme() {
-        SinglePatientScreen(id = 40123864, rememberNavController())
+        SinglePatientScreen(id = "40123864", rememberNavController())
     }
 }
 

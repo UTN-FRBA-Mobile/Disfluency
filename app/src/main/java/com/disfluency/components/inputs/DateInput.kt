@@ -4,11 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.DialogProperties
 import com.disfluency.R
 import java.time.Instant
 import java.time.LocalDate
@@ -19,28 +21,31 @@ import java.time.format.DateTimeFormatter
 //TODO: Investigar si hay forma de cambiar el formato de las fechas en el DatePicker. Esta como mm/dd/aaaa.
 
 @Composable
-fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?> {
-    var dateValue: LocalDate? by remember {
-        mutableStateOf(null)
-    }
-    var formattedValue by rememberSaveable {
-        mutableStateOf("")
-    }
-
+fun DateInput(state: MutableState<LocalDate?>, label: String){
+    var formattedValue by rememberSaveable { mutableStateOf(formatToString(state)) }
     val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
     var openDialog by remember { mutableStateOf(false) }
 
-    /* * * * */
-    val disableDialog = {openDialog = false}
-    var input: Input<LocalDate?>? = null
+    val disableDialog = { openDialog = false }
 
-    Box {
-        input = input(
-            label = label,
-            getRealValue = {dateValue},
-            formattedValue = {formattedValue},
-            onValueChange = {},
-            trailingIcon = { DateIcon() }
+    var wrongValue: Boolean by remember { mutableStateOf(false) }
+
+    Box() {
+        OutlinedTextField(
+            value = formattedValue,
+            onValueChange = {
+                wrongValue = !MandatoryValidation().validate(formattedValue)
+            },
+            label = { Text(label) },
+            singleLine = true,
+            isError = wrongValue,
+            trailingIcon = {
+                if (wrongValue) Icon(Icons.Filled.Info, "Error")
+                else Icon(Icons.Filled.CalendarToday, "Fecha", tint = MaterialTheme.colorScheme.primary)
+            },
+            supportingText = {
+                if(wrongValue) Text(text = "Este campo es requerido")
+            }
         )
 
         Box(modifier = Modifier
@@ -48,16 +53,15 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?> {
             .clickable { openDialog = true })
     }
 
-    val maxDateAsMilliseconds: Long? = maxDate?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli()
+    val maxDateAsMilliseconds: Long? = LocalDate.now().atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli()
     if (openDialog) {
         DatePickerDialog(
             onDismissRequest = disableDialog,
             confirmButton = {
                 TextButton(
                     onClick = {
-                        dateValue = millisecondsToLocalDate(datePickerState.selectedDateMillis!!)
-                        formattedValue = dateValue!!.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-                        input?.validate()
+                        state.value = millisecondsToLocalDate(datePickerState.selectedDateMillis!!)
+                        formattedValue = formatToString(state)
                         disableDialog()
                     },
                     enabled = datePickerState.selectedDateMillis!=null
@@ -79,17 +83,14 @@ fun inputDate(label: String, maxDate: LocalDate?): Input<LocalDate?> {
             }
         )
     }
+}
 
-    return input!!
+fun formatToString(state: MutableState<LocalDate?>): String{
+    return state.value?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: ""
 }
 
 fun millisecondsToLocalDate(milliseconds: Long): LocalDate {
     return Instant.ofEpochMilli(milliseconds)
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
-}
-
-@Composable
-fun DateIcon(){
-    Icon(Icons.Filled.CalendarToday, "Fecha", tint = MaterialTheme.colorScheme.primary)
 }

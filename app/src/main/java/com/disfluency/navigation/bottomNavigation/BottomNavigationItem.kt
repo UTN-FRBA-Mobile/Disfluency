@@ -1,7 +1,10 @@
 package com.disfluency.navigation.bottomNavigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Assignment
+import androidx.compose.material.icons.outlined.ContactMail
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.RecordVoiceOver
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.disfluency.navigation.Route
 

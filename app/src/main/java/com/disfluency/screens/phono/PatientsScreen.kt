@@ -1,5 +1,7 @@
 package com.disfluency.screens.phono
 
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,14 +12,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -28,89 +27,116 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.disfluency.R
+import com.disfluency.components.user.IconLabeled
+import com.disfluency.components.user.weeklyTurnFormat
+import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalComposeUiApi::class)
+
 @Composable
 fun PatientsScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Box(
-            Modifier
-                .semantics { isContainer = true }
-                .zIndex(1f)
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)) {
-            //TODO: ver si se puede esconder el teclado cuando doy enter
-            SearchBar(
-                modifier = Modifier.align(Alignment.TopCenter),
-                query = text,
-                onQueryChange = { text = it },
-                onSearch = { },
-                active = false,
-                onActiveChange = { },
-                placeholder = { Text(stringResource(R.string.search_placeholder)) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            ) {}
-        }
-        PatientsList(user.patients, navController, text)
+    val patients = remember { mutableStateListOf<Patient>() }
+
+    LaunchedEffect(Unit) {
+        val patientsResponse = withContext(Dispatchers.IO) { PatientRepository.getPatientsByTherapistId(user.id) }
+        Log.i("HTTP", patientsResponse.toString())
+        patients.addAll(patientsResponse)
     }
-    PatientCreation(navController)
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.onPrimaryContainer
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(
+                Modifier
+                    .semantics { isContainer = true }
+                    .zIndex(1f)
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp)) {
+                //TODO: ver si se puede esconder el teclado cuando doy enter
+                SearchBar(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    query = text,
+                    onQueryChange = { text = it },
+                    onSearch = { },
+                    active = false,
+                    onActiveChange = { },
+                    placeholder = { Text("Buscar") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                ) {}
+            }
+            PatientsList(patients.toList(), navController, text)
+        }
+        PatientCreation(navController)
+    }
+
 }
 
 @Composable
-fun PatientsList(pacientes: List<Patient>, navController: NavHostController, filter: String) {
+fun PatientsList(patients: List<Patient>, navController: NavHostController, filter: String) {
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(pacientes.filter {
-                paciente -> paciente.fullName().contains(filter, true) }) {paciente ->
-            PatientCard(paciente, navController)
+        items(patients.filter {
+                patient -> patient.fullName().contains(filter, true) }) {patient ->
+            PatientCard(patient, navController)
         }
     }
 }
 
 @Composable
-fun PatientCard(paciente: Patient, navController: NavHostController) {
-    // Refactor a ListItem?
+fun PatientCard(patient: Patient, navController: NavHostController) {
     val onClick = {
-        navController.navigate(Route.Paciente.routeTo(paciente.id))
+        navController.navigate(Route.Paciente.routeTo(patient.id))
     }
 
-    Row(
-        modifier = Modifier
-            .padding(all = 8.dp)
-            .fillMaxWidth()
-            .clickable { onClick() }
+    Card(
+        modifier = Modifier.clickable { onClick() },
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
     ) {
-        Image(
-            painter = painterResource(paciente.profilePic),
-            contentDescription = null,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Text(
-                text = paciente.fullNameFormal(),
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Surface(shape = MaterialTheme.shapes.medium) {
+        ListItem(
+            modifier = Modifier.height(56.dp),
+            headlineContent = {
                 Text(
-                    text = "${paciente.age()} ${stringResource(R.string.years_old_unit)}",
-                    modifier = Modifier.padding(all = 4.dp),
+                    text = patient.fullNameFormal(),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            supportingContent = {
+                Text(
+                    text = weeklyTurnFormat(patient.weeklyTurn),
                     style = MaterialTheme.typography.labelMedium
                 )
+            },
+            leadingContent = {
+                Image(
+                    painter = painterResource(patient.profilePic),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape)
+                )
+            },
+            trailingContent = {
+                IconLabeled(
+                    icon = Icons.Outlined.AccessTime,
+                    label = patient.weeklyHour.format(
+                        DateTimeFormatter.ofPattern(stringResource(
+                        R.string.time_format))),
+                    content = "Time"
+                )
             }
-        }
+        )
     }
+
 
 }
 
@@ -125,6 +151,7 @@ fun PatientCreation(navController: NavHostController) {
                 navController.navigate(Route.NuevoPaciente.route)
             },
             modifier = Modifier.padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.secondary
         ) {
             Icon(Icons.Filled.Add, "Creacion")
         }
