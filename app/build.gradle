@@ -85,7 +85,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
 
-    implementation 'com.github.maryamrzdh:compose-stepper:1.0.0-beta01'
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:32.1.1')

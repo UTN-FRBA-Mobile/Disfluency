@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.maryamrzdh.stepper.Stepper
 
 class StepScreen(val stepTitle: String, val forwardEnabled: Boolean = true, val content: @Composable () -> Unit)
 
@@ -46,7 +45,7 @@ fun PageStepper(steps: List<StepScreen>, onCancel: () -> Unit, onFinish: () -> U
             currentStep = currentStep,
             stepDescriptionList = steps.map { it.stepTitle },
             selectedColor = MaterialTheme.colorScheme.primary,
-            unSelectedColor= Color.White
+            unSelectedColor= MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         steps[currentStep - 1].content()
