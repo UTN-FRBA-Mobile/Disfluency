@@ -29,41 +29,32 @@ fun PatientListItemSkeleton(){
         ListItem(
             colors = ListItemDefaults.colors(containerColor = skeletonBackground),
             modifier = Modifier
-                .height(56.dp)
-                .shimmer(),
+                .height(56.dp),
             headlineContent = {
                 Box(modifier = Modifier
                     .width(200.dp)
                     .height(20.dp)
                     .padding(bottom = 2.dp)
-                    .background(
-                        skeletonContent
-                    )
-                    .shimmer())
+                    .background(skeletonContent))
             },
             supportingContent = {
                 Box(modifier = Modifier
                     .width(90.dp)
                     .height(20.dp)
                     .padding(top = 2.dp)
-                    .background(
-                        skeletonContent
-                    )
-                    .shimmer())
+                    .background(skeletonContent))
             },
             leadingContent = {
                 Box(modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(skeletonContent)
-                    .shimmer())
+                    .background(skeletonContent))
             },
             trailingContent = {
                 Box(modifier = Modifier
                     .width(55.dp)
                     .height(25.dp)
-                    .background(skeletonContent)
-                    .shimmer())
+                    .background(skeletonContent))
             }
         )
     }

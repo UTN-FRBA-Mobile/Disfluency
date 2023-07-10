@@ -38,25 +38,25 @@ fun SingleExerciseSkeleton(){
             Box(modifier = Modifier
                 .width(200.dp)
                 .height(40.dp)
-                .background(skeletonBackground))
+                .background(skeletonBackground, RoundedCornerShape(4.dp)))
 
             Box(modifier = Modifier
                 .padding(8.dp)
                 .width(350.dp)
                 .height(100.dp)
-                .background(skeletonBackground))
+                .background(skeletonBackground, RoundedCornerShape(4.dp)))
 
             Box(modifier = Modifier
                 .padding(bottom = 4.dp, top = 24.dp)
                 .width(80.dp)
                 .height(20.dp)
-                .background(skeletonBackground))
+                .background(skeletonBackground, RoundedCornerShape(4.dp)))
 
             Box(modifier = Modifier
                 .padding(8.dp)
                 .width(350.dp)
                 .height(120.dp)
-                .background(skeletonBackground))
+                .background(skeletonBackground, RoundedCornerShape(4.dp)))
         }
 
         ExampleRecordingSkeleton()
