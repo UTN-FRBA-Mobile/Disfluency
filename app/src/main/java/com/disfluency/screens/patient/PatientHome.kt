@@ -186,11 +186,11 @@ private fun ActivitiesOverview(patient: Patient, navController: NavController) {
     val activities = listOf(
         ActivityOverviewItem(
             stringResource(R.string.single_patient_button_pending_exercises),
-            ExerciseRepository.getPendingExercisesCountByPatient(patient)
+            patient.getPendingExercisesCount()
         ) { navController.navigate(Route.Ejercicios.route) },
         ActivityOverviewItem(
             stringResource(R.string.single_patient_button_pending_questionnaires),
-            QuestionnaireRepository.getPendingQuestionnairesCountByPatient(patient),
+            patient.getPendingQuestionnairesCount(),
         ) { Toast.makeText(context, comingSoonMessage, Toast.LENGTH_SHORT).show() },
     )
 

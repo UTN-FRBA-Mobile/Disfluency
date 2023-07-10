@@ -27,8 +27,10 @@ import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
+import com.disfluency.screens.success.SuccessScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -38,6 +40,9 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun FormNewPatient(navController: NavController, phono: Phono){
+
+    rememberTopAppBarState().contentOffset = 0f
+
     val newPatient = remember { mutableStateOf<Patient?>(null) }
     val avatarIndex = remember { mutableStateOf(0) }
     val name = remember { mutableStateOf("") }
@@ -47,6 +52,9 @@ fun FormNewPatient(navController: NavController, phono: Phono){
     val dateOfBirth: MutableState<LocalDate?> = remember { mutableStateOf(null) }
     val weeklyTurn = remember{ mutableStateListOf<DayOfWeek>() }
     val weeklyHour: MutableState<LocalTime?> = remember { mutableStateOf(null) }
+
+
+    var submitted by remember { mutableStateOf(false) }
 
     val steps = listOf(
         StepScreen("Avatar"){
@@ -94,12 +102,17 @@ fun FormNewPatient(navController: NavController, phono: Phono){
                 newPatient.value = PatientRepository.addPatientToTherapist(patient, phono.id)
                 Log.i("HTTP", "Creating patient: $patient")
             }
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(200)
+                submitted = true
+            }
         }
     )
-    newPatient.value?.let {
-        LaunchedEffect(Unit) {
+
+    if (submitted){
+        LaunchedEffect(Unit){
             navController.popBackStack()
-            navController.navigate(Route.Paciente.routeTo(it.id))
+            navController.navigate(Route.NewPatientSuccess.route)
         }
     }
 }

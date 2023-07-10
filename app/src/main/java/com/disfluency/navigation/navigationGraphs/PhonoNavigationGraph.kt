@@ -19,6 +19,8 @@ import com.disfluency.screens.phono.PatientQuestionnairesScreen
 import com.disfluency.screens.phono.PatientSessionsScreen
 import com.disfluency.screens.phono.SinglePatientScreen
 import com.disfluency.screens.phono.*
+import com.disfluency.screens.success.AssignmentSuccessScreen
+import com.disfluency.screens.success.NewPatientSuccessScreen
 
 @Composable
 fun PhonoNavigationGraph(navController: NavHostController, user: User) {
@@ -93,6 +95,13 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User) {
             it.arguments?.getString("id")?.let {id->
                 TranscriptionScreen(practiceId = id)
             }
+        }
+
+        composable(Route.AssignmentSuccess.route){
+            AssignmentSuccessScreen(navController)
+        }
+        composable(Route.NewPatientSuccess.route){
+            NewPatientSuccessScreen(navController)
         }
     }
 }

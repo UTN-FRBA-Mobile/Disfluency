@@ -128,7 +128,7 @@ fun AnalysisRecording(url: String, audioPlayer: DisfluencyAudioPlayer){
                 .fillMaxWidth()
                 .padding(vertical = 4.dp),
             text = "Audio Analizado",
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.bodyLarge
         )
 
         AudioPlayer(url = url, audioPlayer = audioPlayer)

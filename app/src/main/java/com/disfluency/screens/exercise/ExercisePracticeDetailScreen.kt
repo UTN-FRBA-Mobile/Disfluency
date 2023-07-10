@@ -18,7 +18,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
+import com.disfluency.loading.SkeletonLoader
+import com.disfluency.loading.skeleton.exercise.ExercisePracticeDetailSkeleton
+import com.disfluency.model.Exercise
 import com.disfluency.model.ExerciseAssignment
+import com.disfluency.model.ExercisePractice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -26,43 +30,58 @@ import kotlinx.coroutines.withContext
 fun ExercisePracticeDetailScreen(practiceId: String, assignmentId: String){
     val exerciseAssignment = remember { mutableStateOf<ExerciseAssignment?>(null) }
 
-        LaunchedEffect(Unit) {
-            val anExerciseAssignment = withContext(Dispatchers.IO) { ExerciseRepository.getAssignmentById(assignmentId) }
-            Log.i("HTTP", anExerciseAssignment.toString())
-            exerciseAssignment.value = anExerciseAssignment
+    LaunchedEffect(Unit) {
+        val anExerciseAssignment = withContext(Dispatchers.IO) { ExerciseRepository.getAssignmentById(assignmentId) }
+        Log.i("HTTP", anExerciseAssignment.toString())
+        exerciseAssignment.value = anExerciseAssignment
+    }
+
+    SkeletonLoader(
+        state = exerciseAssignment,
+        content = {
+            exerciseAssignment.value?.let {
+                val practice = it.practiceAttempts.first { p -> p.id == practiceId }
+                val exercise = it.exercise
+
+                ExercisePracticeDetail(practice = practice, exercise = exercise)
+            }
+        },
+        skeleton = {
+            ExercisePracticeDetailSkeleton()
         }
+    )
 
-    exerciseAssignment.value?.let {
-        val practice = it.practiceAttempts.first { p -> p.id == practiceId }
-        val exercise = it.exercise
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "${stringResource(R.string.exercise_answer_prefix)}${practice.date}",
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(8.dp)
-            )
+}
 
-            Text(
-                text = exercise.title,
-                style = MaterialTheme.typography.titleMedium
-            )
+@Composable
+fun ExercisePracticeDetail(practice: ExercisePractice, exercise: Exercise){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "${stringResource(R.string.exercise_answer_prefix)}${practice.date}",
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(8.dp)
+        )
 
-            Text(
-                text = exercise.instruction,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(8.dp)
-            )
+        Text(
+            text = exercise.title,
+            style = MaterialTheme.typography.titleMedium
+        )
 
-            ExampleRecording(sampleAudioUrl = practice.recordingUrl)
-        }
+        Text(
+            text = exercise.instruction,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        ExampleRecording(sampleAudioUrl = practice.recordingUrl)
     }
 }

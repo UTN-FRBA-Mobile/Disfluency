@@ -27,9 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.disfluency.R
+import com.disfluency.components.list.items.PatientListItem
 import com.disfluency.components.user.IconLabeled
 import com.disfluency.components.user.weeklyTurnFormat
 import com.disfluency.data.PatientRepository
+import com.disfluency.loading.SkeletonLoader
+import com.disfluency.loading.skeleton.patient.PatientListSkeleton
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
@@ -42,12 +45,12 @@ import java.time.format.DateTimeFormatter
 fun PatientsScreen(navController: NavHostController, user: Phono) {
     var text by rememberSaveable { mutableStateOf("") }
 
-    val patients = remember { mutableStateListOf<Patient>() }
+    val patients: MutableState<List<Patient>?> = remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         val patientsResponse = withContext(Dispatchers.IO) { PatientRepository.getPatientsByTherapistId(user.id) }
         Log.i("HTTP", patientsResponse.toString())
-        patients.addAll(patientsResponse)
+        patients.value = patientsResponse
     }
 
     Surface(
@@ -73,7 +76,19 @@ fun PatientsScreen(navController: NavHostController, user: Phono) {
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 ) {}
             }
-            PatientsList(patients.toList(), navController, text)
+
+            SkeletonLoader(
+                state = patients,
+                content = {
+                    patients.value?.let {
+                        PatientsList(it, navController, text)
+                    }
+                },
+                skeleton = {
+                    PatientListSkeleton()
+                }
+            )
+
         }
         PatientCreation(navController)
     }
@@ -86,59 +101,14 @@ fun PatientsList(patients: List<Patient>, navController: NavHostController, filt
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(patients.filter {
                 patient -> patient.fullName().contains(filter, true) }) {patient ->
-            PatientCard(patient, navController)
+            PatientListItem(patient, onClick = {
+                navController.navigate(Route.Paciente.routeTo(patient.id))
+            })
         }
     }
 }
 
-@Composable
-fun PatientCard(patient: Patient, navController: NavHostController) {
-    val onClick = {
-        navController.navigate(Route.Paciente.routeTo(patient.id))
-    }
 
-    Card(
-        modifier = Modifier.clickable { onClick() },
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-    ) {
-        ListItem(
-            modifier = Modifier.height(56.dp),
-            headlineContent = {
-                Text(
-                    text = patient.fullNameFormal(),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            },
-            supportingContent = {
-                Text(
-                    text = weeklyTurnFormat(patient.weeklyTurn),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            },
-            leadingContent = {
-                Image(
-                    painter = painterResource(patient.profilePic),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape)
-                )
-            },
-            trailingContent = {
-                IconLabeled(
-                    icon = Icons.Outlined.AccessTime,
-                    label = patient.weeklyHour.format(
-                        DateTimeFormatter.ofPattern(stringResource(
-                        R.string.time_format))),
-                    content = "Time"
-                )
-            }
-        )
-    }
-
-
-}
 
 @Composable
 fun PatientCreation(navController: NavHostController) {

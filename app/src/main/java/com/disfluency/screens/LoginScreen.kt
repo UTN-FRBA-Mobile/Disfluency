@@ -1,6 +1,14 @@
 package com.disfluency.screens
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -40,6 +48,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+private val OFFSET = 120.dp
+
 class NotSupportedUserRoleException(role: Role): Exception(role::class.toString())
 
 @Composable
@@ -77,7 +87,7 @@ fun LoginScreen(navController: NavController, loginService: LoginService) {
         }
     }
 
-    LoginForm(retry) { username, password ->
+    val submitAction: (String, String)->Unit = { username, password ->
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 onSubmit = true
@@ -92,8 +102,20 @@ fun LoginScreen(navController: NavController, loginService: LoginService) {
         }
     }
 
+    val finishedLogoAnimation = remember { mutableStateOf(!loginService.isFirstLogin()) }
+
+    Box(modifier = Modifier.fillMaxSize()){
+        AnimatedVisibility(visible = finishedLogoAnimation.value, enter = fadeIn(animationSpec = tween(delayMillis = 500))) {
+            LoginForm(retry, submitAction)
+        }
+        AnimatedLogo(finishedAnimation = finishedLogoAnimation)
+    }
+
     if (onSubmit) {
-        Box(Modifier.fillMaxSize().background(Color.Gray.copy(0.2f)), contentAlignment = Alignment.Center) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color.Gray.copy(0.2f)), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
     }
@@ -113,14 +135,8 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
 
     Column(
         Modifier
-            .fillMaxSize()
+            .fillMaxSize().offset(y = OFFSET / 2)
             .wrapContentSize(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-
-        Image(
-            painter = painterResource(id = R.drawable.disfluency_logo),
-            contentDescription = "Disfluency",
-            modifier = Modifier.size(170.dp, 170.dp)
-        )
 
         OutlinedTextField(
             value = username,
@@ -159,6 +175,46 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         }
         if(retry){
             Text(stringResource(R.string.login_error_message), color=MaterialTheme.colorScheme.error)
+        }
+    }
+}
+
+@OptIn(ExperimentalAnimationGraphicsApi::class)
+@Composable
+fun AnimatedLogo(finishedAnimation: MutableState<Boolean>){
+    val animationCount = 5
+
+    val image = AnimatedImageVector.animatedVectorResource(R.drawable.disfluency_logo_animation)
+    var atEnd by remember { mutableStateOf(finishedAnimation.value) }
+
+    val offset = animateDpAsState(targetValue = if (finishedAnimation.value) OFFSET else 0.dp,
+        animationSpec = tween(durationMillis = 1000)
+    )
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .offset(y = -offset.value),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = rememberAnimatedVectorPainter(animatedImageVector = image, atEnd = atEnd),
+            contentDescription = stringResource(R.string.app_name),
+            modifier = Modifier.size(170.dp, 170.dp)
+        )
+    }
+
+    LaunchedEffect(Unit){
+        if (!finishedAnimation.value){
+            var count = 0
+
+            while (count < animationCount) {
+                delay(800)
+                atEnd = !atEnd
+                count++
+            }
+            finishedAnimation.value = true
         }
     }
 }

@@ -7,10 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +55,7 @@ fun ExerciseAssignmentDetail(id: String, navController: NavController){
                         navController.navigate(Route.PatientExerciseRecordPractice.routeTo(id))
                     },
                     modifier = Modifier.padding(16.dp),
+                    containerColor = MaterialTheme.colorScheme.secondary
                 ) {
                     Icon(Icons.Filled.Add, "Grabar")
                 }

@@ -9,7 +9,6 @@ import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.navigation.navigationGraphs.PatientNavigationGraph
 import com.disfluency.navigation.navigationGraphs.PhonoNavigationGraph
 import com.disfluency.screens.LoginScreen
-import com.disfluency.screens.SplashScreen
 import com.disfluency.screens.utils.LoginService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,10 +48,7 @@ fun AppNavigation(){
         }
     }
 
-    NavHost(navController = navController, startDestination = "splash"){
-        composable("splash"){
-            SplashScreen(navController = navController)
-        }
+    NavHost(navController = navController, startDestination = Route.Login.route){
         composable(Route.Login.route){
             LoginScreen(navController, loginService)
         }

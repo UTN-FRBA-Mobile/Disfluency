@@ -9,7 +9,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Assignment
+import androidx.compose.material.icons.outlined.Mic
+import androidx.compose.material.icons.outlined.RecordVoiceOver
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,10 +35,10 @@ import androidx.navigation.compose.rememberNavController
 import com.disfluency.R
 import com.disfluency.components.grid.TwoColumnGridItemSpan
 import com.disfluency.components.user.PatientInfoCard
-import com.disfluency.data.ExerciseRepository
 import com.disfluency.data.PatientRepository
-import com.disfluency.data.QuestionnaireRepository
 import com.disfluency.data.TherapySessionRepository
+import com.disfluency.loading.SkeletonLoader
+import com.disfluency.loading.skeleton.patient.SinglePatientScreenSkeleton
 import com.disfluency.model.Patient
 import com.disfluency.navigation.Route
 import com.disfluency.ui.theme.MyApplicationTheme
@@ -53,18 +55,26 @@ fun SinglePatientScreen(id: String, navController: NavController){
         patient.value = aPatient
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        patient.value?.let {
-            PatientInfoCard(patient = it)
-            ButtonPanel(patient = it, navController = navController)
-            ActivitiesOverview(patient = it)
+    SkeletonLoader(
+        state = patient,
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                patient.value?.let {
+                    PatientInfoCard(patient = it)
+                    ButtonPanel(patient = it, navController = navController)
+                    ActivitiesOverview(patient = it)
+                }
+            }
+        },
+        skeleton = {
+            SinglePatientScreenSkeleton()
         }
-    }
+    )
 }
 
 

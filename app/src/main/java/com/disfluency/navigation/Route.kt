@@ -66,6 +66,8 @@ sealed class Route(val route: String, val title: Int){
     object HomePatient : Route("patient/home", R.string.pa_home_title)
 
     object PracticeSuccess: Route("ejercicio-resuelto-completado", R.string.record_success_title)
+    object AssignmentSuccess: Route("asignacion-completada", R.string.exercise_assignment_success_title)
+    object NewPatientSuccess: Route("alta-paciente-completada", R.string.new_patient_success_title)
 
     object TranscriptionAnalysis: Route("ejercicio-resuelto/{id}/analisis", R.string.ph_exercise_analysis){
         fun routeTo(practiceId: String): String{
@@ -75,8 +77,8 @@ sealed class Route(val route: String, val title: Int){
 }
 
 //Routes that are supposed to be displayed without top or nav bar
-val noBottomBarRoutes = listOf(Route.PracticeSuccess, Route.NuevoPaciente).map { it.route }
-val noTopBarRoutes = listOf(Route.PracticeSuccess).map { it.route }
+val noBottomBarRoutes = listOf(Route.PracticeSuccess, Route.AssignmentSuccess, Route.NewPatientSuccess, Route.NuevoPaciente).map { it.route }
+val noTopBarRoutes = listOf(Route.PracticeSuccess, Route.AssignmentSuccess, Route.NewPatientSuccess).map { it.route }
 
 val items = Route::class.nestedClasses.map { it.objectInstance as Route }
 fun getItemByRoute(route: String): Route{
