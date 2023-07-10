@@ -24,7 +24,7 @@ import com.disfluency.screens.phono.*
 fun PhonoNavigationGraph(navController: NavHostController, user: User) {
     NavHost(navController, startDestination = Route.HomePhono.route) {
         composable(BottomNavigationItem.HomePhono.screenRoute.route) {
-            PhonoHomeScreen()
+            PhonoHomeScreen(user.role as Phono, navController)
         }
         composable(BottomNavigationItem.Pacientes.screenRoute.route) {
             PatientsScreen(navController, user.role as Phono)

@@ -23,9 +23,9 @@ import com.disfluency.R
 import com.disfluency.data.MockedData
 import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
+import com.disfluency.utils.formatDayOfWeek
 import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
 import java.util.*
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -88,7 +88,7 @@ fun PatientInfoCard(patient: Patient){
 @Composable
 fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
     val days = weeklyTurn
-        .map { d -> d.getDisplayName(TextStyle.FULL, Locale("es_ES")) }
+        .map { d -> formatDayOfWeek(dayOfWeek = d) }
         .map { d -> d[0].uppercaseChar() + d.substring(1) }
     return if(weeklyTurn.size>1){
         val lastDay = days.last()
