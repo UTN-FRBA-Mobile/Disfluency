@@ -32,9 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.disfluency.AppScaffold
 import com.disfluency.components.grid.TwoColumnGridItemSpan
 import com.disfluency.model.Phono
+import com.disfluency.model.User
 import com.disfluency.navigation.Route
+import com.disfluency.ui.theme.MyApplicationTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -43,8 +46,13 @@ import java.util.*
 @Preview
 @Composable
 fun Preview(){
-    val phono = Phono("2341", "Luis", "Luque", R.drawable.avatar_null)
-    PhonoHomeScreen(phono = phono, rememberNavController())
+    val phono = Phono("2341", "Luis", "Luque", R.drawable.avatar_5)
+    val user = User("us", "us", phono)
+    MyApplicationTheme() {
+        AppScaffold(user = user, onLogout = { /*TODO*/ }, bottomNavigationItems = listOf()) {
+            PhonoHomeScreen(phono = phono, rememberNavController())
+        }
+    }
 }
 
 @Composable
@@ -160,7 +168,7 @@ private fun ActivityShortcutCard(title: String, icon: ImageVector){
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         modifier = Modifier
-            .height(190.dp)
+            .height(140.dp)
             .fillMaxWidth(),
     ) {
         Column(
@@ -184,11 +192,11 @@ private fun ActivityShortcutCard(title: String, icon: ImageVector){
             )
             Surface(
                 modifier = Modifier
-                    .size(75.dp)
+                    .size(50.dp)
                     .clip(CircleShape),
                 color = MaterialTheme.colorScheme.primary
             ) {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(20.dp)){
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(12.dp)){
                     Icon(icon, title, modifier = Modifier.fillMaxSize())
                 }
             }
