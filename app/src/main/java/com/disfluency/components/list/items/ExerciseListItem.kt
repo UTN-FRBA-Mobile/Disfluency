@@ -32,7 +32,9 @@ fun ExerciseListItem(exercise: Exercise, onClick: () -> Unit = {}, leadingConten
             headlineContent = {
                 Text(
                     text = exercise.title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             },
             supportingContent = {
