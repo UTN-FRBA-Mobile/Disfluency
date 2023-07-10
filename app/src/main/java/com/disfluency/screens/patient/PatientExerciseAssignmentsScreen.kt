@@ -16,12 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.disfluency.R
+import com.disfluency.components.list.items.ExerciseThumbnail
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.loading.SkeletonLoader
 import com.disfluency.loading.skeleton.exercise.ExerciseAssignmentListSkeleton
 import com.disfluency.model.ExerciseAssignment
 import com.disfluency.navigation.Route
-import com.disfluency.screens.exercise.ExerciseThumbnail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.format.DateTimeFormatter

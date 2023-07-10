@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.disfluency.R
+import com.disfluency.components.list.items.ExerciseListItem
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.loading.SkeletonLoader
 import com.disfluency.loading.skeleton.exercise.ExerciseListSkeleton
@@ -91,79 +92,10 @@ fun ExercisesScreen(navController: NavHostController, phono: Phono) {
 fun ExerciseList(exercises: List<Exercise>, navController: NavHostController, filter: String) {
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(exercises.filter {
-                ex -> ex.fullName().contains(filter, true) }) {ex ->
-            ExerciseListItem(ex, navController)
-        }
-    }
-}
-
-
-@Composable
-fun ExerciseListItem(exercise: Exercise, navController: NavHostController) {
-    val onClick = {
-        navController.navigate(Route.Ejercicio.routeTo(exercise.id))
-    }
-
-    Card(
-        modifier = Modifier.clickable { onClick() },
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-    ){
-        ListItem(
-            modifier = Modifier.height(56.dp),
-            headlineContent = {
-                Text(
-                    text = exercise.title,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            },
-            supportingContent = {
-                Text(
-                    text = exercise.getFullInstructions(),
-                    maxLines = 1,
-                    style = MaterialTheme.typography.labelMedium,
-                    overflow = TextOverflow.Ellipsis
-                )
-            },
-            leadingContent = {
-                ExerciseThumbnail(exercise = exercise)
+        items(exercises.filter { ex -> ex.fullName().contains(filter, true) }) {ex ->
+            ExerciseListItem(ex, onClick = {
+                navController.navigate(Route.Ejercicio.routeTo(ex.id))
             })
-    }
-}
-
-@Composable
-fun ExerciseThumbnail(exercise: Exercise){
-    val color = stringToRGB(exercise.title)
-    Surface(
-        color = color,
-        modifier = Modifier
-            .clip(CircleShape)
-            .size(40.dp)
-            .border(
-                1.5.dp,
-                color
-                    .copy(0.5f)
-                    .compositeOver(Color.Black),
-                CircleShape
-            ),
-    ) {
-        Box(contentAlignment = Alignment.Center){
-            Text(
-                text = exercise.title.first().uppercaseChar().toString(),
-                style = TextStyle(color = Color.White, fontSize = 18.sp)
-            )
         }
     }
-}
-
-
-//TODO: mover a otro lado esto!
-fun stringToRGB(string: String): Color {
-    val i = string.hashCode()
-
-    val a = (i shr 24 and 0xFF)
-    val r = (i shr 16 and 0xFF)
-    val g = (i shr 8 and 0xFF)
-    val b = (i and 0xFF)
-    return Color(r, g, b, 255);
 }

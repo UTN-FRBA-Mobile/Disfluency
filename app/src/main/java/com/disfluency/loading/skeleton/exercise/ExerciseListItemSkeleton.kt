@@ -14,10 +14,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.disfluency.components.list.items.ExerciseListItem
 import com.disfluency.data.MockedData
 import com.disfluency.loading.skeletonBackground
 import com.disfluency.loading.skeletonContent
-import com.disfluency.screens.exercise.ExerciseListItem
 import com.disfluency.ui.theme.MyApplicationTheme
 import com.valentinilk.shimmer.shimmer
 
@@ -74,7 +74,7 @@ private fun ExerciseListItemSkeletonComparison(){
 
     MyApplicationTheme() {
         Column(Modifier.padding(16.dp)) {
-            ExerciseListItem(exercise = MockedData.exercises[0], rememberNavController())
+            ExerciseListItem(exercise = MockedData.exercises[0])
 
             Spacer(modifier = Modifier.padding(8.dp))
 

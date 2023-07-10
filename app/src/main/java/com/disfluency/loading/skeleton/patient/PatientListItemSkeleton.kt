@@ -3,7 +3,6 @@ package com.disfluency.loading.skeleton.patient
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -14,11 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import com.disfluency.components.list.items.PatientListItem
 import com.disfluency.data.MockedData
 import com.disfluency.loading.skeletonBackground
 import com.disfluency.loading.skeletonContent
-import com.disfluency.screens.phono.PatientCard
 import com.disfluency.ui.theme.MyApplicationTheme
 import com.valentinilk.shimmer.shimmer
 
@@ -88,7 +86,7 @@ private fun PatientListItemSkeletonComparison(){
 
     MyApplicationTheme() {
         Column(Modifier.padding(16.dp)) {
-            PatientCard(patient = MockedData.patients[0], navController = rememberNavController())
+            PatientListItem(patient = MockedData.patients[0])
 
             Spacer(modifier = Modifier.padding(8.dp))
 

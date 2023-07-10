@@ -3,7 +3,6 @@ package com.disfluency.loading.skeleton.exercise
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -18,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.disfluency.data.MockedData
 import com.disfluency.loading.skeletonBackground
 import com.disfluency.loading.skeletonContent
-import com.disfluency.screens.exercise.ExerciseListItem
 import com.disfluency.screens.patient.ExerciseAssignmentListItem
 import com.disfluency.ui.theme.MyApplicationTheme
 import com.valentinilk.shimmer.shimmer
