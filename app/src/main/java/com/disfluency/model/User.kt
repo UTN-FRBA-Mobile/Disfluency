@@ -15,15 +15,11 @@ data class User(
     val role: Role
     ){
     fun profilePic(): Int{
-        return getProfilePicFromRole(role)
-    }
-}
-
-fun getProfilePicFromRole(role: Role): Int{
-    return when (role) {
-        is Patient -> role.profilePic
-        is Phono -> role.profilePictureUrl
-        else -> { throw NoPictureDefinedForRole(role)}
+        return when (role) {
+            is Patient -> role.profilePic
+            is Phono -> role.profilePictureUrl
+            else -> { throw NoPictureDefinedForRole(role)}
+        }
     }
 }
 
