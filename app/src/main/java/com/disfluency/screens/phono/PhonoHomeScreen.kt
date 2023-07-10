@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.disfluency.components.grid.TwoColumnGridItemSpan
-import com.disfluency.components.inputs.formatDayOfWeek
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
 import java.time.LocalDateTime
@@ -50,7 +49,6 @@ fun Preview(){
 
 @Composable
 fun PhonoHomeScreen(phono: Phono, navController: NavController) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +64,7 @@ fun PhonoHomeScreen(phono: Phono, navController: NavController) {
 private fun WelcomeCard(phono: Phono) {
     val datetime = LocalDateTime.now()
     val turnCount = phono.patients.count { it.daysTillNextTurnFromDate(datetime) == 0L }
-    val turnCountMesssage = if(turnCount == 0) "Hoy no tenés turnos" else "Hoy tenés $turnCount turnos"
+    val turnCountMesssage = if(turnCount == 0) "Hoy no tenés turnos" else "Hoy tenés $turnCount turno${if(turnCount>1)"s" else ""}"
 
     OutlinedCard(
         Modifier
@@ -100,7 +98,7 @@ private fun WelcomeCard(phono: Phono) {
                 Text(
                     text = datetime.format(
                         DateTimeFormatter.ofLocalizedDate ( FormatStyle.FULL )
-                            .withLocale(Locale("es_ES")
+                            .withLocale(Locale(stringResource(R.string.locale))
                             )
                     ).replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.labelMedium
@@ -122,19 +120,19 @@ private fun PhonoButtons(navController: NavController) {
 
     val activities = listOf(
         ActivityOverviewItem(
-            "Crear Ejercicio",
+            stringResource(R.string.ph_home_button_new_exercise),
             Icons.Outlined.RecordVoiceOver
         ) { toast.show() },
         ActivityOverviewItem(
-            "Crear Cuestionario",
+            stringResource(R.string.ph_home_button_new_questionnaire),
             Icons.Outlined.Assignment
         ) { toast.show() },
         ActivityOverviewItem(
-            "Grabar Sesión",
+            stringResource(R.string.ph_home_button_new_session),
             Icons.Outlined.Mic
         ) { toast.show() },
         ActivityOverviewItem(
-            "Registrar Paciente",
+            stringResource(R.string.ph_home_button_new_patient),
             Icons.Outlined.AccountCircle
         ) { navController.navigate(Route.NuevoPaciente.route) },
     )

@@ -84,8 +84,9 @@ fun DaysOfWeekCheckbox(onChange: (List<DayOfWeek>)->Unit) {
     }
 }
 
+@Composable
 fun formatDayOfWeek(dayOfWeek: DayOfWeek): String{
-    return dayOfWeek.getDisplayName(TextStyle.FULL, Locale("es_ES")).replaceFirstChar { it.uppercase() }
+    return dayOfWeek.getDisplayName(TextStyle.FULL, Locale(stringResource(R.string.locale))).replaceFirstChar { it.uppercase() }
 }
 
 @Composable
