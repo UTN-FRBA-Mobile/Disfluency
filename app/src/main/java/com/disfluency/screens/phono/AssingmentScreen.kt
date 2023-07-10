@@ -1,6 +1,7 @@
 package com.disfluency.screens.phono
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -48,7 +49,7 @@ fun AssignmentScreen(navController: NavHostController, phono: Phono) {
         exercises.value = exercisesResponse
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.onPrimaryContainer)) {
         Text(
             text = "Pacientes",
             style = MaterialTheme.typography.titleLarge,
