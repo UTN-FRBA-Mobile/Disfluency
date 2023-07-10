@@ -9,9 +9,13 @@ import com.disfluency.model.Patient
 import com.disfluency.model.User
 import com.disfluency.navigation.Route
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
-import com.disfluency.screens.exercise.*
+import com.disfluency.screens.exercise.ExerciseAssignmentDetail
+import com.disfluency.screens.exercise.ExercisePracticeDetailScreen
+import com.disfluency.screens.exercise.ExerciseRecordingScreen
+import com.disfluency.screens.exercise.SingleExerciseScreen
 import com.disfluency.screens.patient.PatientExerciseAssignmentsScreen
 import com.disfluency.screens.patient.PatientHome
+import com.disfluency.screens.success.RecordSuccessScreen
 
 @Composable
 fun PatientNavigationGraph(navController: NavHostController, user: User) {

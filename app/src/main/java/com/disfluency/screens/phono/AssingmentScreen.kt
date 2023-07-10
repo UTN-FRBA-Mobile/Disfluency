@@ -211,8 +211,8 @@ fun AssignButton(
         FloatingActionButton(
             onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
-                    PatientRepository.assignExercisesToPatients(AssignmentDTO(checkedPatients, checkedExercises), therapistId)
                     onSubmit = true
+                    PatientRepository.assignExercisesToPatients(AssignmentDTO(checkedPatients, checkedExercises), therapistId)
                 }
             },
             modifier = Modifier.padding(16.dp),
@@ -224,7 +224,8 @@ fun AssignButton(
 
     if(onSubmit) {
         LaunchedEffect(Unit) {
-            navController.navigate(Route.HomePhono.route)
+            delay(200)
+            navController.navigate(Route.AssignmentSuccess.route)
         }
     }
 }

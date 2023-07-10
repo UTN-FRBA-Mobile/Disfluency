@@ -14,8 +14,6 @@ private const val FADE_TIME = 400
 
 @Composable
 fun <T>SkeletonLoader(state: MutableState<T?>, content:  @Composable() (() -> Unit), skeleton:  @Composable() (() -> Unit)){
-    println("SKELETON LOADER: state is null? ${state.value == null}")
-
     AnimatedVisibility(visible = state.value == null, exit = fadeOut(tween(FADE_TIME))) {
         skeleton.invoke()
     }

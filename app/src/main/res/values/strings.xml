@@ -67,6 +67,8 @@
                 <string name="new_patient_dateOfBirth_button_return">Volver</string>
                 <string name="new_patient_button_submit">Crear</string>
                 <string name="new_patient_button_cancel">Cancelar</string>
+
+                <string name="new_patient_success_title">Alta de Paciente Exitosa</string>
             <!-- Pantalla mis pacientes -->
                 <string name="ph_patients_title">Pacientes</string>
                 <string name="search_placeholder">Buscar</string>
@@ -89,6 +91,7 @@
                 <string name="exercise_detail_title">Detalle del ejercicio</string>
             <!-- Pantalla Asignación de Ejercicio -->
                 <string name="ph_exercise_asign_title">Asignar</string>
+                <string name="exercise_assignment_success_title">Asignacion de Ejercicio Exitosa</string>
             <!-- Pantalla Analisis de Disfluencia -->
                 <string name="ph_exercise_analysis">Analisis de Disfluencias</string>
 

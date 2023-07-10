@@ -22,9 +22,9 @@ import com.disfluency.R
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.ExerciseAssignment
 import com.disfluency.navigation.Route
+import com.disfluency.screens.success.ON_SUCCESS_ANIMATION_TIME
 import kotlinx.coroutines.*
 
-const val ON_SUCCESS_ANIMATION_TIME = 300
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -63,58 +63,5 @@ fun ExerciseRecordingScreen(assignmentId: String, navController: NavController){
             navController.popBackStack()
             navController.navigate(Route.PracticeSuccess.route)
         })
-    }
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun RecordSuccessScreen(navController: NavController){
-    val waitTime = 2000L
-
-    var animateVisibility by remember { mutableStateOf(true) }
-
-    LaunchedEffect(key1 = true, block = {
-        delay(waitTime)
-        animateVisibility = false
-        delay((ON_SUCCESS_ANIMATION_TIME * 0.4).toLong())
-        navController.popBackStack()
-    })
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(
-            visible = animateVisibility,
-            enter = fadeIn(tween(durationMillis = ON_SUCCESS_ANIMATION_TIME * 4, delayMillis = ON_SUCCESS_ANIMATION_TIME * 2))
-                    + scaleIn(tween(durationMillis = ON_SUCCESS_ANIMATION_TIME * 4, delayMillis = ON_SUCCESS_ANIMATION_TIME * 2)),
-            exit = fadeOut(tween(ON_SUCCESS_ANIMATION_TIME))
-        ) {
-            Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primary){}
-        }
-
-        AnimatedVisibility(
-            visible = animateVisibility,
-            enter = fadeIn(tween(durationMillis = 1, delayMillis = ON_SUCCESS_ANIMATION_TIME)),
-            exit = fadeOut(tween(ON_SUCCESS_ANIMATION_TIME))
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = "Done",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(16.dp)
-                )
-                Text(
-                    text = stringResource(R.string.pa_record_success_message),
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
     }
 }
