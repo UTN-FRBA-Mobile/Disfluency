@@ -40,7 +40,6 @@ fun TranscriptionScreen(practiceId: String) {
             .padding(16.dp)
     ) {
         Box(modifier = Modifier
-            .wrapContentSize()
             .weight(0.8f)){
             Transcription(analysis, disfluencyAudioPlayer)
         }

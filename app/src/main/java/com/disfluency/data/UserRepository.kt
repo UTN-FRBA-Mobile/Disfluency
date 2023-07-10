@@ -1,5 +1,6 @@
 package com.disfluency.data
 
+import com.disfluency.R
 import com.disfluency.clients.DisfluencyAPIServiceGenerator
 import com.disfluency.model.Role
 import retrofit2.HttpException
@@ -24,7 +25,7 @@ object UserRepository {
 
     fun getPhonoForPatient(patient: Patient): Phono {
         //TODO: resolver sin mockeo
-        return Phono("", "Lionel", "Scaloni", 0)
+        return Phono("", "Lionel", "Scaloni", R.drawable.avatar_1)
 //    return (.map { it.role }.find { it is Phono && it.patients.any { pat -> pat.id == patient.id}} ?: throw PhonoNotFoundException()) as Phono
     }
 }
