@@ -11,14 +11,14 @@ import com.disfluency.navigation.Route
 import com.disfluency.navigation.bottomNavigation.BottomNavigationItem
 import com.disfluency.screens.exercise.*
 import com.disfluency.screens.patient.PatientExerciseAssignmentsScreen
-import com.disfluency.screens.utils.EmptyScreen
+import com.disfluency.screens.patient.PatientHome
 
 @Composable
 fun PatientNavigationGraph(navController: NavHostController, user: User) {
     val patient = user.role as Patient
     NavHost(navController, startDestination = Route.HomePatient.route) {
         composable(BottomNavigationItem.HomePatient.screenRoute.route) {
-            EmptyScreen("Home Paciente")
+            PatientHome(user.role as Patient, navController)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
             PatientExerciseAssignmentsScreen(navController, patient.id) //TODO: Revisar

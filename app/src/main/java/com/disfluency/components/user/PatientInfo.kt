@@ -70,9 +70,9 @@ fun PatientInfoCard(patient: Patient){
                         label = weeklyTurnFormat(patient.weeklyTurn),
                         content = "Turn"
                     )
-                    
+
                     Spacer(modifier = Modifier.width(8.dp))
-                    
+
                     IconLabeled(
                         icon = Icons.Outlined.AccessTime,
                         label = patient.weeklyHour.format(DateTimeFormatter.ofPattern(stringResource(
@@ -95,7 +95,6 @@ fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
         val daysBeforeLast = days.dropLast(1)
         "${daysBeforeLast.joinToString(", ")} ${stringResource(id = R.string.symbol_and)} $lastDay"
     }
-
     else days.joinToString { it }
 }
 

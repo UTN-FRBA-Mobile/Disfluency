@@ -2,11 +2,16 @@ package com.disfluency.screens.exercise
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,10 +25,10 @@ import com.disfluency.components.audio.AudioMediaType
 import com.disfluency.components.audio.AudioPlayer
 import com.disfluency.components.audio.LiveWaveform
 import com.disfluency.components.button.RecordAudioButton
+import com.disfluency.components.dialog.ExerciseInfoDialog
 import com.disfluency.components.dialog.ExitDialog
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
-import com.disfluency.navigation.Route
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -46,10 +51,9 @@ fun RecordExercise(id: String, onSend: (File) -> Unit, navController: NavControl
     val changeRecordingState = { recordingDone = !recordingDone }
 
     var openDialog by remember { mutableStateOf(false) }
-    var exitActionBack by remember { mutableStateOf(true) }
+    var openInfoDialog by remember { mutableStateOf(false) }
 
     BackHandler(enabled = recordingDone) {
-        exitActionBack = true
         openDialog = true
     }
 
@@ -62,9 +66,14 @@ fun RecordExercise(id: String, onSend: (File) -> Unit, navController: NavControl
                 exit = {
                     openDialog = false
                     recordingDone = false
-                    if (exitActionBack) navController.popBackStack()
-                    else navController.navigate(Route.Ejercicio.routeTo(it.id))
+                    navController.popBackStack()
                 }
+            )
+        }
+
+        if (openInfoDialog){
+            ExerciseInfoDialog(
+                exercise = it, cancel = { openInfoDialog = false }
             )
         }
 
@@ -76,13 +85,7 @@ fun RecordExercise(id: String, onSend: (File) -> Unit, navController: NavControl
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             ExercisePhraseDetail(exercise = it, onInfoButtonClick = {
-                if (recordingDone){
-                    exitActionBack = false
-                    openDialog = true
-                } else {
-                    //TODO: ver como queda con un dialog en vez de salir
-                    navController.navigate(Route.Ejercicio.routeTo(it.id))
-                }
+                openInfoDialog = true
             })
 
             RecordingVisualizer(audioRecorder = audioRecorder, hasRecorded = recordingDone)

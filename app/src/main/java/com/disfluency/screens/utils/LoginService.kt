@@ -2,8 +2,6 @@ package com.disfluency.screens.utils
 
 import com.disfluency.data.UserNotFoundException
 import com.disfluency.data.UserRepository
-import com.disfluency.model.Patient
-import com.disfluency.model.Phono
 import com.disfluency.model.User
 
 class LoginService {
@@ -18,7 +16,7 @@ class LoginService {
         return user ?: throw UserNotFoundException()
     }
 
-    suspend fun logout(){
+    fun logout(){
         this.user = null
     }
 }

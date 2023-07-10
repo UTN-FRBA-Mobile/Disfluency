@@ -14,6 +14,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Period
+import java.time.*
 
 data class Patient(
     @JsonProperty("name")
@@ -90,4 +91,27 @@ data class Patient(
     fun getPendingQuestionnairesCount(): Int {
         return 0
     }
+
+    fun nextTurnFromDateTime(dateTime: LocalDateTime): LocalDateTime {
+        if(weeklyTurn.isEmpty()){
+            throw NoTurnsAssignedException(this)
+        }
+        var nextTurnDate: LocalDate? = null
+        var nextDate = dateTime.toLocalDate()
+
+        while(nextTurnDate==null){
+            if(weeklyTurn.contains(nextDate.dayOfWeek) && !(dateTime.toLocalDate().isEqual(nextDate) && weeklyHour.isBefore(dateTime.toLocalTime()))) {
+                nextTurnDate = nextDate
+            }
+            nextDate = nextDate.plusDays(1)
+        }
+
+        return LocalDateTime.of(nextTurnDate, weeklyHour)
+    }
+
+    fun daysTillNextTurnFromDate(dateTime: LocalDateTime): Long{
+        return Duration.between(dateTime.toLocalDate().atStartOfDay(), nextTurnFromDateTime(dateTime).toLocalDate().atStartOfDay()).toDays()
+    }
 }
+
+class NoTurnsAssignedException(patient: Patient): Exception("Patient ${patient.fullName()} hasn't weekly turns asigned")
