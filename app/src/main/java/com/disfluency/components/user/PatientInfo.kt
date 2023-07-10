@@ -92,7 +92,7 @@ fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
         "${daysBeforeLast.joinToString(", ")} ${stringResource(id = R.string.symbol_and)} $lastDay"
     }
 
-    else weeklyTurn.joinToString { formatDayOfWeek(it) }
+    else weeklyTurn.map { formatDayOfWeek(it) }.joinToString()
 }
 
 @Composable
