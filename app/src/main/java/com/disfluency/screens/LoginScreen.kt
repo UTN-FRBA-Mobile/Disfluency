@@ -131,7 +131,12 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
         username.isNotBlank() && password.isNotBlank()
     }
 
-    val submit = {onSubmit(username, password)}
+    val focusManager = LocalFocusManager.current
+
+    val submit = {
+        focusManager.clearFocus()
+        onSubmit(username, password)
+    }
 
     Column(
         Modifier
@@ -147,17 +152,13 @@ fun LoginForm(retry: Boolean, onSubmit: (String, String)->Unit){
             modifier = Modifier.padding(8.dp)
         )
 
-        val focusManager = LocalFocusManager.current
         OutlinedTextField(
             modifier = Modifier.padding(8.dp),
             value = password,
             onValueChange = { password = it },
             placeholder = { Text(stringResource(R.string.login_label_password)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onSend = {
-                submit()
-                focusManager.clearFocus()
-            }),
+            keyboardActions = KeyboardActions(onSend = { submit() }),
             singleLine = true,
             visualTransformation = if(visiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
