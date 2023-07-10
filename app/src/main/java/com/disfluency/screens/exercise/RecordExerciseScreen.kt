@@ -1,11 +1,17 @@
 package com.disfluency.screens.exercise
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,60 +29,69 @@ import com.disfluency.components.dialog.ExerciseInfoDialog
 import com.disfluency.components.dialog.ExitDialog
 import com.disfluency.data.ExerciseRepository
 import com.disfluency.model.Exercise
-import com.disfluency.navigation.Route
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 const val LOCAL_RECORD_FILE = "disfluency_exercise_recording.mp3"
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun RecordExercise(id: Int, onSend: (File) -> Unit, navController: NavController){
-    val exercise = ExerciseRepository.getExerciseById(id)
+fun RecordExercise(id: String, onSend: (File) -> Unit, navController: NavController){
+    val exercise = remember { mutableStateOf<Exercise?>(null) }
+
+    LaunchedEffect(Unit) {
+        val anExercise = withContext(Dispatchers.IO) { ExerciseRepository.getExerciseById(id) }
+        Log.i("HTTP", anExercise.toString())
+        exercise.value = anExercise
+    }
+
     val audioRecorder = DisfluencyAudioRecorder(LocalContext.current)
 
     var recordingDone by remember { mutableStateOf(false) }
     val changeRecordingState = { recordingDone = !recordingDone }
 
     var openDialog by remember { mutableStateOf(false) }
+    var openInfoDialog by remember { mutableStateOf(false) }
 
     BackHandler(enabled = recordingDone) {
         openDialog = true
     }
 
-    if (openDialog){
-        ExitDialog(
-            title = "¿Esta seguro que desea salir?",
-            content = "Se perdera la grabacion realizada. Antes de salir deberia confirmar la resolucion del ejercicio o descartarla.",
-            cancel = { openDialog = false },
-            exit = {
-                openDialog = false
-                recordingDone = false
-                navController.popBackStack()
-            }
-        )
-    }
+    exercise.value?.let {
+        if (openDialog){
+            ExitDialog(
+                title = "¿Esta seguro que desea salir?",
+                content = "Se perdera la grabacion realizada. Antes de salir deberia confirmar la resolucion del ejercicio o descartarla.",
+                cancel = { openDialog = false },
+                exit = {
+                    openDialog = false
+                    recordingDone = false
+                    navController.popBackStack()
+                }
+            )
+        }
 
-    var openInfoDialog by remember { mutableStateOf(false) }
-    if (openInfoDialog){
-        ExerciseInfoDialog(
-            exercise = exercise, cancel = { openInfoDialog = false }
-        )
-    }
+        if (openInfoDialog){
+            ExerciseInfoDialog(
+                exercise = it, cancel = { openInfoDialog = false }
+            )
+        }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        ExercisePhraseDetail(exercise = exercise, onInfoButtonClick = {
-            openInfoDialog = true
-        })
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            ExercisePhraseDetail(exercise = it, onInfoButtonClick = {
+                openInfoDialog = true
+            })
 
-        RecordingVisualizer(audioRecorder = audioRecorder, hasRecorded = recordingDone)
+            RecordingVisualizer(audioRecorder = audioRecorder, hasRecorded = recordingDone)
 
-        RecordButton(audioRecorder = audioRecorder, changeRecordingState = changeRecordingState, onSend = onSend)
+            RecordButton(audioRecorder = audioRecorder, changeRecordingState = changeRecordingState, onSend = onSend)
+        }
     }
 }
 

@@ -164,7 +164,7 @@ private fun PhonoCard(phono: Phono){
                     maxLines = 2
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text("Ing. en Fonoaudiología", style=MaterialTheme.typography.titleSmall, fontStyle = FontStyle.Italic)
+                Text("Lic. en Fonoaudiología", style=MaterialTheme.typography.titleSmall, fontStyle = FontStyle.Italic)
             }
 
             Image(

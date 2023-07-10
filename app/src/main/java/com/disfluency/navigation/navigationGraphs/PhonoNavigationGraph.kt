@@ -30,7 +30,7 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User) {
             PatientsScreen(navController, user.role as Phono)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            ExercisesScreen(navController)
+            ExercisesScreen(navController, user.role as Phono)
         }
         composable(BottomNavigationItem.Cuestionarios.screenRoute.route) {
             PhonoQuestionnaireScreen()
@@ -42,25 +42,25 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User) {
             route = Route.Paciente.route,
             arguments = listOf(navArgument("id") {  })
         ) { backStackEntry -> //TODO: ver si hay forma de no tener que hacer el pasamanos de navController
-            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(id = it.toInt(), navController = navController) }
+            backStackEntry.arguments?.getString("id")?.let { SinglePatientScreen(id = it, navController = navController) }
         }
         composable(
             route = Route.PatientExercises.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PhonoExercisesScreen(id = it.toInt(), navController = navController) }
+            backStackEntry.arguments?.getString("id")?.let { PhonoExercisesScreen(id = it, navController = navController) }
         }
         composable(
             route = Route.PatientQuestionnaires.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PatientQuestionnairesScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { PatientQuestionnairesScreen(id = it) }
         }
         composable(
             route = Route.PatientSessions.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { PatientSessionsScreen(id = it) }
         }
         composable(Route.NuevoPaciente.route) {
             FormNewPatient(navController, user.role as Phono)
@@ -70,7 +70,7 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User) {
             route = Route.Ejercicio.route,
             arguments = listOf(navArgument("id") {  })
         ){ backStackEntry ->
-            backStackEntry.arguments?.getString("id")?.let { SingleExerciseScreen(id = it.toInt()) }
+            backStackEntry.arguments?.getString("id")?.let { SingleExerciseScreen(id = it) }
         }
 
         composable(Route.NuevoEjercicio.route) {
@@ -83,9 +83,9 @@ fun PhonoNavigationGraph(navController: NavHostController, user: User) {
             }
         }
 
-        composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){})){
-            it.arguments?.getString("id")?.let {id->
-                TherapistExercisePracticeDetail(id = id, navController = navController)
+        composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){}, navArgument("practiceId"){})){
+            it.arguments?.let {args ->
+                TherapistExercisePracticeDetail(id = args.getString("practiceId")!!, assignmentId = args.getString("id")!!, navController = navController)
             }
         }
 

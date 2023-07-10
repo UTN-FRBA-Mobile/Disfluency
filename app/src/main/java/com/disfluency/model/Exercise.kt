@@ -1,31 +1,35 @@
 package com.disfluency.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class Exercise(
-    val id: Int,
-    val therapistId: Int,
+    @JsonProperty("id")
+    val id: String,
+
+    @JsonProperty("title")
     val title: String,
+
+    @JsonProperty("instruction")
     val instruction: String,
+
+    @JsonProperty("phrase")
     val phrase: String? = null,
-    val sampleAudioURL: String,
-    val number: Int
+
+    @JsonProperty("sampleRecordingUrl")
+    val sampleRecordingUrl: String
 ) {
     fun fullName(): String{
         return "$title $instruction $phrase"
     }
 
-    fun number(): String{
-        return "#$number"
-    }
-
     fun getFullInstructions(): String{
-        if (phrase.isNullOrBlank()){
-            return instruction
+        return if (phrase.isNullOrBlank()){
+            instruction
         }else{
-            return "$instruction: $phrase"
+            "$instruction: $phrase"
         }
     }
 
-    fun getAudioSample(): Unit{
-        return Unit
+    fun getAudioSample() {
     }
 }

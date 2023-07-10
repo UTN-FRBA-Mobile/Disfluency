@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.StrokeCap
@@ -25,24 +24,26 @@ fun LiveWaveform(amplitudes: MutableList<Float>, maxSpikes: Int = MAX_SPIKES, ma
         .fillMaxWidth()
         .padding(24.dp)
         .drawBehind {
-            val iterate = amplitudes.toList().takeLast(maxSpikes).listIterator()
+            try {
+                val iterate = amplitudes.toList().takeLast(maxSpikes).listIterator()
+                while (iterate.hasNext()){
+                    val index = iterate.nextIndex()
+                    val amp = iterate.next()
 
-            while (iterate.hasNext()){
-                val index = iterate.nextIndex()
-                val amp = iterate.next()
+                    val x = index * (size.width / maxSpikes)
+                    val length = maxHeight.value * amp
+                    val y = size.center.y - length/2
 
-                val x = index * (size.width / maxSpikes)
-                val length = maxHeight.value * amp
-                val y = size.center.y - length/2
-
-                if (amp > 0)
-                    drawLine(
-                        color = color,
-                        start = Offset(x = x, y = y),
-                        end = Offset(x = x, y = y + length),
-                        strokeWidth = 15f,
-                        cap = StrokeCap.Round
-                    )
+                    if (amp > 0)
+                        drawLine(
+                            color = color,
+                            start = Offset(x = x, y = y),
+                            end = Offset(x = x, y = y + length),
+                            strokeWidth = 15f,
+                            cap = StrokeCap.Round
+                        )
+                }
+            } catch (_: Exception) {
             }
         }
     )

@@ -1,5 +1,6 @@
 package com.disfluency.screens.phono;
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,9 @@ import com.disfluency.data.PatientRepository
 import com.disfluency.model.Patient
 import com.disfluency.model.Phono
 import com.disfluency.navigation.Route
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
@@ -34,6 +38,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun FormNewPatient(navController: NavController, phono: Phono){
+    val newPatient = remember { mutableStateOf<Patient?>(null) }
     val avatarIndex = remember { mutableStateOf(0) }
     val name = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
@@ -76,7 +81,7 @@ fun FormNewPatient(navController: NavController, phono: Phono){
             val patient = Patient(
                 name = name.value,
                 lastName = lastName.value,
-                id = dni.value.toInt(),
+                id = dni.value,
                 dateOfBirth = dateOfBirth.value!!,
                 email = email.value,
                 joinedSince = LocalDate.now(),
@@ -84,13 +89,19 @@ fun FormNewPatient(navController: NavController, phono: Phono){
                 weeklyTurn = weeklyTurn,
                 profilePic = USER_AVATARS[avatarIndex.value]
             )
-
             phono.addPatient(patient)
-//            PatientRepository.addPatient(patient)
-            navController.popBackStack()
-            navController.navigate(Route.Paciente.routeTo(patient.id))
+            CoroutineScope(Dispatchers.IO).launch {
+                newPatient.value = PatientRepository.addPatientToTherapist(patient, phono.id)
+                Log.i("HTTP", "Creating patient: $patient")
+            }
         }
     )
+    newPatient.value?.let {
+        LaunchedEffect(Unit) {
+            navController.popBackStack()
+            navController.navigate(Route.Paciente.routeTo(it.id))
+        }
+    }
 }
 
 @Composable

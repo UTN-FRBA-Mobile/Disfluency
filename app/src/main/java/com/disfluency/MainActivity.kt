@@ -12,11 +12,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.core.app.ActivityCompat
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.disfluency.navigation.AppNavigation
 import com.disfluency.ui.theme.MyApplicationTheme
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 

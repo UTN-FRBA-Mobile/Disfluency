@@ -15,12 +15,13 @@ import com.disfluency.screens.patient.PatientHome
 
 @Composable
 fun PatientNavigationGraph(navController: NavHostController, user: User) {
+    val patient = user.role as Patient
     NavHost(navController, startDestination = Route.HomePatient.route) {
         composable(BottomNavigationItem.HomePatient.screenRoute.route) {
             PatientHome(user.role as Patient, navController)
         }
         composable(BottomNavigationItem.Ejercicios.screenRoute.route) {
-            PatientExerciseAssignmentsScreen(navController, user.role as Patient) //TODO: Revisar
+            PatientExerciseAssignmentsScreen(navController, patient.id) //TODO: Revisar
         }
 
         composable(Route.PatientExerciseAssignmentDetail.route, listOf(navArgument("id"){})){
@@ -33,14 +34,14 @@ fun PatientNavigationGraph(navController: NavHostController, user: User) {
                 ExerciseRecordingScreen(id, navController)
             }
         }
-        composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){})){
-            it.arguments?.getString("id")?.let {id->
-                ExercisePracticeDetailScreen(practiceId = id)
+        composable(Route.PatientExercisePracticeDetail.route, listOf(navArgument("id"){}, navArgument("practiceId"){})){
+            it.arguments?.let {args ->
+                ExercisePracticeDetailScreen(practiceId = args.getString("practiceId")!!, assignmentId = args.getString("id")!!)
             }
         }
         composable(Route.Ejercicio.route, listOf(navArgument("id"){})){
             it.arguments?.getString("id")?.let { id ->
-                SingleExerciseScreen(id = id.toInt())
+                SingleExerciseScreen(id = id)
             }
         }
         composable(Route.PracticeSuccess.route){

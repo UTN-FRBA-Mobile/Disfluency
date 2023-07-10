@@ -20,12 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.disfluency.R
-import com.disfluency.components.inputs.formatDayOfWeek
 import com.disfluency.data.MockedData
 import com.disfluency.model.Patient
 import com.disfluency.ui.theme.MyApplicationTheme
+import com.disfluency.utils.formatDayOfWeek
 import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -86,13 +87,15 @@ fun PatientInfoCard(patient: Patient){
 
 @Composable
 fun weeklyTurnFormat(weeklyTurn: List<DayOfWeek>): String{
+    val days = weeklyTurn
+        .map { d -> formatDayOfWeek(dayOfWeek = d) }
+        .map { d -> d[0].uppercaseChar() + d.substring(1) }
     return if(weeklyTurn.size>1){
-        val lastDay = formatDayOfWeek(weeklyTurn.last())
-        val daysBeforeLast = weeklyTurn.dropLast(1).map{ formatDayOfWeek(it) }
+        val lastDay = days.last()
+        val daysBeforeLast = days.dropLast(1)
         "${daysBeforeLast.joinToString(", ")} ${stringResource(id = R.string.symbol_and)} $lastDay"
     }
-
-    else weeklyTurn.map { formatDayOfWeek(it) }.joinToString()
+    else days.joinToString { it }
 }
 
 @Composable

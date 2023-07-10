@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.sp
 import com.disfluency.data.PatientRepository
 
 @Composable
-fun PatientSessionsScreen(id: Int) {
-    val patient = PatientRepository.getPatientById(id)
+fun PatientSessionsScreen(id: String) {
+    val patient = PatientRepository.getPatientById2(id)
 
     Column(
         modifier = Modifier

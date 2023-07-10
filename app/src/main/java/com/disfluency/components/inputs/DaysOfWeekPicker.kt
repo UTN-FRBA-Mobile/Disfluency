@@ -15,6 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.util.*
 
 @Composable
 fun WeeklyTurnPicker(selectedDays: SnapshotStateList<DayOfWeek>){
@@ -41,7 +43,7 @@ fun WeeklyTurnPicker(selectedDays: SnapshotStateList<DayOfWeek>){
                 }
             ) {
                 Text(
-                    text = day.name[0].toString().uppercase(),
+                    text = day.getDisplayName(TextStyle.FULL, Locale("es_ES"))[0].toString().uppercase(),
                     fontSize = 15.sp,
                     textAlign = TextAlign.Center
                 )
