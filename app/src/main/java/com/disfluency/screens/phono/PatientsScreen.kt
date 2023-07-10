@@ -60,7 +60,7 @@ fun PatientsScreen(navController: NavHostController, user: Phono) {
                     .semantics { isContainer = true }
                     .zIndex(1f)
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)) {
+                    .padding(vertical = 8.dp, horizontal = 16.dp)) {
                 //TODO: ver si se puede esconder el teclado cuando doy enter
                 SearchBar(
                     modifier = Modifier.align(Alignment.TopCenter),
